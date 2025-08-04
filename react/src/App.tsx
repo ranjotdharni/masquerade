@@ -1,10 +1,16 @@
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  async function testAPI(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault()
+
+    await fetch("http://127.0.0.1:8000/api/test")
+  }
 
   return (
     <>
@@ -18,8 +24,8 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={testAPI}>
+          Test API
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
