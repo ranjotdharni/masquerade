@@ -1,7 +1,7 @@
 import viteLogo from '../../public/vite.svg'
 import reactLogo from '../assets/react.svg'
 
-export default function Welcome() {
+export default function WelcomePage() {
     return (
         <>
             <div>
