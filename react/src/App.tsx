@@ -1,19 +1,27 @@
 import './App.css'
-import { Route, Routes } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { PAGE_HOME, PAGE_WELCOME } from './lib/constants'
-import Welcome from './pages/Welcome'
-import Home from './pages/Home'
+import WelcomePage from './pages/WelcomePage'
+import HomePage from './pages/HomePage'
+import AppLayout from './pages/AppLayout'
 
-function App() {
+const routes = createBrowserRouter([
+  {
+    path: PAGE_WELCOME,
+    element: <WelcomePage />
+  },
+  {
+    path: '/',
+    element: <AppLayout />,
+    children: [
+      { path: PAGE_HOME, element: <HomePage /> }
+    ],
+  },
+])
+
+export default function App() {
 
   return (
-    <>
-      <Routes>
-        <Route path={PAGE_WELCOME} element={<Welcome />} />
-        <Route path={PAGE_HOME} element={<Home />} />
-      </Routes>
-    </>
+    <RouterProvider router={routes} />
   )
 }
-
-export default App
