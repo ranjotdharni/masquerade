@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from apiauth.views import TestView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/test', TestView.as_view(), name='api_test')
 ]
