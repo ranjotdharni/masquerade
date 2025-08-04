@@ -1,9 +1,47 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: JetBrains;
+  src: url("./assets/fonts/jbm/JetBrainsMono-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: JetBrains Italic;
+  src: url("./assets/fonts/jbm/JetBrainsMono-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: JetBrains Bold;
+  src: url("./assets/fonts/jbm/JetBrainsMono-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url("./assets/fonts/roboto/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Roboto Italic;
+  src: url("./assets/fonts/roboto/Roboto-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Roboto Bold;
+  src: url("./assets/fonts/roboto/Roboto-Bold.ttf") format("truetype");
+}
+
 @theme {
  --color-text: #124f54;
  --color-background: #ededed;
  --color-primary: #6ad7af;
  --color-secondary: #102937;
  --color-accent: #e2dad0;
+
+ --font-jbm: JetBrains;
+ --font-jbm-italic: JetBrains Italic;
+ --font-jbm-bold: JetBrains Bold;
+
+ --font-roboto: Roboto;
+ --font-roboto-italic: Roboto Italic;
+ --font-roboto-bold: Roboto Bold;
 }
