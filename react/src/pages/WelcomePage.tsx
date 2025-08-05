@@ -1,5 +1,5 @@
-import viteLogo from '../../public/vite.svg'
-import reactLogo from '../assets/react.svg'
+import viteLogo from "../../public/vite.svg"
+import reactLogo from "../assets/react.svg"
 
 export default function WelcomePage() {
     return (
