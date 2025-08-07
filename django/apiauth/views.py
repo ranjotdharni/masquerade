@@ -6,8 +6,7 @@ import certifi
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from pymongo.mongo_client import MongoClient 
-from pymongo.server_api import ServerApi 
+from pymongo.mongo_client import MongoClient
 
 # Create your views here.
 
@@ -23,4 +22,4 @@ class TestView(APIView):
         except Exception as e:
             print(e)
 
-        return Response({ "message": "success" }, status=200)
+        return Response({ "message": "successful test" }, status=200)
