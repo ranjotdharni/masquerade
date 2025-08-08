@@ -6,6 +6,8 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from .utils import decode_google_jwt
+
 # Create your views here.
 
 class TestView(APIView):
@@ -23,7 +25,6 @@ class TestView(APIView):
 class GoogleTokenExchange(APIView):
     def get(self, request):
         code = request.GET.get("code")
-        state = request.GET.get("state")
 
         google_token_url = "https://oauth2.googleapis.com/token"
         data = {
@@ -37,12 +38,21 @@ class GoogleTokenExchange(APIView):
         token_response = requests.post(google_token_url, data=data)
         token_json = token_response.json()
 
-        access_token = token_json.get("access_token")
-        refresh_token = token_json.get("refresh_token")
         id_token = token_json.get("id_token")
 
-        redirect_url = (
-            f"{settings.FRONTEND_URL}/login?"
-            f"access={access_token}&refresh={refresh_token}&id_token={id_token}&state={state}"
-        )
+        decryption_result = decode_google_jwt(id_token=id_token)
+        redirect_url = ""
+
+        if ("error" in decryption_result):
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"error={decryption_result.message}"
+            )
+        else:
+            print(decryption_result["email"])
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"access=success&refresh=success"
+            )
+
         return redirect(redirect_url)
