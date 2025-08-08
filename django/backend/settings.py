@@ -27,19 +27,23 @@ load_dotenv()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+
 BACKEND_URL = os.getenv("BACKEND_URL")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
+HOST_DOMAIN = os.getenv("HOST_DOMAIN")
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ACTIVE_ENVIRONMENT") != "prod"
 
-ALLOWED_HOSTS = [BACKEND_URL]
+ALLOWED_HOSTS = [HOST_DOMAIN]
 
 SITE_ID = 1
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*']
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
@@ -48,7 +52,7 @@ REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'access'
 JWT_AUTH_REFRESH_COOKIE = 'refresh'
 
-LOGIN_REDIRECT_URL = f'{FRONTEND_URL}/home'
+LOGIN_REDIRECT_URL = f'{FRONTEND_URL}/login/'
 
 # Application definition
 
@@ -62,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'dj_rest_auth',
     'allauth',
     'allauth.account',
@@ -77,6 +82,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -143,8 +149,8 @@ AUTH_PASSWORD_VALIDATORS = [
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+            'client_id': GOOGLE_CLIENT_ID,
+            'secret': GOOGLE_CLIENT_SECRET,
             'key': ''
         },
         'SCOPE': [

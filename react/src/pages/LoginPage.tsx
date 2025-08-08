@@ -1,8 +1,29 @@
-import { ICON_LOGO_STICKER } from "../lib/constants"
+import { API_LOGIN, ICON_LOGO_STICKER, PAGE_HOME } from "../lib/constants"
 import LoginPageImage from "../assets/svg/loginPageImage.svg"
+import type { MouseEvent } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 export default function LoginPage() {
-    // <a href={`${import.meta.env.VITE_BACKEND_URL}${API_LOGIN}`}>Click to sign in</a>
+    let navigate = useNavigate()
+    
+    const [searchParams, setSearchParams] = useSearchParams()
+    let accessToken: string | null = searchParams.get("access")
+    let refreshToken: string | null = searchParams.get("refresh")
+
+    if (accessToken && refreshToken) {
+        handleTokens(accessToken, refreshToken)
+    }
+
+    function handleTokens(accessToken: string, refreshToken: string) {
+        alert(`Access Token: ${accessToken}\nRefresh Token: ${refreshToken}`)
+        // Add logic here to store tokens properly
+        navigate(`/${PAGE_HOME}`)
+    }
+
+    function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
+        event.preventDefault()
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_LOGIN}`
+    }
 
     return (
         <section className="mt-[10vh] w-full h-[85vh] bg-background flex justify-center">
@@ -18,6 +39,7 @@ export default function LoginPage() {
                         <div className="w-full flex-1 mt-8">
                             <div className="flex flex-col items-center">
                                 <button
+                                    onClick={signInWithGoogle}
                                     className="w-full max-w-xs font-jbm shadow-sm rounded-lg py-3 bg-accent text-text hover:text-primary flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:cursor-pointer hover:shadow focus:shadow-sm focus:shadow-outline">
                                     <div className="bg-white p-2 rounded-full">
                                         <svg className="w-4" viewBox="0 0 533.5 544.3">
