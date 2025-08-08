@@ -7,11 +7,19 @@ export default function LoginPage() {
     let navigate = useNavigate()
     
     const [searchParams, setSearchParams] = useSearchParams()
+    let errorResponse: string | null = searchParams.get("error")
     let accessToken: string | null = searchParams.get("access")
     let refreshToken: string | null = searchParams.get("refresh")
 
-    if (accessToken && refreshToken) {
+    if (errorResponse) {
+        handleServerError(errorResponse)
+    }
+    else if (accessToken && refreshToken) {
         handleTokens(accessToken, refreshToken)
+    }
+
+    function handleServerError(errorResponse: string) {
+        alert(`Error: ${errorResponse}`)
     }
 
     function handleTokens(accessToken: string, refreshToken: string) {
