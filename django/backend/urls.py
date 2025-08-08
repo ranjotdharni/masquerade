@@ -21,8 +21,9 @@ from apiauth.views import TestView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/test', TestView.as_view(), name='api_test'),
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('api/auth/google/', include('allauth.socialaccount.providers.google.urls')),
+    path('api/auth/google/login/callback/', include('apiauth.urls')),
+    path('api/auth/', include('allauth.urls')),
+    path('api/auth', include('apiauth.urls')),
 ]
