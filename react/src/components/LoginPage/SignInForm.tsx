@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react"
-import { API_LOGIN } from "../../lib/constants"
+import { API_GOOGLE_LOGIN } from "../../lib/constants"
 
 type SignInFormProps = {
     setError: (error: string) => void
@@ -7,9 +7,15 @@ type SignInFormProps = {
 
 export default function SignInForm({ setError } : SignInFormProps) {
 
-    function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
+    async function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_LOGIN}`
+        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`)
+        const response = await result.json()
+
+        if (response.redirect)
+            window.location.href = response.redirect
+        else
+            setError("500 Internal Server Error")
     }
 
     return (

@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import GoogleTokenExchange
+from .views import GoogleSignIn
 
 urlpatterns = [
-    path('', GoogleTokenExchange.as_view(), name="token_exchange"),
+    path('google/init/', GoogleSignIn.as_view(), name="google_init"),
 ]
