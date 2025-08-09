@@ -57,6 +57,7 @@ class GoogleTokenExchange(APIView):
                     f"error={decryption_result.message}"
                 )
             else:
+                # log user in here
                 print(decryption_result["email"])
                 redirect_url = (
                     f"{settings.FRONTEND_URL}/login?"
