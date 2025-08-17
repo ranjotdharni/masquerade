@@ -20,7 +20,7 @@ export default function SignInForm({ setError } : SignInFormProps) {
 
     return (
         <div className="mt-12 flex flex-col items-center">
-            <h1 className="text-2xl xl:text-3xl font-roboto-bold text-text">
+            <h1 className="text-2xl xl:text-3xl font-lato-bold text-text">
                 Sign In
             </h1>
             <div className="w-full flex-1 mt-8">

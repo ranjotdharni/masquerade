@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "ui": "cd react && npm run dev",
-        "server": "cd django && source venv/bin/activate && python manage.py runserver",
+        "ui": "kill -9 $(lsof -ti :5173) 2 > /dev/null || echo 'Port 5173 available...' && cd react && npm run dev",
+        "server": "kill -9 $(lsof -ti :8000) 2 > /dev/null || echo 'Port 8000 available...' && cd django && source venv/bin/activate && python manage.py runserver_plus --cert-file ~/.localhost-ssl/localhost.crt --key-file ~/.localhost-ssl/localhost.key 127.0.0.1:8000",
         "app": "./quickstart.sh"
     }
 }
