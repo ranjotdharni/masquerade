@@ -1,6 +1,11 @@
 import requests
 
 from urllib.parse import quote
+
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.middleware.csrf import get_token
+from django.contrib.auth import get_user_model, login
 from django.shortcuts import redirect
 from django.conf import settings
 
@@ -8,8 +13,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .utils import decode_google_jwt
+from .models import SocialAccount
+
+User = get_user_model()
 
 # Create your views here.
+
+class ConfirmAuth(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        print("Successful Test!")
+        return Response({ "success": True }, status=200)
 
 class GoogleSignIn(APIView):
     def get(self, request):
@@ -30,6 +46,7 @@ class GoogleSignIn(APIView):
     
 class GoogleTokenExchange(APIView):
     def get(self, request):
+        response = None 
         redirect_url = ""
 
         try:
@@ -58,10 +75,57 @@ class GoogleTokenExchange(APIView):
                 )
             else:
                 # log user in here
-                print(decryption_result["email"])
+                email = decryption_result["email"]
+                uid = decryption_result["sub"]
+
+                try:
+                    social_account = SocialAccount.objects.get(provider=settings.GOOGLE_AUTH_ID, uid=uid)
+                    user = social_account.user
+                except SocialAccount.DoesNotExist:
+                    user = User.objects.create(
+                        email=email
+                    )
+
+                    user.set_unusable_password()
+                    user.save()
+
+                    social_account = SocialAccount.objects.create(
+                        user=user,
+                        provider=settings.GOOGLE_AUTH_ID,
+                        uid=uid
+                    )
+
+                    login(request, user)
+
+                csrf_token = get_token(request=request)
+
                 redirect_url = (
-                    f"{settings.FRONTEND_URL}/login?"
-                    f"access=success&refresh=success"
+                    f"{settings.FRONTEND_URL}/home"
+                )
+                response = redirect(redirect_url)
+
+                response.set_cookie(
+                    key=settings.CSRF_COOKIE_NAME,
+                    value=csrf_token,
+                    httponly=False,
+                    secure=True,
+                    samesite="None"
+                )
+
+                response.set_cookie(
+                    key=settings.UID_COOKIE_NAME,
+                    value=uid,
+                    httponly=False,
+                    secure=True,
+                    samesite="None"
+                )
+
+                response.set_cookie(
+                    key=settings.EMAIL_COOKIE_NAME,
+                    value=email,
+                    httponly=False,
+                    secure=True,
+                    samesite="None"
                 )
         except Exception as e:
             print(e.with_traceback())
@@ -69,5 +133,6 @@ class GoogleTokenExchange(APIView):
                 f"{settings.FRONTEND_URL}/login?"
                 f"error=500"
             )
+            response = redirect(redirect_url)
 
-        return redirect(redirect_url)
+        return response

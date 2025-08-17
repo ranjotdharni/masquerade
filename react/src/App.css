@@ -30,6 +30,21 @@
   src: url("./assets/fonts/roboto/Roboto-Bold.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: Lato;
+  src: url("./assets/fonts/lato/Lato-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Lato Italic;
+  src: url("./assets/fonts/lato/Lato-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Lato Bold;
+  src: url("./assets/fonts/lato/Lato-Bold.ttf") format("truetype");
+}
+
 @theme {
  --color-text: #124f54;
  --color-background: #ededed;
@@ -45,6 +60,10 @@
  --font-roboto: Roboto;
  --font-roboto-italic: Roboto Italic;
  --font-roboto-bold: Roboto Bold;
+
+ --font-lato: Lato;
+ --font-lato-italic: Lato Italic;
+ --font-lato-bold: Lato Bold;
 }
 
 .appNavigation {

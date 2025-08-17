@@ -35,6 +35,16 @@ HOST_DOMAIN = os.getenv("HOST_DOMAIN")
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 
+BASIC_AUTH_ID = 0
+GOOGLE_AUTH_ID = 1
+GITHUB_AUTH_ID = 2
+
+AUTH_ID_LIST = {
+    BASIC_AUTH_ID: "Basic",
+    GOOGLE_AUTH_ID: "Google",
+    GITHUB_AUTH_ID: "Github"
+}
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ACTIVE_ENVIRONMENT") != "prod"
 
@@ -64,6 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -79,8 +90,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -185,3 +196,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MONGO_CONNECTION_STRING = f'mongodb+srv://{os.getenv("MONGO_USER")}:{os.getenv("MONGO_PASSWORD")}@{os.getenv("MONGO_URL")}?retryWrites=true&w=majority&appName={os.getenv("MONGO_APP_NAME")}'
 MONGO_CLIENT = MongoClient(MONGO_CONNECTION_STRING, tlsCAFile=certifi.where())
+
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_NAME = os.getenv("CSRF_COOKIE_NAME")
+CSRF_TRUSTED_ORIGINS = [
+    FRONTEND_URL,
+]
+
+UID_COOKIE_NAME = os.getenv("UID_COOKIE_NAME")
+EMAIL_COOKIE_NAME = os.getenv("EMAIL_COOKIE_NAME")
