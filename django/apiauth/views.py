@@ -2,11 +2,13 @@ import requests
 
 from urllib.parse import quote
 
-from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.conf import settings
 
@@ -21,6 +23,7 @@ User = get_user_model()
 
 # Create your views here.
 
+@method_decorator(csrf_protect, name="dispatch")
 class ConfirmAuth(APIView):
     permission_classes = [IsAuthenticated]
 
