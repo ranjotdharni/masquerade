@@ -3,9 +3,10 @@ import { API_GOOGLE_LOGIN } from "../../lib/constants"
 
 type SignInFormProps = {
     setError: (error: string) => void
+    setLoader: (loader: boolean) => void
 }
 
-export default function SignInForm({ setError } : SignInFormProps) {
+export default function SignInForm({ setError, setLoader } : SignInFormProps) {
 
     async function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
@@ -78,7 +79,7 @@ export default function SignInForm({ setError } : SignInFormProps) {
                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white mt-5"
                         type="password" placeholder="Password" />
                     <button
-                        onClick={() => { setError("This is a sign in error.") }}
+                        onClick={() => { setLoader(true) }}
                         className="mt-5 tracking-wide font-semibold bg-text text-accent w-full py-4 rounded-lg hover:text-white hover:bg-primary hover:cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                         
                         <span className="ml-3 font-jbm">

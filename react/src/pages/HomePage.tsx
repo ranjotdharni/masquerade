@@ -20,6 +20,7 @@ export default function HomePage() {
             method: "POST",
             credentials: 'include',
             headers: {
+                "Authorization": `Bearer ${localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)}`,
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfCookie
             }
