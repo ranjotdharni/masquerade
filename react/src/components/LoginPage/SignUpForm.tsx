@@ -1,9 +1,10 @@
 
 type SignUpFormProps = {
     setError: (error: string) => void
+    setLoader: (loader: boolean) => void
 }
 
-export default function SignUpForm({ setError } : SignUpFormProps) {
+export default function SignUpForm({ setError, setLoader } : SignUpFormProps) {
 
     return (
         <div className="mt-12 flex flex-col items-center">

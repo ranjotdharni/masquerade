@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'dj_rest_auth',
     'allauth',
     'allauth.account',
@@ -160,6 +161,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
+
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
@@ -208,5 +216,5 @@ CSRF_TRUSTED_ORIGINS = [
     FRONTEND_URL,
 ]
 
-UID_COOKIE_NAME = os.getenv("UID_COOKIE_NAME")
-EMAIL_COOKIE_NAME = os.getenv("EMAIL_COOKIE_NAME")
+REFRESH_COOKIE_NAME = os.getenv("REFRESH_COOKIE_NAME")
+ACCESS_TOKEN_NAME = os.getenv("ACCESS_TOKEN_NAME")

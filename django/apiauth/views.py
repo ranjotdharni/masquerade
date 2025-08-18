@@ -3,6 +3,7 @@ import requests
 from urllib.parse import quote
 
 from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.middleware.csrf import get_token
 from django.contrib.auth import get_user_model, login
@@ -11,6 +12,7 @@ from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .utils import decode_google_jwt
 from .models import SocialAccount
@@ -20,14 +22,15 @@ User = get_user_model()
 # Create your views here.
 
 class ConfirmAuth(APIView):
-    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        print("Successful Test!")
+        print("You are authenticated!")
         return Response({ "success": True }, status=200)
 
 class GoogleSignIn(APIView):
+    permission_classes = [AllowAny]
+
     def get(self, request):
         server_callback_uri = quote(f"{settings.BACKEND_URL}/api/auth/google/login/callback/", safe="")
 
@@ -45,9 +48,15 @@ class GoogleSignIn(APIView):
         return Response({ "redirect": google_oauth_url }, status=301)
     
 class GoogleTokenExchange(APIView):
+    permission_classes = [AllowAny]
+
     def get(self, request):
         response = None 
+        social_account = None
+        user = None
         redirect_url = ""
+        access_token = ""
+        refresh_token = ""
 
         try:
             code = request.GET.get("code")
@@ -83,7 +92,7 @@ class GoogleTokenExchange(APIView):
                     user = social_account.user
                 except SocialAccount.DoesNotExist:
                     user = User.objects.create(
-                        email=email
+                        username=email
                     )
 
                     user.set_unusable_password()
@@ -95,12 +104,15 @@ class GoogleTokenExchange(APIView):
                         uid=uid
                     )
 
-                    login(request, user)
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+                refresh_token = str(refresh)
 
                 csrf_token = get_token(request=request)
 
                 redirect_url = (
-                    f"{settings.FRONTEND_URL}/home"
+                    f"{settings.FRONTEND_URL}/login#"
+                    f"{settings.ACCESS_TOKEN_NAME}={access_token}"
                 )
                 response = redirect(redirect_url)
 
@@ -111,19 +123,10 @@ class GoogleTokenExchange(APIView):
                     secure=True,
                     samesite="None"
                 )
-
                 response.set_cookie(
-                    key=settings.UID_COOKIE_NAME,
-                    value=uid,
-                    httponly=False,
-                    secure=True,
-                    samesite="None"
-                )
-
-                response.set_cookie(
-                    key=settings.EMAIL_COOKIE_NAME,
-                    value=email,
-                    httponly=False,
+                    key=settings.REFRESH_COOKIE_NAME,
+                    value=refresh_token,
+                    httponly=True,
                     secure=True,
                     samesite="None"
                 )
