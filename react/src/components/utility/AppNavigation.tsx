@@ -32,7 +32,7 @@ const pages: NavigationPage[] = [
 function NavigationItem({ name, link, Icon } : NavigationPage) {
 
     return (
-        <a className="relative h-12 w-full flex flex-row justify-start pl-42 md:pl-32 space-x-2 items-center text-xl font-roboto hover:bg-accent md:text-md" href={link}>
+        <a className="relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto hover:bg-accent md:text-md" href={link}>
             <Icon className="text-text" />
             <p>{name}</p>
         </a>
@@ -44,7 +44,7 @@ export default function AppNavigation({ open } : AppNavigationProps) {
     return (
         <
             nav 
-            className="absolute top-[10vh] left-0 w-full flex-col justify-start border border-accent md:w-1/5 md:left-4/5 overflow-hidden appNavigation" 
+            className="absolute top-[10vh] left-0 w-full flex-col justify-start items-center border border-accent md:w-[15%] md:left-[85%] overflow-hidden appNavigation" 
             style={{opacity: open ? 1 : 0, height: open ? `${pages.length * 3}rem` : 0}}
         >
             {
