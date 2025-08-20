@@ -14,6 +14,8 @@ export default function LoginPage() {
     let errorResponse: string | null = searchParams.get("error")
 
     const hash = window.location.hash.substring(1)
+    window.history.replaceState(null, "", window.location.pathname) // wipe credentials from browser history
+
     const hashParams = new URLSearchParams(hash)
     let accessToken: string | null = hashParams.get(import.meta.env.VITE_ACCESS_TOKEN_NAME)
 
