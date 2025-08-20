@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import GoogleSignIn, ConfirmAuth
+from .views import GoogleSignIn, LogOut
 
 urlpatterns = [
     path('google/init/', GoogleSignIn.as_view(), name="google_init"),
-    path('confirm/', ConfirmAuth.as_view(), name="confirm_auth"),
+    path('logout/', LogOut.as_view(), name="logout"),
 ]
