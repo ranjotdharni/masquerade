@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
+from django.http import JsonResponse
 from django.conf import settings
 
 from rest_framework import status
@@ -25,35 +26,21 @@ User = get_user_model()
 # Create your views here.
 
 @method_decorator(csrf_protect, name="dispatch")
-class LogOut(APIView):
+class SignOut(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request):
-        response = Response({ "message": "Logged Out" }, status=status.HTTP_205_RESET_CONTENT)
+        response = JsonResponse({ "message": "Logged Out" }, status=status.HTTP_200_OK)
 
         try:
             refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
             token = RefreshToken(refresh_token)
             token.blacklist()
         except Exception as e:
-            return Response({ "error": True, "message": "500 Internal Server Error" }, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_400_BAD_REQUEST)
         
-        response.delete_cookie(
-            settings.CSRF_COOKIE_NAME,
-            path="/",
-            httponly=False,
-            secure=True,
-            samesite="None"
-        )
-
-        response.delete_cookie(
-            settings.REFRESH_COOKIE_NAME,
-            path="/",
-            samesite="None",
-            httponly=True,
-            secure=True,
-            domain=settings.HOST_DOMAIN,
-        )
+        response.delete_cookie(settings.CSRF_COOKIE_NAME)
+        response.delete_cookie(settings.REFRESH_COOKIE_NAME)
 
         return response    
 
