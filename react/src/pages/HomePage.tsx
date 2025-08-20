@@ -1,7 +1,8 @@
 import { useState, type MouseEvent } from "react"
 import AppContent from "../components/layout/AppContent"
 import { API_CONFIRM_AUTH } from "../lib/constants"
-import { getCookie } from "../lib/utility/internal"
+import { authenticatedRequest } from "../lib/utility/internal"
+import type { GenericError } from "../lib/types/internal"
 
 export default function HomePage() {
     const [response, setResponse] = useState<string>("")
@@ -9,26 +10,14 @@ export default function HomePage() {
     async function test(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
 
-        const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
+        const response = await authenticatedRequest(API_CONFIRM_AUTH, "POST")
 
-        if (csrfCookie == null) {
-            setResponse("Failed to get cookie")
-            return
+        if (response.error) {
+            setResponse((response as GenericError).message || "Error")
         }
-
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_CONFIRM_AUTH}`, {
-            method: "POST",
-            credentials: 'include',
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)}`,
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrfCookie
-            }
-        }).then(middle => { 
-            return middle.json()
-        }).then(response => {
+        else {
             setResponse(JSON.stringify(response))
-        })
+        }
     }
 
     return (
