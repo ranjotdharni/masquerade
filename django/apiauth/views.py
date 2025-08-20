@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.conf import settings
 
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -24,12 +25,37 @@ User = get_user_model()
 # Create your views here.
 
 @method_decorator(csrf_protect, name="dispatch")
-class ConfirmAuth(APIView):
+class LogOut(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        print("You are authenticated!")
-        return Response({ "success": True }, status=200)
+    def delete(self, request):
+        response = Response({ "message": "Logged Out" }, status=status.HTTP_205_RESET_CONTENT)
+
+        try:
+            refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception as e:
+            return Response({ "error": True, "message": "500 Internal Server Error" }, status=status.HTTP_400_BAD_REQUEST)
+        
+        response.delete_cookie(
+            settings.CSRF_COOKIE_NAME,
+            path="/",
+            httponly=False,
+            secure=True,
+            samesite="None"
+        )
+
+        response.delete_cookie(
+            settings.REFRESH_COOKIE_NAME,
+            path="/",
+            samesite="None",
+            httponly=True,
+            secure=True,
+            domain=settings.HOST_DOMAIN,
+        )
+
+        return response    
 
 class GoogleSignIn(APIView):
     permission_classes = [AllowAny]
@@ -134,7 +160,7 @@ class GoogleTokenExchange(APIView):
                     samesite="None"
                 )
         except Exception as e:
-            print(e.with_traceback())
+            print(e)
             redirect_url = (
                 f"{settings.FRONTEND_URL}/login?"
                 f"error=500"

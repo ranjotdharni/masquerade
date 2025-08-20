@@ -11,13 +11,6 @@ export default function LoginPage() {
     let navigate = useNavigate()
     
     const [searchParams, setSearchParams] = useSearchParams()
-    let errorResponse: string | null = searchParams.get("error")
-
-    const hash = window.location.hash.substring(1)
-    window.history.replaceState(null, "", window.location.pathname) // wipe credentials from browser history
-
-    const hashParams = new URLSearchParams(hash)
-    let accessToken: string | null = hashParams.get(import.meta.env.VITE_ACCESS_TOKEN_NAME)
 
     const [loader, setLoader] = useState<boolean>(false)
     const [error, setError] = useError()
@@ -33,6 +26,14 @@ export default function LoginPage() {
     }
 
     useEffect(() => {
+        let errorResponse: string | null = searchParams.get("error")
+
+        const hash = window.location.hash.substring(1)
+        window.history.replaceState(null, "", window.location.pathname) // wipe credentials from browser history
+
+        const hashParams = new URLSearchParams(hash)
+        let accessToken: string | null = hashParams.get(import.meta.env.VITE_ACCESS_TOKEN_NAME)
+
         if (errorResponse) {
             handleServerError(errorResponse)
         }
@@ -40,7 +41,7 @@ export default function LoginPage() {
             setLoader(true)
             handleTokens(accessToken)
         }
-    }, [errorResponse, accessToken])
+    }, [])
 
     return (
         <section className="mt-[10vh] w-full h-[85vh] bg-background flex justify-center">

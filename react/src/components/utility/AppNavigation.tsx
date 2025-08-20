@@ -1,5 +1,9 @@
-import { List, Settings2, UserPen, type LucideIcon } from "lucide-react"
-import { PAGE_HOME } from "../../lib/constants"
+import { List, LogOut, Settings2, UserPen, type LucideIcon } from "lucide-react"
+import { API_LOGOUT, PAGE_HOME, PAGE_LOGIN } from "../../lib/constants"
+import type { MouseEvent } from "react"
+import { useNavigate } from "react-router-dom"
+import { authenticatedRequest } from "../../lib/utility/internal"
+import type { GenericError } from "../../lib/types/internal"
 
 type AppNavigationProps = {
     open: boolean
@@ -9,6 +13,7 @@ type NavigationPage = {
     name: string
     link: string
     Icon: LucideIcon
+    callback?: (event: MouseEvent<HTMLAnchorElement>) => void
 }
 
 const pages: NavigationPage[] = [
@@ -27,12 +32,34 @@ const pages: NavigationPage[] = [
         link: `/${PAGE_HOME}`,
         Icon: Settings2
     },
+    {
+        name: "Sign Out",
+        link: `/${PAGE_LOGIN}`,
+        Icon: LogOut,
+        callback: signOut
+    },
 ]
 
-function NavigationItem({ name, link, Icon } : NavigationPage) {
+async function signOut(event: MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault()
+
+    const response = await authenticatedRequest(API_LOGOUT, "DELETE")
+
+    if (response.error) {
+        console.log((response as GenericError).message ? (response as GenericError).message : "500 Internal Server Error")
+        return
+    }
+
+    localStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
+    window.location.href = `/${PAGE_LOGIN}`
+}
+
+function NavigationItem({ name, link, Icon, callback } : NavigationPage) {
+
+    const navigate = useNavigate()
 
     return (
-        <a className="relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto hover:bg-accent md:text-md" href={link}>
+        <a onClick={ callback !== undefined ? (e) => { callback(e) } : () => { navigate(link) } } className="z-20 hover:bg-accent hover:cursor-pointer relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto md:text-md">
             <Icon className="text-text" />
             <p>{name}</p>
         </a>
@@ -49,7 +76,7 @@ export default function AppNavigation({ open } : AppNavigationProps) {
         >
             {
                 pages.map((page, index) => {
-                    return <NavigationItem key={`NAVIGATION_ITEM_${index}`} name={page.name} link={page.link} Icon={page.Icon} />
+                    return <NavigationItem key={`NAVIGATION_ITEM_${index}`} name={page.name} link={page.link} Icon={page.Icon} callback={page.callback} />
                 })
             }
         </nav>
