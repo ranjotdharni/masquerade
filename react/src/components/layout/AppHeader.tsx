@@ -1,7 +1,7 @@
-import { Menu } from "lucide-react"
 import { ICON_LOGO } from "../../lib/constants"
 import { useState, type MouseEvent } from "react"
 import AppNavigation from "../utility/AppNavigation"
+import NavigationOpener from "../utility/animated/NavigationOpener"
 
 export default function AppHeader() {
     const [navigationOpen, setNavigationOpen] = useState<boolean>(false)
@@ -18,8 +18,8 @@ export default function AppHeader() {
                 <h1 className="text-xl md:text-3xl text-text font-jbm-bold">Masquerade</h1>
             </div>
 
-            <button onClick={toggleNavigation} className="md:h-1/2 md:aspect-square">
-                <Menu className="w-full h-full text-text hover:text-accent hover:cursor-pointer" />
+            <button onClick={toggleNavigation} className="h-1/2 aspect-square hover:cursor-pointer">
+                <NavigationOpener open={navigationOpen} />
             </button>
 
             <AppNavigation open={navigationOpen} />
