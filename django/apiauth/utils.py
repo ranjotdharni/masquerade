@@ -5,7 +5,26 @@ from backend.helpers import GenericError
 from django.conf import settings
 from jwt.algorithms import RSAAlgorithm
 
+from rest_framework_simplejwt.tokens import UntypedToken
+from django.contrib.auth import get_user_model
+
 GOOGLE_CERTS_URL = "https://www.googleapis.com/oauth2/v3/certs"
+
+User = get_user_model()
+
+def get_user_from_access_token(token):
+    try:
+        validated_token = UntypedToken(token)
+    except Exception as e:
+        return GenericError(message="Could not decode token.").to_dict()
+
+    user_id = validated_token['user_id']
+
+    try:
+        user = User.objects.get(id=user_id)
+        return user
+    except User.DoesNotExist:
+        return GenericError(message="User not found.").to_dict()
 
 def decode_google_jwt(id_token):
     certs_response = requests.get(GOOGLE_CERTS_URL)

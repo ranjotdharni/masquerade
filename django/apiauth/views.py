@@ -18,7 +18,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt
+from .utils import decode_google_jwt, get_user_from_access_token
 from .models import SocialAccount
 
 User = get_user_model()
@@ -26,8 +26,17 @@ User = get_user_model()
 # Create your views here.
 
 @method_decorator(csrf_protect, name="dispatch")
+class TestAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        response = Response({ "success": "true", "message": "Test Succeeded" }, status.HTTP_200_OK)
+        return response
+
+@method_decorator(csrf_protect, name="dispatch")
 class RefreshTokens(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
     def post(self, request):
         response = None
@@ -38,19 +47,24 @@ class RefreshTokens(APIView):
             return response
         
         try:
-            refresh = RefreshToken(refresh_token)
-            new_access_token = str(refresh.access_token)
+            old_refresh = RefreshToken(refresh_token)
+            new_access_token = str(old_refresh.access_token)
+            old_refresh.blacklist()
 
-            response = Response({ f"${settings.ACCESS_TOKEN_NAME}": new_access_token }, status=status.HTTP_200_OK)
+            user = get_user_from_access_token(new_access_token)
 
-            if getattr(settings, "SIMPLE_JWT", {}).get("ROTATE_REFRESH_TOKENS", False):
-                response.set_cookie(
-                    key=settings.REFRESH_COOKIE_NAME,
-                    value=str(refresh),
-                    httponly=True,
-                    secure=True,
-                    samesite="None"
-                )
+            new_refresh_token = RefreshToken.for_user(user)
+            refresh = str(new_refresh_token)
+
+            response = Response({ f"{settings.ACCESS_TOKEN_NAME}": new_access_token }, status=status.HTTP_200_OK)
+
+            response.set_cookie(
+                key=settings.REFRESH_COOKIE_NAME,
+                value=str(refresh),
+                httponly=True,
+                secure=True,
+                samesite="None"
+            )
         except Exception as e:
             response = Response({ "error": "true", "message": "Refresh token invalid." }, status=status.HTTP_401_UNAUTHORIZED)
 

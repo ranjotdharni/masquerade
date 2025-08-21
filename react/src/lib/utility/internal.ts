@@ -1,4 +1,4 @@
-import { API_REFRESH_TOKENS, HTTP_401_UNAUTHORIZED, PAGE_LOGIN, RESERVED_AUTH_STATUSES } from "../constants";
+import { API_REFRESH_TOKENS, HTTP_401_UNAUTHORIZED, PAGE_LOGIN, RESERVED_AUTH_STATUSES } from "../constants"
 import type { GenericError } from "../types/internal"
 
 export function getCookie(name: string): string | null {
@@ -15,6 +15,11 @@ export function getCookie(name: string): string | null {
         }
     }
     return cookieValue;
+}
+
+export function clientSignOut() {
+    localStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
+    window.location.href = `/${PAGE_LOGIN}`
 }
 
 export async function authenticatedRequest(endpoint: string, method: "POST" | "PUT" | "DELETE", body?: Record<string | number, string | number | boolean>, refresh: boolean = true): Promise<Record<string | number, string | number | boolean> | GenericError> {
@@ -58,7 +63,7 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                             const refreshResponse = await authenticatedRequest(API_REFRESH_TOKENS, "POST", undefined, false)
 
                             if (refreshResponse.error) {
-                                window.location.href = `/${PAGE_LOGIN}`
+                                clientSignOut()
                                 return refreshResponse as GenericError
                             }
                             else {
@@ -67,7 +72,7 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                             }
                         }
                         else {
-                            window.location.href = `/${PAGE_LOGIN}`
+                            clientSignOut()
                             return {
                                 error: true,
                                 message: "Log back in."
@@ -75,7 +80,7 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                         }
                         break;
                     default:
-                        window.location.href = `/${PAGE_LOGIN}`
+                        clientSignOut()
                         return {
                             error: true,
                             message: "Log back in."
