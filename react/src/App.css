@@ -69,3 +69,17 @@
 .appNavigation {
   transition: height 0.25s ease, opacity 0.35s ease;
 }
+
+.appButton {
+  background-color: var(--color-primary);
+  padding-block: 0.25em;
+  padding-inline: 1.25em;
+  border-radius: 0.25em;
+  color: var(--color-text);
+  transition: color 0.1s linear;
+
+  &:hover {
+    cursor: pointer;
+    color: var(--color-background);
+  }
+}
