@@ -2,7 +2,7 @@ import { List, LogOut, Settings2, UserPen, type LucideIcon } from "lucide-react"
 import { API_LOGOUT, PAGE_HOME, PAGE_LOGIN } from "../../lib/constants"
 import type { MouseEvent } from "react"
 import { useNavigate } from "react-router-dom"
-import { authenticatedRequest } from "../../lib/utility/internal"
+import { authenticatedRequest, clientSignOut } from "../../lib/utility/internal"
 import type { GenericError } from "../../lib/types/internal"
 
 type AppNavigationProps = {
@@ -50,8 +50,7 @@ async function signOut(event: MouseEvent<HTMLAnchorElement>) {
         return
     }
 
-    localStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
-    window.location.href = `/${PAGE_LOGIN}`
+    clientSignOut()
 }
 
 function NavigationItem({ name, link, Icon, callback } : NavigationPage) {
