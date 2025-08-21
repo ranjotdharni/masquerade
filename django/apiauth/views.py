@@ -26,6 +26,37 @@ User = get_user_model()
 # Create your views here.
 
 @method_decorator(csrf_protect, name="dispatch")
+class RefreshTokens(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        response = None
+
+        refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
+        if not refresh_token:
+            response = Response({ "error": "true", "message": "Refresh token missing." }, status=status.HTTP_401_UNAUTHORIZED)
+            return response
+        
+        try:
+            refresh = RefreshToken(refresh_token)
+            new_access_token = str(refresh.access_token)
+
+            response = Response({ f"${settings.ACCESS_TOKEN_NAME}": new_access_token }, status=status.HTTP_200_OK)
+
+            if getattr(settings, "SIMPLE_JWT", {}).get("ROTATE_REFRESH_TOKENS", False):
+                response.set_cookie(
+                    key=settings.REFRESH_COOKIE_NAME,
+                    value=str(refresh),
+                    httponly=True,
+                    secure=True,
+                    samesite="None"
+                )
+        except Exception as e:
+            response = Response({ "error": "true", "message": "Refresh token invalid." }, status=status.HTTP_401_UNAUTHORIZED)
+
+        return response
+
+@method_decorator(csrf_protect, name="dispatch")
 class SignOut(APIView):
     permission_classes = [IsAuthenticated]
 
