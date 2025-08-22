@@ -1,5 +1,7 @@
 @import "../App.css";
 
+/* Navigation Open Button */
+
 .navigationOpener {
     width: 100%;
     height: 100%;
@@ -51,4 +53,21 @@
 .navigationClosed span {
     width: 100%;
     height: 12.5%;
+}
+
+
+/* Bounce Logo (Page Loader) */
+
+.bounceDelay {
+    animation: bounceDelay 2s linear infinite;
+}
+
+@keyframes bounceDelay {
+    0% { transform: translateY(0px); }
+    9% { transform: translateY(-10px); }
+    18% { transform: translateY(0px); }
+    27% { transform: translateY(-10px); }
+    36% { transform: translateY(0px); }
+    45% { transform: translateY(-10px); }
+    54% { transform: translateY(0px); }
 }

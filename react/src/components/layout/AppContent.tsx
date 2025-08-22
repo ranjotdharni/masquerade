@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from "react"
 
-
 export default function AppContent({ children, style } : { children: ReactNode, style?: CSSProperties }) {
 
     return (
