@@ -1,4 +1,4 @@
-import { ICON_LOGO_STICKER, PAGE_HOME } from "../lib/constants"
+import { API_CONFIRM_AUTH, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
 import LoginPageImage from "../assets/svg/loginPageImage.svg"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import SignInForm from "../components/LoginPage/SignInForm"
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import SignUpForm from "../components/LoginPage/SignUpForm"
 import useError from "../lib/hooks/useError"
 import Loader from "../components/utility/Loader"
+import { getCookie } from "../lib/utility/internal"
 
 export default function LoginPage() {
     let navigate = useNavigate()
@@ -41,6 +42,38 @@ export default function LoginPage() {
             setLoader(true)
             handleTokens(accessToken)
         }
+    }, [])
+
+    useEffect(() => {
+        async function performAuthCheck() {
+            const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
+            const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
+                
+            if (csrfCookie !== null && accessToken !== null) {
+                try {
+                    await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_CONFIRM_AUTH}`, {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Authorization": `Bearer ${accessToken}`,
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": csrfCookie
+                        },
+                    }).then(middle => {
+                        return RESERVED_AUTH_STATUSES.findIndex(item => item.status === middle.status)
+                    }).then(result => {
+                        if (result === -1)
+                            navigate(`/${PAGE_HOME}`)
+                    })
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+
+        if (import.meta.env.VITE_CONFIRM_AUTH === "true")
+            performAuthCheck()
     }, [])
 
     return (

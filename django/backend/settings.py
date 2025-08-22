@@ -29,6 +29,9 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
+ACTIVE_ENVIRONMENT = os.getenv("ACTIVE_ENVIRONMENT")
+PRODUCTION_ENVIRONMENT_NAME = os.getenv("PRODUCTION_ENVIRONMENT_NAME")
+
 BACKEND_URL = os.getenv("BACKEND_URL")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 HOST_DOMAIN = os.getenv("HOST_DOMAIN")
@@ -43,11 +46,11 @@ GITHUB_AUTH_ID = 2
 AUTH_ID_LIST = {
     BASIC_AUTH_ID: "Basic",
     GOOGLE_AUTH_ID: "Google",
-    GITHUB_AUTH_ID: "Github"
+    GITHUB_AUTH_ID: "Github",
 }
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("ACTIVE_ENVIRONMENT") != "prod"
+DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
 
 ALLOWED_HOSTS = [HOST_DOMAIN]
 
