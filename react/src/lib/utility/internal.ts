@@ -58,9 +58,9 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
             
             if (reservedAuthStatusIndex !== -1) {
                 switch (middle.status) {
-                    case HTTP_401_UNAUTHORIZED:
+                    case HTTP_401_UNAUTHORIZED: // Attempt to refresh access token on Unauthorized response
                         if (refresh) {
-                            const refreshResponse = await authenticatedRequest(API_REFRESH_TOKENS, "POST", undefined, false)
+                            const refreshResponse = await authenticatedRequest(API_REFRESH_TOKENS, "POST", undefined, false)    // refresh = false, only attempt to refresh access token once
 
                             if (refreshResponse.error) {
                                 clientSignOut()
@@ -68,10 +68,10 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                             }
                             else {
                                 localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, (refreshResponse as Record<string | number, string | number | boolean>)[import.meta.env.VITE_ACCESS_TOKEN_NAME] as string)
-                                return await authenticatedRequest(endpoint, method, undefined, false)
+                                return await authenticatedRequest(endpoint, method, undefined, false)   // Re-attempt original request (only once, refresh = false) if token refreshed successfully
                             }
                         }
-                        else {
+                        else {  // token refresh failed once, log user out
                             clientSignOut()
                             return {
                                 error: true,
@@ -79,7 +79,7 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                             } as GenericError
                         }
                         break;
-                    default:
+                    default:    // reserved responses other than the above handled cases always log user out
                         clientSignOut()
                         return {
                             error: true,

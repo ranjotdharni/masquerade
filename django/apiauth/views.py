@@ -26,11 +26,11 @@ User = get_user_model()
 # Create your views here.
 
 @method_decorator(csrf_protect, name="dispatch")
-class TestAPI(APIView):
+class ConfirmAuth(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        response = Response({ "success": "true", "message": "Test Succeeded" }, status.HTTP_200_OK)
+        response = Response({ "success": "true", "message": "User is logged in." }, status.HTTP_200_OK)
         return response
 
 @method_decorator(csrf_protect, name="dispatch")
