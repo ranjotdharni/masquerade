@@ -195,7 +195,7 @@ class GoogleTokenExchange(APIView):
             print(e)
             redirect_url = (
                 f"{settings.FRONTEND_URL}/login?"
-                f"error=500"
+                f"error=true"
             )
             response = redirect(redirect_url)
 
