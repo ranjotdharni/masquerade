@@ -17,8 +17,8 @@ export default function LoginPage() {
     const [error, setError] = useError()
     const [signUp, setSignUp] = useState<boolean>(false)
 
-    function handleServerError(errorResponse: string) {
-        alert(`Error: ${errorResponse}`)
+    function handleServerError() {
+        setError("500 Internal Server Error")
     }
 
     function handleTokens(accessToken: string) {
@@ -36,7 +36,7 @@ export default function LoginPage() {
         let accessToken: string | null = hashParams.get(import.meta.env.VITE_ACCESS_TOKEN_NAME)
 
         if (errorResponse) {
-            handleServerError(errorResponse)
+            handleServerError()
         }
         else if (accessToken) {
             setLoader(true)
