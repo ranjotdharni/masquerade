@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react"
-import { API_GOOGLE_LOGIN } from "../../lib/constants"
+import { API_GITHUB_LOGIN, API_GOOGLE_LOGIN } from "../../lib/constants"
 
 type SignInFormProps = {
     setError: (error: string) => void
@@ -11,6 +11,17 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
     async function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
         const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`)
+        const response = await result.json()
+
+        if (response.redirect)
+            window.location.href = response.redirect
+        else
+            setError("500 Internal Server Error")
+    }
+
+    async function signInWithGithub(event: MouseEvent<HTMLButtonElement>) {
+        event.preventDefault()
+        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`)
         const response = await result.json()
 
         if (response.redirect)
@@ -51,6 +62,7 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
                     </button>
 
                     <button
+                        onClick={signInWithGithub}
                         className="w-full max-w-xs font-jbm shadow-sm rounded-lg py-3 bg-accent text-text hover:text-primary flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:cursor-pointer hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
                         <div className="bg-white p-1 rounded-full">
                             <svg className="w-6" viewBox="0 0 32 32">
