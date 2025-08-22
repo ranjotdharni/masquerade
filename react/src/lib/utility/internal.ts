@@ -26,14 +26,14 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
     const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
     const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
     
-    if (csrfCookie == null) {
+    if (csrfCookie === null) {
         return {
             error: true,
             message: "Failed to get CSRF Token",
         } as GenericError
     }
 
-    if (accessToken == null) {
+    if (accessToken === null) {
         return {
             error: true,
             message: "Failed to get Access Token",
