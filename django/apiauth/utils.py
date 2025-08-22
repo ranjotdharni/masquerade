@@ -45,3 +45,21 @@ def decode_google_jwt(id_token):
             continue
     
     return GenericError(message="Google-issued tokens are invalid.").to_dict()
+
+def decode_github_token_response(response):
+    try:
+        token_content = response._content.decode("utf-8")
+        
+        items = token_content.split("&")
+        github_access_token_array = items[0].split("=")
+
+        github_access_token = github_access_token_array[1]
+        
+        headers = { "Authorization": f"Bearer {github_access_token}" }
+        response = requests.get("https://api.github.com/user", headers=headers)
+        payload = response.json()
+
+        return payload
+    except Exception as e:
+        print(e)
+        return GenericError(message="Could not decode token.").to_dict()

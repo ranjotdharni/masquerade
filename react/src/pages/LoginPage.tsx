@@ -1,4 +1,4 @@
-import { API_CONFIRM_AUTH, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
+import { API_CONFIRM_AUTH, AUTH_ID_LIST, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
 import LoginPageImage from "../assets/svg/loginPageImage.svg"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import SignInForm from "../components/LoginPage/SignInForm"
@@ -17,8 +17,32 @@ export default function LoginPage() {
     const [error, setError] = useError()
     const [signUp, setSignUp] = useState<boolean>(false)
 
-    function handleServerError() {
-        setError("500 Internal Server Error")
+    function handleServerError(error: string) {
+        const duplicateError: number = Number(error)
+
+        if (isNaN(duplicateError)) {
+            setError("500 Internal Server Error")
+            return
+        }
+
+        if (duplicateError === DUPLICATE_USER_CODE) {
+            const providerResponse: string | null = searchParams.get("provider")
+
+            if (!providerResponse) {
+                setError("500 Internal Server Error")
+                return
+            }
+
+            const provider: number = Number(providerResponse)
+
+            if (isNaN(provider) || !AUTH_ID_LIST[provider]) {
+                setError("500 Internal Server Error")
+                return
+            }
+
+            setError(`Sign in with ${AUTH_ID_LIST[provider]}`)
+            return
+        }
     }
 
     function handleTokens(accessToken: string) {
@@ -29,16 +53,18 @@ export default function LoginPage() {
     useEffect(() => {
         let errorResponse: string | null = searchParams.get("error")
 
+        if (errorResponse) {
+            handleServerError(errorResponse)
+            return
+        }
+
         const hash = window.location.hash.substring(1)
         window.history.replaceState(null, "", window.location.pathname) // wipe credentials from browser history
 
         const hashParams = new URLSearchParams(hash)
         let accessToken: string | null = hashParams.get(import.meta.env.VITE_ACCESS_TOKEN_NAME)
-
-        if (errorResponse) {
-            handleServerError()
-        }
-        else if (accessToken) {
+        
+        if (accessToken) {
             setLoader(true)
             handleTokens(accessToken)
         }

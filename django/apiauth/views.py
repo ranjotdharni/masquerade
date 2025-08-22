@@ -12,13 +12,14 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.conf import settings
+from django.db import IntegrityError
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt, get_user_from_access_token
+from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token
 from .models import SocialAccount
 
 User = get_user_model()
@@ -139,9 +140,10 @@ class GoogleTokenExchange(APIView):
             decryption_result = decode_google_jwt(id_token=id_token)
 
             if ("error" in decryption_result):
+                print(decryption_result.message)
                 redirect_url = (
                     f"{settings.FRONTEND_URL}/login?"
-                    f"error={decryption_result.message}"
+                    f"error=500_INTERNAL_SERVER_ERROR"
                 )
             else:
                 # log user in here
@@ -191,11 +193,133 @@ class GoogleTokenExchange(APIView):
                     secure=True,
                     samesite="None"
                 )
+        except IntegrityError as e:
+            user = User.objects.get(username=email)
+            social_account = SocialAccount.objects.get(user=user)
+
+            provider = social_account.provider
+
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"error={settings.DUPLICATE_USER_CODE}"
+                f"&provider={provider}"
+            )
+            response = redirect(redirect_url)
         except Exception as e:
             print(e)
             redirect_url = (
                 f"{settings.FRONTEND_URL}/login?"
-                f"error=true"
+                f"error=500_INTERNAL_SERVER_ERROR"
+            )
+            response = redirect(redirect_url)
+
+        return response
+    
+class GithubSignIn(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        server_callback_uri = quote(f"{settings.BACKEND_URL}/api/auth/github/login/callback/", safe="")
+
+        github_oauth_url = (
+            f"https://github.com/login/oauth/authorize"
+            f"?client_id={settings.GITHUB_CLIENT_ID}"
+            f"&amp;redirect_uri={server_callback_uri}"
+            f"&amp;scope=user"
+        )
+
+        return Response({ "redirect": github_oauth_url }, status=301)
+    
+class GithubTokenExchange(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        response = None 
+        social_account = None
+        user = None
+        redirect_url = f"{settings.FRONTEND_URL}/login"
+        access_token = ""
+        refresh_token = ""
+
+        try:
+            code = request.GET.get("code")
+
+            github_token_url = f"https://github.com/login/oauth/access_token?client_id={settings.GITHUB_CLIENT_ID}&amp;client_secret={settings.GITHUB_CLIENT_SECRET}&amp;code={code}"
+
+            token_response = requests.get(github_token_url)
+            decryption_result = decode_github_token_response(response=token_response)
+
+            if ("error" in decryption_result):
+                print(decryption_result.message)
+                redirect_url = (
+                    f"{settings.FRONTEND_URL}/login?"
+                    f"error=500_INTERNAL_SERVER_ERROR"
+                )
+            else:
+                # log user in here
+                email = decryption_result["email"]
+                uid = decryption_result["id"]
+
+                try:
+                    social_account = SocialAccount.objects.get(provider=settings.GITHUB_AUTH_ID, uid=uid)
+                    user = social_account.user
+                except SocialAccount.DoesNotExist:
+                    user = User.objects.create(
+                        username=email
+                    )
+
+                    user.set_unusable_password()
+                    user.save()
+
+                    social_account = SocialAccount.objects.create(
+                        user=user,
+                        provider=settings.GITHUB_AUTH_ID,
+                        uid=uid
+                    )
+
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+                refresh_token = str(refresh)
+
+                csrf_token = get_token(request=request)
+
+                redirect_url = (
+                    f"{settings.FRONTEND_URL}/login#"
+                    f"{settings.ACCESS_TOKEN_NAME}={access_token}"
+                )
+                response = redirect(redirect_url)
+
+                response.set_cookie(
+                    key=settings.CSRF_COOKIE_NAME,
+                    value=csrf_token,
+                    httponly=False,
+                    secure=True,
+                    samesite="None"
+                )
+                response.set_cookie(
+                    key=settings.REFRESH_COOKIE_NAME,
+                    value=refresh_token,
+                    httponly=True,
+                    secure=True,
+                    samesite="None"
+                )
+        except IntegrityError as e:
+            user = User.objects.get(username=email)
+            social_account = SocialAccount.objects.get(user=user)
+
+            provider = social_account.provider
+
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"error={settings.DUPLICATE_USER_CODE}"
+                f"&provider={provider}"
+            )
+            response = redirect(redirect_url)
+        except Exception as e:
+            print(e)
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"error=500_INTERNAL_SERVER_ERROR"
             )
             response = redirect(redirect_url)
 

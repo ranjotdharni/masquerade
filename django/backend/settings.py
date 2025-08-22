@@ -39,15 +39,20 @@ HOST_DOMAIN = os.getenv("HOST_DOMAIN")
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 
+GITHUB_CLIENT_ID = os.getenv('GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = os.getenv('GITHUB_CLIENT_SECRET')
+
 BASIC_AUTH_ID = 0
 GOOGLE_AUTH_ID = 1
 GITHUB_AUTH_ID = 2
 
 AUTH_ID_LIST = {
-    BASIC_AUTH_ID: "Basic",
+    BASIC_AUTH_ID: "Email/Password",
     GOOGLE_AUTH_ID: "Google",
     GITHUB_AUTH_ID: "Github",
 }
+
+DUPLICATE_USER_CODE = 409
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
@@ -91,6 +96,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     'apiauth',
 ]
 
@@ -194,7 +200,15 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': [
             'email'
         ]
-    }
+    },
+    'github': {
+        'APP': {
+            'client_id': GITHUB_CLIENT_ID,
+            'secret': GITHUB_CLIENT_SECRET,
+            'key': '',
+            'redirect_uri': f'{BACKEND_URL}/api/auth/github/login/callback/',
+        }
+    },
 }
 
 
