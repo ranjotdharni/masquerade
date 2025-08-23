@@ -1,4 +1,5 @@
 import requests
+import uuid
 
 from urllib.parse import quote
 
@@ -88,7 +89,74 @@ class SignOut(APIView):
         response.delete_cookie(settings.CSRF_COOKIE_NAME)
         response.delete_cookie(settings.REFRESH_COOKIE_NAME)
 
-        return response    
+        return response  
+
+@method_decorator(csrf_protect, name="dispatch")
+class BasicSignUp(APIView):
+      permission_classes = [AllowAny]
+
+      def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if not email or not password:
+            return Response({ "error": "true", "message": "Email and/or Password missing." }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.create_user(
+                username=email,
+                password=password,
+            )
+            user.save()
+
+            social_account = SocialAccount.objects.create(
+                user=user,
+                provider=settings.BASIC_AUTH_ID,
+                uid=str(uuid.uuid4())
+            )
+
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
+            csrf_token = get_token(request=request)
+
+            response = Response({ "success": "true", "message": "Account Created.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
+            response.set_cookie(
+                key=settings.CSRF_COOKIE_NAME,
+                value=csrf_token,
+                httponly=False,
+                secure=True,
+                samesite="None"
+            )
+            response.set_cookie(
+                key=settings.REFRESH_COOKIE_NAME,
+                value=refresh_token,
+                httponly=True,
+                secure=True,
+                samesite="None"
+            )
+
+            return response
+        except IntegrityError as e:
+            user = User.objects.get(username=email)
+            social_account = SocialAccount.objects.get(user=user)
+
+            provider = social_account.provider
+
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"error={settings.DUPLICATE_USER_CODE}"
+                f"&provider={provider}"
+            )
+            return redirect(redirect_url)
+        except Exception as e:
+            print(e)
+            redirect_url = (
+                f"{settings.FRONTEND_URL}/login?"
+                f"error=500_INTERNAL_SERVER_ERROR"
+            )
+            return redirect(redirect_url)
 
 class GoogleSignIn(APIView):
     permission_classes = [AllowAny]
