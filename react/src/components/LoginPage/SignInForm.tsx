@@ -1,5 +1,6 @@
-import type { MouseEvent } from "react"
-import { API_GITHUB_LOGIN, API_GOOGLE_LOGIN } from "../../lib/constants"
+import { useState, type MouseEvent } from "react"
+import { API_BASIC_SIGNIN, API_GITHUB_LOGIN, API_GOOGLE_LOGIN, PAGE_HOME } from "../../lib/constants"
+import { useNavigate } from "react-router-dom"
 
 type SignInFormProps = {
     setError: (error: string) => void
@@ -7,9 +8,44 @@ type SignInFormProps = {
 }
 
 export default function SignInForm({ setError, setLoader } : SignInFormProps) {
+    const navigate = useNavigate()
+
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+
+    async function basicSignIn(event: MouseEvent<HTMLFormElement>) {
+        event.preventDefault()
+        setLoader(true)
+
+        const checkEmail: string = email.trim()
+        const checkPassword: string = password.trim()
+
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_BASIC_SIGNIN}`, {
+            method: "POST",
+            body: JSON.stringify({
+                email: checkEmail,
+                password: checkPassword
+            })
+        }).then(middle => {
+            return middle.json()
+        }).then(result => {
+            return result
+        })
+
+        if (response.error) {
+            setError(response.message)
+        }
+        else {
+            localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, response[import.meta.env.VITE_ACCESS_TOKEN_NAME])
+            navigate(`/${PAGE_HOME}`)
+        }
+
+        setLoader(false)
+    }
 
     async function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
+        setLoader(true)
         const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`)
         const response = await result.json()
 
@@ -17,10 +53,13 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
             window.location.href = response.redirect
         else
             setError("500 Internal Server Error")
+
+        setLoader(false)
     }
 
     async function signInWithGithub(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
+        setLoader(true)
         const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`)
         const response = await result.json()
 
@@ -28,6 +67,8 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
             window.location.href = response.redirect
         else
             setError("500 Internal Server Error")
+
+        setLoader(false)
     }
 
     return (
@@ -83,22 +124,26 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
                     </div>
                 </div>
 
-                <div className="mx-auto max-w-xs">
+                <form onSubmit={basicSignIn} className="mx-auto max-w-xs">
                     <input
+                        value={email}
+                        onChange={ e => { setEmail(e.target.value) } }
                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white"
                         type="email" placeholder="Email" />
                     <input
+                        value={password}
+                        onChange={ e => { setPassword(e.target.value) } }
                         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white mt-5"
                         type="password" placeholder="Password" />
                     <button
-                        onClick={() => { setLoader(true) }}
+                        type="submit"
                         className="mt-5 tracking-wide font-semibold bg-text text-accent w-full py-4 rounded-lg hover:text-white hover:bg-primary hover:cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                         
                         <span className="ml-3 font-jbm">
                             Sign In
                         </span>
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     )

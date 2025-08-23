@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.conf import settings
@@ -91,7 +91,55 @@ class SignOut(APIView):
 
         return response  
 
-@method_decorator(csrf_protect, name="dispatch")
+class BasicSignIn(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if not email or not password:
+            return Response({ "error": "true", "message": "Email and/or Password missing." }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(email=email)
+            if not user.has_usable_password():
+                social_account = SocialAccount.objects.get(user=user)
+                provider = social_account.provider
+                provider_name = settings.AUTH_ID_LIST[provider]
+
+                return Response({ "error": "true", "message": f"Please sign in with ${provider_name}." }, status=status.HTTP_403_FORBIDDEN)
+        except User.DoesNotExist:
+            pass  # let authenticate handle the generic failure
+        
+        user = authenticate(request, username=email, password=password)
+
+        if user is None:
+            return Response({ "error": "true", "message": "Incorrect email or password." }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+        csrf_token = get_token(request=request)
+
+        response = Response({ "success": "true", "message": "Logged in.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
+        response.set_cookie(
+            key=settings.CSRF_COOKIE_NAME,
+            value=csrf_token,
+            httponly=False,
+            secure=True,
+            samesite="None"
+        )
+        response.set_cookie(
+            key=settings.REFRESH_COOKIE_NAME,
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="None"
+        )
+
+        return response
+
 class BasicSignUp(APIView):
       permission_classes = [AllowAny]
 
