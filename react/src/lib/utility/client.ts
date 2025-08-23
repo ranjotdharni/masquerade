@@ -11,8 +11,13 @@ export function isValidEmail(email: string): GenericError | undefined {
     }
 }
 
-export function isValidPassword(password: string): GenericError | undefined {
+export function isValidPassword(password: string, confirm: string): GenericError | undefined {
     const error: GenericError = { error: true }
+
+    if (password !== confirm) {
+        error.message = 'Passwords do not match.'
+        return error
+    }
 
     if (password.length < PASSWORD_MIN_LENGTH) {
         error.message = `Password must be at least ${PASSWORD_MIN_LENGTH} characters.`

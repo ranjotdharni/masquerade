@@ -6,6 +6,7 @@ export const PAGE_HOME: string = 'home' // child routes (nested in app layout) s
 export const API_GOOGLE_LOGIN: string = '/api/auth/google/init/'
 export const API_GITHUB_LOGIN: string = '/api/auth/github/init/'
 export const API_BASIC_SIGNUP: string = '/api/auth/basic/signup/'
+export const API_BASIC_SIGNIN: string = '/api/auth/basic/signin/'
 export const API_LOGOUT: string = '/api/auth/signout/'
 export const API_REFRESH_TOKENS: string = '/api/auth/refresh/'
 export const API_CONFIRM_AUTH: string = '/api/auth/confirm/'

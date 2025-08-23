@@ -1,11 +1,12 @@
 from django.urls import path
 
-from .views import GoogleSignIn, GithubSignIn, BasicSignUp, SignOut, RefreshTokens, ConfirmAuth
+from .views import GoogleSignIn, GithubSignIn, BasicSignUp, BasicSignIn, SignOut, RefreshTokens, ConfirmAuth
 
 urlpatterns = [
     path('google/init/', GoogleSignIn.as_view(), name="google_init"),
     path('github/init/', GithubSignIn.as_view(), name="github_init"),
     path('basic/signup/', BasicSignUp.as_view(), name="basic_signup"),
+    path('basic/signin/', BasicSignIn.as_view(), name="basic_signin"),
     path('signout/', SignOut.as_view(), name="sign_out"),
     path('refresh/', RefreshTokens.as_view(), name="refresh_tokens"),
     path('confirm/', ConfirmAuth.as_view(), name="confirm_auth"),
