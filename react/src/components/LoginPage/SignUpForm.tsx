@@ -10,7 +10,7 @@ type SignUpFormProps = {
 }
 
 export default function SignUpForm({ setError, setLoader } : SignUpFormProps) {
-    const navigate = useNavigate()
+    let navigate = useNavigate()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -36,6 +36,10 @@ export default function SignUpForm({ setError, setLoader } : SignUpFormProps) {
         else {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_BASIC_SIGNUP}`, {
                 method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({
                     email: checkEmail,
                     password: checkPassword

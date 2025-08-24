@@ -8,7 +8,7 @@ type SignInFormProps = {
 }
 
 export default function SignInForm({ setError, setLoader } : SignInFormProps) {
-    const navigate = useNavigate()
+    let navigate = useNavigate()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -22,6 +22,10 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
 
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_BASIC_SIGNIN}`, {
             method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 email: checkEmail,
                 password: checkPassword

@@ -102,13 +102,13 @@ class BasicSignIn(APIView):
             return Response({ "error": "true", "message": "Email and/or Password missing." }, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(username=email)
             if not user.has_usable_password():
                 social_account = SocialAccount.objects.get(user=user)
                 provider = social_account.provider
                 provider_name = settings.AUTH_ID_LIST[provider]
 
-                return Response({ "error": "true", "message": f"Please sign in with ${provider_name}." }, status=status.HTTP_403_FORBIDDEN)
+                return Response({ "error": "true", "message": f"Please sign in with {provider_name}." }, status=status.HTTP_403_FORBIDDEN)
         except User.DoesNotExist:
             pass  # let authenticate handle the generic failure
         
@@ -191,20 +191,13 @@ class BasicSignUp(APIView):
             social_account = SocialAccount.objects.get(user=user)
 
             provider = social_account.provider
+            provider_name = settings.AUTH_ID_LIST[provider]
 
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error={settings.DUPLICATE_USER_CODE}"
-                f"&provider={provider}"
-            )
-            return redirect(redirect_url)
+            response = Response({ "error": "true", "message": f"Sign in with {provider_name}." }, status=status.HTTP_403_FORBIDDEN)
+            return response
         except Exception as e:
-            print(e)
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error=500_INTERNAL_SERVER_ERROR"
-            )
-            return redirect(redirect_url)
+            response = Response({ "error": "true", "message": f"500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
+            return response
 
 class GoogleSignIn(APIView):
     permission_classes = [AllowAny]
