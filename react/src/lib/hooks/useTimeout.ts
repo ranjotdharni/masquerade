@@ -1,49 +1,60 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-export default function useTimeout(initial?: number): [boolean, boolean, (milliseconds: number) => void, reset: () => void] {
+export type UseTimeoutType = {
+    started: boolean
+    completed: boolean
+    begin: (milliseconds: number) => void
+    reset: () => void
+}
+
+export default function useTimeout(initial?: number): UseTimeoutType {
+    const timeoutId = useRef<number | undefined>(undefined)
+    
     const [milliseconds, setMilliseconds] = useState<number>(initial ? initial : 0)
     const [started, setStarted] = useState<boolean>(false)
-    const [complete, setComplete] = useState<boolean>(false)
+    const [completed, setCompleted] = useState<boolean>(false)
 
-    function beginTimeout(milliseconds: number): void {
+    function begin(milliseconds: number): void {
         setStarted(true)
-        setComplete(false)
+        setCompleted(false)
         setMilliseconds(milliseconds)
     }
 
     function completeTimeout() {
         setStarted(false)
-        setComplete(true)
+        setCompleted(true)
     }
 
     function reset() {
         setStarted(false)
-        setComplete(false)
+        setCompleted(false)
+        setMilliseconds(0)
     }
 
     useEffect(() => {
-        let timeoutId: number | undefined
-
         function startTimeout(): number | undefined {
-            if (timeoutId)                  // previous timeout still active, clear first
-                clearTimeout(timeoutId)
+            if (timeoutId.current)                  // previous timeout still active, clear first
+                clearTimeout(timeoutId.current)
 
             return setTimeout(()=> {    // after ${stopAt} milliseconds, clear this timeout
-                timeoutId = undefined
+                timeoutId.current = undefined
                 completeTimeout()
             }, milliseconds)
         }
 
         function stopTimeout() {
-            if (timeoutId)
-                clearTimeout(timeoutId)
+            if (timeoutId.current)
+                clearTimeout(timeoutId.current)
         }
 
-        if (milliseconds !== 0)
-            timeoutId = startTimeout()
+        if (started)
+            timeoutId.current = startTimeout()
+
+        if (!started)       // in case of reset call, stop any timeout if it exists when started becomes false
+            stopTimeout()
 
         return stopTimeout  // stop any remaining timeout on component dismount
-    }, [milliseconds])
+    }, [started, milliseconds])
 
-    return [started, complete, beginTimeout, reset]
+    return { started, completed, begin, reset }
 }
