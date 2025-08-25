@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react"
 
-export default function useError(initial?: string): [string, (message: string) => void] {
+export const NOTIFY_TIMEOUT_MS: number = 8000
+
+export default function useNotify(initial?: string): [string, (message: string) => void] {
     const [message, setMessage] = useState<string>(initial ? initial : "")
 
     useEffect(() => {
         let timeoutId: number | undefined
 
         function startTimeout(): number | undefined {
-            if (timeoutId)
+            if (timeoutId)                  // previous timeout still active, clear first
                 clearTimeout(timeoutId)
 
-            return setTimeout(()=> {
+            return setTimeout(()=> {    // after ${NOTIFY_TIMEOUT_MS} milliseconds, clear this timeout and clear message
                 timeoutId = undefined
                 setMessage('')
-            }, 8000)
+            }, NOTIFY_TIMEOUT_MS)
         }
 
         function stopTimeout() {
@@ -21,10 +23,10 @@ export default function useError(initial?: string): [string, (message: string) =
                 clearTimeout(timeoutId)
         }
 
-        if (message !== "")
+        if (message.trim() !== "")
             timeoutId = startTimeout()
 
-        return stopTimeout
+        return stopTimeout  // stop any remaining timeout on component dismount
     }, [message])
 
     return [message, setMessage]

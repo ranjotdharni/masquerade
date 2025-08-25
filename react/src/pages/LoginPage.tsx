@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import SignInForm from "../components/LoginPage/SignInForm"
 import { useEffect, useState } from "react"
 import SignUpForm from "../components/LoginPage/SignUpForm"
-import useError from "../lib/hooks/useError"
+import useNotify from "../lib/hooks/useNotify"
 import Loader from "../components/utility/Loader"
 import { getCookie } from "../lib/utility/internal"
 
@@ -14,7 +14,7 @@ export default function LoginPage() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const [loader, setLoader] = useState<boolean>(false)
-    const [error, setError] = useError()
+    const [error, setError] = useNotify()
     const [signUp, setSignUp] = useState<boolean>(false)
 
     function handleServerError(error: string) {
