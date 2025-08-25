@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import Loader from "../components/utility/Loader"
 import { API_CONFIRM_AUTH, ICON_LOGO_STICKER } from "../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../lib/utility/internal"
+import { UIProvider } from "../components/context/provider/UIProvider"
 
 function ContentLoader() {
     return (
@@ -20,7 +21,7 @@ function ContentLoader() {
 
 function App() {
     return (
-        <>
+        <UIProvider notify={() => {}} confirm={() => {}}>
             <AppHeader />
 
             <main>
@@ -28,7 +29,7 @@ function App() {
             </main>
 
             <AppFooter />
-        </>
+        </UIProvider>
     )
 }
 
@@ -49,6 +50,8 @@ export default function AppLayout() {
 
         if (import.meta.env.VITE_CONFIRM_AUTH === "true")
             performAuthCheck()
+        else
+            setPageIsLoading(false)
     }, [])
     
     return (
