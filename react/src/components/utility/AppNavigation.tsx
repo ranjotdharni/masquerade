@@ -12,6 +12,8 @@ type AppNavigationProps = {
 type NavigationPage = {
     name: string
     link: string
+    index?: number
+    open?: boolean
     Icon: LucideIcon
     callback?: (event: MouseEvent<HTMLAnchorElement>) => void
 }
@@ -53,12 +55,16 @@ async function signOut(event: MouseEvent<HTMLAnchorElement>) {
     clientSignOut()
 }
 
-function NavigationItem({ name, link, Icon, callback } : NavigationPage) {
+function NavigationItem({ name, link, open, index, Icon, callback } : NavigationPage) {
 
     const navigate = useNavigate()
 
     return (
-        <a onClick={ callback !== undefined ? (e) => { callback(e) } : () => { navigate(link) } } className="z-20 hover:bg-accent hover:cursor-pointer relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto md:text-md">
+        <a 
+            onClick={ callback !== undefined ? (e) => { callback(e) } : () => { navigate(link) } } 
+            style={{["--index" as any]: index ? index : 0}}
+            className={`${open ? "appNavigationItemOpen" : "appNavigationItemClosed"} rounded-lg border border-accent z-20 hover:bg-accent hover:cursor-pointer relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto md:text-md`}
+        >
             <Icon className="text-text" />
             <p>{name}</p>
         </a>
@@ -70,12 +76,12 @@ export default function AppNavigation({ open } : AppNavigationProps) {
     return (
         <
             nav 
-            className="absolute top-[10vh] left-0 w-full flex-col justify-start items-center border border-accent md:w-[15%] md:left-[85%] overflow-hidden appNavigation" 
-            style={{opacity: open ? 1 : 0, height: open ? `${pages.length * 3}rem` : 0}}
+            className="absolute top-[10vh] left-0 w-full flex flex-col justify-evenly items-center md:w-[20%] md:left-[80%] md:px-4 overflow-hidden appNavigation" 
+            style={{height: `${(pages.length * 3) + 2}rem`, zIndex: open ? 20 : "auto"}}
         >
             {
                 pages.map((page, index) => {
-                    return <NavigationItem key={`NAVIGATION_ITEM_${index}`} name={page.name} link={page.link} Icon={page.Icon} callback={page.callback} />
+                    return <NavigationItem key={`NAVIGATION_ITEM_${index}`} index={index} name={page.name} link={page.link} open={open} Icon={page.Icon} callback={page.callback} />
                 })
             }
         </nav>
