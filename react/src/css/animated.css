@@ -71,3 +71,40 @@
     45% { transform: translateY(-10px); }
     54% { transform: translateY(0px); }
 }
+
+
+/* Pop In Confirm Modal */
+
+.popIn {
+    scale: 1;
+    opacity: 1;
+    animation: popIn 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* cubic bezier for spring */
+}
+
+@keyframes popIn {
+    0% {
+        scale: 0.5;
+        opacity: 0;
+    }
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+
+/* Pop In Blur Confirm Modal Wrapper */
+
+.popInBlur {
+    backdrop-filter: blur(10px);
+    animation: popInBlur 0.1s ease-in;
+}
+
+@keyframes popInBlur {
+    0% {
+        backdrop-filter: blur(0px);
+    }
+    100% {
+        backdrop-filter: blur(10px);
+    }
+}
