@@ -8,7 +8,6 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from django.middleware.csrf import get_token
 from django.contrib.auth import get_user_model, authenticate
 from django.shortcuts import redirect
 from django.http import JsonResponse
@@ -20,7 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token
+from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token, generate_provider_response, generate_basic_response
 from .models import SocialAccount
 
 User = get_user_model()
@@ -117,26 +116,7 @@ class BasicSignIn(APIView):
         if user is None:
             return Response({ "error": "true", "message": "Incorrect email or password." }, status=status.HTTP_401_UNAUTHORIZED)
         
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        refresh_token = str(refresh)
-        csrf_token = get_token(request=request)
-
-        response = Response({ "success": "true", "message": "Logged in.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
-        response.set_cookie(
-            key=settings.CSRF_COOKIE_NAME,
-            value=csrf_token,
-            httponly=False,
-            secure=True,
-            samesite="None"
-        )
-        response.set_cookie(
-            key=settings.REFRESH_COOKIE_NAME,
-            value=refresh_token,
-            httponly=True,
-            secure=True,
-            samesite="None"
-        )
+        response = generate_basic_response(request, user)
 
         return response
 
@@ -163,27 +143,7 @@ class BasicSignUp(APIView):
                 uid=str(uuid.uuid4())
             )
 
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
-            refresh_token = str(refresh)
-
-            csrf_token = get_token(request=request)
-
-            response = Response({ "success": "true", "message": "Account Created.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
-            response.set_cookie(
-                key=settings.CSRF_COOKIE_NAME,
-                value=csrf_token,
-                httponly=False,
-                secure=True,
-                samesite="None"
-            )
-            response.set_cookie(
-                key=settings.REFRESH_COOKIE_NAME,
-                value=refresh_token,
-                httponly=True,
-                secure=True,
-                samesite="None"
-            )
+            response = generate_basic_response(request, user)
 
             return response
         except IntegrityError as e:
@@ -226,8 +186,6 @@ class GoogleTokenExchange(APIView):
         social_account = None
         user = None
         redirect_url = ""
-        access_token = ""
-        refresh_token = ""
 
         try:
             code = request.GET.get("code")
@@ -276,32 +234,7 @@ class GoogleTokenExchange(APIView):
                         uid=uid
                     )
 
-                refresh = RefreshToken.for_user(user)
-                access_token = str(refresh.access_token)
-                refresh_token = str(refresh)
-
-                csrf_token = get_token(request=request)
-
-                redirect_url = (
-                    f"{settings.FRONTEND_URL}/login#"
-                    f"{settings.ACCESS_TOKEN_NAME}={access_token}"
-                )
-                response = redirect(redirect_url)
-
-                response.set_cookie(
-                    key=settings.CSRF_COOKIE_NAME,
-                    value=csrf_token,
-                    httponly=False,
-                    secure=True,
-                    samesite="None"
-                )
-                response.set_cookie(
-                    key=settings.REFRESH_COOKIE_NAME,
-                    value=refresh_token,
-                    httponly=True,
-                    secure=True,
-                    samesite="None"
-                )
+                response = generate_provider_response(request, user)
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
@@ -347,8 +280,6 @@ class GithubTokenExchange(APIView):
         social_account = None
         user = None
         redirect_url = f"{settings.FRONTEND_URL}/login"
-        access_token = ""
-        refresh_token = ""
 
         try:
             code = request.GET.get("code")
@@ -386,32 +317,7 @@ class GithubTokenExchange(APIView):
                         uid=uid
                     )
 
-                refresh = RefreshToken.for_user(user)
-                access_token = str(refresh.access_token)
-                refresh_token = str(refresh)
-
-                csrf_token = get_token(request=request)
-
-                redirect_url = (
-                    f"{settings.FRONTEND_URL}/login#"
-                    f"{settings.ACCESS_TOKEN_NAME}={access_token}"
-                )
-                response = redirect(redirect_url)
-
-                response.set_cookie(
-                    key=settings.CSRF_COOKIE_NAME,
-                    value=csrf_token,
-                    httponly=False,
-                    secure=True,
-                    samesite="None"
-                )
-                response.set_cookie(
-                    key=settings.REFRESH_COOKIE_NAME,
-                    value=refresh_token,
-                    httponly=True,
-                    secure=True,
-                    samesite="None"
-                )
+                response = generate_provider_response(request, user)
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
