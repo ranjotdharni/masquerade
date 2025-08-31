@@ -1,15 +1,17 @@
-import { useContext } from "react"
 import AppContent from "../components/layout/AppContent"
-import { UIContext } from "../components/context/UIContext"
+import { Plus } from "lucide-react"
+import { PAGE_SURVEY_CREATE } from "../lib/constants"
 
 export default function HomePage() {
-    const { notify, confirm } = useContext(UIContext)
 
     return (
-        <AppContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '5px'}}>
-            <p className="font-lato">You are logged in!</p>
-            <button className="appButton" onClick={() => { notify({ message: "This is a notification.", color: "var(--color-error)" }) }}>Notify</button>
-            <button className="appButton" onClick={() => { confirm({ message: "Do you want to continue?", callback: () => { notify({ message: "Test Successful!", color: "var(--color-text)" }) } }) }}>Confirm</button>
+        <AppContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+            <div className="w-1/5 h-1/2 flex flex-col justify-center items-center gap-4 border-2 border-primary rounded shadow-xl">
+                <a href={`/${PAGE_SURVEY_CREATE}`} className="w-1/5 aspect-square bg-text rounded-[1000px] flex flex-col justify-center items-center">
+                    <Plus className="text-background w-1/2 h-full aspect-square" />
+                </a>
+                <p className="text-text font-jbm">Create Survey</p>
+            </div>
         </AppContent>
     )
 }

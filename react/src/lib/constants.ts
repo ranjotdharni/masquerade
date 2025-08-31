@@ -2,6 +2,7 @@
 export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'
 export const PAGE_HOME: string = 'home' // child routes (nested in app layout) should not have leading slashes
+export const PAGE_SURVEY_CREATE: string = 'survey/create'
 
 export const API_GOOGLE_LOGIN: string = '/api/auth/google/init/'
 export const API_GITHUB_LOGIN: string = '/api/auth/github/init/'
