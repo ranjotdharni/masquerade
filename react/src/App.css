@@ -52,6 +52,8 @@
  --color-secondary: #102937;
  --color-accent: #e2dad0;
  --color-error: #96063b;
+ --color-success: #68c151;
+ --color-inactive: #4a4a4a;
 
  --font-jbm: JetBrains;
  --font-jbm-italic: JetBrains Italic;
@@ -101,5 +103,17 @@ body {
   &:hover {
     cursor: pointer;
     color: var(--color-background);
+  }
+}
+
+.appInput {
+  border-bottom: solid 1px var(--color-secondary);
+  padding-inline: 3px;
+  outline: none;
+  font-family: JetBrains;
+  color: var(--color-secondary);
+
+  &:focus {
+    color: var(--color-text);
   }
 }

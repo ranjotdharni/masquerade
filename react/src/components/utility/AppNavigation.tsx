@@ -63,7 +63,7 @@ function NavigationItem({ name, link, open, index, Icon, callback } : Navigation
         <a 
             onClick={ callback !== undefined ? (e) => { callback(e) } : () => { navigate(link) } } 
             style={{["--index" as any]: index ? index : 0}}
-            className={`${open ? "appNavigationItemOpen" : "appNavigationItemClosed"} rounded-lg border border-accent z-20 hover:bg-accent hover:cursor-pointer relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto md:text-md`}
+            className={`${open ? "appNavigationItemOpen" : "appNavigationItemClosed"} rounded-lg border border-accent z-20 bg-background hover:bg-accent hover:cursor-pointer relative h-12 w-full flex flex-row justify-center space-x-2 items-center text-xl font-roboto md:text-md`}
         >
             <Icon className="text-text" />
             <p>{name}</p>
