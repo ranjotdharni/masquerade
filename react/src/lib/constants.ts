@@ -42,3 +42,9 @@ export const AUTH_ID_LIST: Record<number, string> = {
 export const DUPLICATE_USER_CODE: number = 409
 
 export const PASSWORD_MIN_LENGTH: number = 12
+
+export const QUESTION_TYPE_ID_MAP = {
+    SINGLE_CHOICE_TYPE: 1,
+    MULTIPLE_CHOICE_TYPE: 2,
+    WRITTEN_ANSWER_TYPE: 3,
+} as const

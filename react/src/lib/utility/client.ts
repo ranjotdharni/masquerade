@@ -39,3 +39,8 @@ export function isValidPassword(password: string, confirm: string): GenericError
         return error
     }
 }
+
+export function generateClientId(): string {
+    const CLIENT_ID_LENGTH: number = 8
+    return `${Math.floor(Math.random() * Math.pow(10, CLIENT_ID_LENGTH))}`
+}
