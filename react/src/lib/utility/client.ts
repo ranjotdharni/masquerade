@@ -1,4 +1,5 @@
-import { PASSWORD_MIN_LENGTH } from "../constants"
+import { PASSWORD_MIN_LENGTH, QUESTION_TYPE_ID_MAP } from "../constants"
+import type { QuestionIdType } from "../types/client"
 import type { GenericError } from "../types/internal"
 
 export function isValidEmail(email: string): GenericError | undefined {
@@ -43,4 +44,14 @@ export function isValidPassword(password: string, confirm: string): GenericError
 export function generateClientId(): string {
     const CLIENT_ID_LENGTH: number = 8
     return `${Math.floor(Math.random() * Math.pow(10, CLIENT_ID_LENGTH))}`
+}
+
+export function cycleQuestionType(type: QuestionIdType): QuestionIdType {
+    const values = Object.values(QUESTION_TYPE_ID_MAP)
+    const typeIndex = values.indexOf(type)
+
+    if (typeIndex === -1 || typeIndex + 1 >= values.length)
+        return values[0]
+    
+    return values[typeIndex + 1]
 }

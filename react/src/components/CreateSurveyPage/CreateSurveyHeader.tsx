@@ -18,7 +18,7 @@ export default function CreateSurveyHeader({ name, changeName, addQuestion } : C
                 <div className="px-2 h-full flex flex-row justify-start items-center space-x-6">
                     <button onClick={addQuestion} className="px-2 h-full flex flex-row items-center rounded bg-secondary text-xs text-background hover:cursor-pointer hover:bg-text">
                         <Plus className="h-full w-auto aspect-square py-1" />
-                        <p>Add Question</p>
+                        <p className="font-lato">Add Question</p>
                     </button>
                     <div className="flex flex-row items-center space-x-2">
                         <p>Invite Only</p>

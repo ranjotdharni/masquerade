@@ -7,15 +7,16 @@ export type ChoiceAnswerType = {
     answer: string
 }
 
-export type ChoiceQuestionType = {
+type QuestionType = {
     id: string
-    type: typeof QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE | typeof QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE
     question: string
+}
+
+export type ChoiceQuestionType = QuestionType & {
+    type: typeof QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE | typeof QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE
     answers: ChoiceAnswerType[]
 }
 
-export type TextQuestionType = {
-    id: string
+export type TextQuestionType = QuestionType & {
     type: typeof QUESTION_TYPE_ID_MAP.WRITTEN_ANSWER_TYPE
-    question: string
 }
