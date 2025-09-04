@@ -10,7 +10,7 @@ import { UIProvider } from "../components/context/provider/UIProvider"
 function ContentLoader() {
     return (
         <div className="w-screen h-screen flex flex-col justify-center items-center space-y-4">
-            <img src={ICON_LOGO_STICKER} className="w-16 aspect-sqaure bounceDelay" />
+            <img src={ICON_LOGO_STICKER} className="w-16 aspect-square bounceDelay" />
             <div className="w-10 aspect-square">
                 <Loader />
             </div>

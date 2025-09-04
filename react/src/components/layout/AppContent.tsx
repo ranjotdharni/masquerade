@@ -1,9 +1,9 @@
-import type { CSSProperties, ReactNode } from "react"
+import type { ReactNode } from "react"
 
-export default function AppContent({ children, style } : { children: ReactNode, style?: CSSProperties }) {
+export default function AppContent({ children, className } : { children: ReactNode, className?: string }) {
 
     return (
-        <section style={style} className="w-full h-[85vh] absolute left-0 top-[10vh]">
+        <section style={{width: "100%", height: "85vh", position: "absolute", left: 0, top: "10vh"}} className={className}>
             { children }
         </section>
     )
