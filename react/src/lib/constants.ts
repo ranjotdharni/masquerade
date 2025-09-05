@@ -49,3 +49,5 @@ export const QUESTION_TYPE_ID_MAP = {
     MULTIPLE_CHOICE_TYPE: 2,
     WRITTEN_ANSWER_TYPE: 3,
 } as const
+
+export const MAX_ANSWERS_PER_QUESTION: number = 4

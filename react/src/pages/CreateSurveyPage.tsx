@@ -2,7 +2,7 @@ import { useState } from "react"
 import CreateSurveyHeader from "../components/CreateSurveyPage/CreateSurveyHeader"
 import AppContent from "../components/layout/AppContent"
 import type { ChoiceQuestionType, QuestionIdType, TextQuestionType } from "../lib/types/client"
-import { QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { MAX_ANSWERS_PER_QUESTION, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
 import { cycleQuestionType, generateClientId } from "../lib/utility/client"
 
@@ -87,6 +87,31 @@ export default function CreateSurveyPage() {
         })
     }
 
+    function addAnswer(questionId: string, answer: string) {
+        setQuestions(oldQuestions => {
+            let newQuestions = [...oldQuestions]
+            let addIndex = newQuestions.findIndex(q => q.id === questionId)
+
+            if (addIndex !== -1 && (newQuestions[addIndex] as ChoiceQuestionType).answers) {
+                let question: ChoiceQuestionType = newQuestions[addIndex] as ChoiceQuestionType
+                let newAnswers = [...question.answers]
+
+                if (newAnswers.length === MAX_ANSWERS_PER_QUESTION)
+                    return newQuestions
+
+                newAnswers.push({
+                    id: generateClientId(),
+                    answer: answer,
+                })
+
+                question.answers = newAnswers
+                newQuestions[addIndex] = question
+            }
+
+            return newQuestions
+        })
+    }
+
     return (
         <AppContent>
             <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} />
@@ -94,7 +119,7 @@ export default function CreateSurveyPage() {
             <div className="w-full h-[90%] md:h-[95%] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {
                     questions.map(item => {
-                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} />
+                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} />
                     })
                 }
             </div>
