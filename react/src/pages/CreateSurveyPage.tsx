@@ -71,13 +71,17 @@ export default function CreateSurveyPage() {
         })
     }
 
-    function changeType(id: string, currentType: QuestionIdType) {
+    function changeType(current: ChoiceQuestionType | TextQuestionType) {
         setQuestions(oldQuestions => {
             let newQuestions = [...oldQuestions]
-            let changeIndex = newQuestions.findIndex(q => q.id === id)
+            let changeIndex = newQuestions.findIndex(q => q.id === current.id)
 
             if (changeIndex !== -1)
-                newQuestions[changeIndex] = newQuestionByType(cycleQuestionType(currentType))
+                newQuestions[changeIndex] = {
+                    ...newQuestionByType(cycleQuestionType(current.type)),
+                    id: current.id,
+                    question: current.question,
+                }
 
             return newQuestions
         })
