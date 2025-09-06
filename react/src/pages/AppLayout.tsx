@@ -6,6 +6,7 @@ import Loader from "../components/utility/Loader"
 import { API_CONFIRM_AUTH, ICON_LOGO_STICKER } from "../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../lib/utility/internal"
 import { UIProvider } from "../components/context/provider/UIProvider"
+import NavBar from "../components/utility/animated/NavBar"
 
 function ContentLoader() {
     return (
@@ -22,7 +23,7 @@ function ContentLoader() {
 function App() {
     return (
         <UIProvider notify={() => {}} confirm={() => {}}>
-            <AppHeader />
+            <NavBar />
 
             <main>
                 <Outlet />
