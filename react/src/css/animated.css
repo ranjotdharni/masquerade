@@ -106,3 +106,22 @@
         backdrop-filter: blur(10px);
     }
 }
+
+
+/* NavBar */
+
+.navbarButton {
+    transition: transform 0.15s ease-in;
+}
+
+.navbarButtonClosed {
+    transform: translateX(-125%);
+}
+
+.navbar {
+    transition: width 0.15s linear, transform 0.15s linear;
+}
+
+.navbarClosed {
+    transform: translateX(-125%);
+}
