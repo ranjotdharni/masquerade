@@ -29,7 +29,7 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
     }, [message, hideTextTimer.completed, clearTextTimer.completed])
 
     return (
-        <div style={{transform: translateY, transition: "transform 0.4s ease"}} className="absolute w-[90%] h-[20vh] left-[5%] top-[90vh] flex flex-col justify-start items-center md:items-end">
+        <div style={{transform: translateY, transition: "transform 0.4s ease", display: message.trim() === "" ? "none" : "flex"}} className="absolute w-[90%] h-[20vh] left-[5%] top-[90vh] flex-col justify-start items-center md:items-end">
             <span style={{color: color}} className="w-full h-auto max-h-1/2 py-4 md:w-auto md:px-8 font-jbm flex flex-row justify-center items-center border bg-background border-accent rounded-lg">
                 <p>{message}</p>
             </span>
@@ -51,15 +51,15 @@ function Confirm({ message, callback, reset } : ConfirmProps & { reset: () => vo
     }
 
     return (
-        <div className="z-40 absolute w-[100vw] h-[100vh] flex flex-col justify-center items-center popInBlur">
-            <aside className="relative w-[90%] h-[50%] md:w-1/5 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center border bg-background border-accent popIn">
-                <h3 className="w-full px-2 border-b border-accent text-xl text-error font-jbm-bold">Are You Sure?</h3>
+        <div className="z-40 absolute w-[100vw] h-[100vh] top-0 left-0 flex flex-col justify-center items-center popInBlur">
+            <aside className="relative w-[90%] h-[50%] md:w-1/5 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center rounded-lg border bg-background border-primary popIn">
+                <h3 className="w-full px-2 border-b border-primary text-xl text-error font-jbm-bold">Are You Sure?</h3>
                 <span className="w-full p-2 flex-1 text-text font-jbm">
                     <p>{message}</p>
                 </span>
                 <div className="w-full h-auto flex flex-row justify-end space-x-2">
                     <button onClick={onCancel} className="appButton bg-error! text-background!">Cancel</button>
-                    <button onClick={onConfirm} className="appButton bg-text! text-background!">Confirm</button>
+                    <button onClick={onConfirm} className="appButton bg-primary! text-background!">Confirm</button>
                 </div>
             </aside>
         </div>

@@ -1,13 +1,8 @@
 import { useNavigate, useRouteError } from "react-router-dom"
 import AppContent from "../layout/AppContent"
 import AppFooter from "../layout/AppFooter"
-import AppHeader from "../layout/AppHeader"
 import BaseHeader from "../layout/BaseHeader"
 import { ICON_LOGO_STICKER, ICON_QUESTION_MARK, PAGE_HOME } from "../../lib/constants"
-
-type ErrorViewProps = {
-    loggedIn?: boolean
-}
 
 function ErrorContent({ error } : { error: any }) {
     const navigate = useNavigate()
@@ -33,12 +28,12 @@ function ErrorContent({ error } : { error: any }) {
     )
 }
 
-export default function ErrorView({ loggedIn } : ErrorViewProps) {
+export default function ErrorView() {
     const error = useRouteError()
 
     return (
         <>
-            { loggedIn ? <AppHeader /> : <BaseHeader /> }
+            <BaseHeader />
 
             <AppContent>
                 <ErrorContent error={error} />

@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom"
 import AppFooter from "../components/layout/AppFooter"
-import AppHeader from "../components/layout/AppHeader"
 import { useEffect, useState } from "react"
 import Loader from "../components/utility/Loader"
 import { API_CONFIRM_AUTH, ICON_LOGO_STICKER } from "../lib/constants"

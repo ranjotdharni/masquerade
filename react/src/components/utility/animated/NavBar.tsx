@@ -20,23 +20,23 @@ type NavbarStateType = typeof NAVBAR_STATES[keyof typeof NAVBAR_STATES]
 function LinkItem({ text, href, open, Icon, close } : { text: string, href: string, open: boolean, Icon: LucideIcon, close: () => void }) {
     
     return (
-        <li className="w-full">
-            <a onClick={() => { close() }} href={href} className={`w-full h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light`}>
-                <Icon className={`${open ? 'h-full' : 'w-full'} aspect-square`} />
+        <div className="w-full">
+            <a onClick={() => { close() }} href={href} className={`w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light`}>
+                <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
             </a>
-        </li>
+        </div>
     )
 }
 
 function ActionItem({ text, action, open, Icon } : { text: string, action: () => void, open: boolean, Icon: LucideIcon }) {
     return (
-        <li className="w-full">
-            <button onClick={e => { e.preventDefault(); action() }} className={`w-full h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light`}>
-                <Icon className={`${open ? 'h-full' : 'w-full'} aspect-square`} />
+        <div className="w-full">
+            <button onClick={e => { e.preventDefault(); action() }} className={`w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light`}>
+                <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
             </button>
-        </li>
+        </div>
     )
 }
 
@@ -75,11 +75,11 @@ export default function NavBar() {
 
     return (
         <>
-            <button onClick={fullOpen} className={`absolute mt-[1vh] ml-[1vh] h-[5vh] w-[5vh] md:w-auto md:h-[5vh] aspect-square rounded bg-primary p-2 hover:cursor-pointer hover:shadow-md navbarButton ${barState !== CLOSED_STATE ? 'navbarButtonClosed' : ''}`}>
+            <button onClick={fullOpen} className={`absolute mt-[1vh] ml-[1vh] h-[5vh] w-[5vh] md:w-auto md:h-[5vh] aspect-square rounded bg-primary p-2 hover:cursor-pointer hover:shadow-md navbarButton ${barState !== CLOSED_STATE ? 'md:navbarButtonClosed' : ''}`}>
                 <img src={ICON_LOGO} className="w-full h-full" />
             </button>
 
-            <nav className={`z-40 p-2 absolute h-[100vh] ${barState === OPEN_STATE ? 'w-[12.5vw]' : 'w-[6.5vh]'} top-0 left-0 bg-primary flex flex-col justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
+            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : 'translate-x-[-125%] md:translate-none md:w-[6.5vh]'} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
                 <header className="w-full h-[5%] flex flex-row justify-center">
                     <div className={`${barState === OPEN_STATE ? 'w-4/5' : 'w-full'} h-full flex flex-row justify-start`}>
                         <img onClick={() => { setBarState(OPEN_STATE) }} src={ICON_LOGO} className={`${barState === OPEN_STATE ? 'h-full' : 'w-full max-w-[2.8vw]'} aspect-square hover:cursor-pointer`} />
