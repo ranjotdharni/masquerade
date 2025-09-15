@@ -1,7 +1,7 @@
 import { useState } from "react"
 import CreateSurveyHeader from "../components/CreateSurveyPage/CreateSurveyHeader"
 import AppContent from "../components/layout/AppContent"
-import type { ChoiceQuestionType, QuestionIdType, TextQuestionType } from "../lib/types/client"
+import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../lib/types/client"
 import { MAX_ANSWERS_PER_QUESTION, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
 import { cycleQuestionType, generateClientId } from "../lib/utility/client"
@@ -24,26 +24,39 @@ function newMultipleChoiceQuestion(): ChoiceQuestionType {
     }
 }
 
-function newWrittenResponseQuestion(): TextQuestionType {
+function newRankingQuestion(): ChoiceQuestionType {
     return {
         id: generateClientId(),
-        type: QUESTION_TYPE_ID_MAP.WRITTEN_ANSWER_TYPE,
+        type: QUESTION_TYPE_ID_MAP.RANKING_TYPE,
+        question: "",
+        answers: [],
+    }
+}
+
+function newRatingQuestion(): RatingQuestionType {
+    return {
+        id: generateClientId(),
+        type: QUESTION_TYPE_ID_MAP.RATING_TYPE,
         question: "",
     }
 }
 
-function newQuestionByType(type: QuestionIdType): ChoiceQuestionType | TextQuestionType {
-    if (type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE)
-        return newSingleChoiceQuestion()
-    else if (type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE)
-        return newMultipleChoiceQuestion()
-    else 
-        return newWrittenResponseQuestion()
+function newQuestionByType(type: QuestionIdType): ChoiceQuestionType | RatingQuestionType {
+    switch (type) {
+        case QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE:
+            return newSingleChoiceQuestion()
+        case QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE:
+            return newMultipleChoiceQuestion()
+        case QUESTION_TYPE_ID_MAP.RANKING_TYPE:
+            return newRankingQuestion()
+        default:
+            return newRatingQuestion()
+    }
 }
 
 export default function CreateSurveyPage() {
     const [name, setName] = useState<string>("")
-    const [questions, setQuestions] = useState<(ChoiceQuestionType | TextQuestionType)[]>([])
+    const [questions, setQuestions] = useState<(ChoiceQuestionType | RatingQuestionType)[]>([])
 
     function changeName(name: string) {
         setName(name)
@@ -71,7 +84,7 @@ export default function CreateSurveyPage() {
         })
     }
 
-    function changeType(current: ChoiceQuestionType | TextQuestionType) {
+    function changeType(current: ChoiceQuestionType | RatingQuestionType) {
         setQuestions(oldQuestions => {
             let newQuestions = [...oldQuestions]
             let changeIndex = newQuestions.findIndex(q => q.id === current.id)

@@ -1,12 +1,12 @@
-import type { ChoiceQuestionType, QuestionIdType, TextQuestionType } from "../../../lib/types/client"
+import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../../../lib/types/client"
 import { MAX_ANSWERS_PER_QUESTION, QUESTION_TYPE_ID_MAP } from "../../../lib/constants"
 import { Check, Plus, X } from "lucide-react"
 import ToggleButton from "../../utility/animated/ToggleButton"
 import { useState, type MouseEvent } from "react"
 
 type QuestionCreatorProps = {
-    slug: ChoiceQuestionType | TextQuestionType
-    changeType: (current: ChoiceQuestionType | TextQuestionType) => void
+    slug: ChoiceQuestionType | RatingQuestionType
+    changeType: (current: ChoiceQuestionType | RatingQuestionType) => void
     removeQuestion: (id: string) => void
     addAnswer: (questionId: string, answer: string) => void
 }
@@ -14,7 +14,8 @@ type QuestionCreatorProps = {
 const contentItemNames: Map<QuestionIdType, string> = new Map([
     [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE, "Multiple Choice"],
     [QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE, "Check List"],
-    [QUESTION_TYPE_ID_MAP.WRITTEN_ANSWER_TYPE, "Text Response"],
+    [QUESTION_TYPE_ID_MAP.RANKING_TYPE, "Ranking"],
+    [QUESTION_TYPE_ID_MAP.RATING_TYPE, "Rating"],
 ])
 
 function BulletPoint({ width, height, checklist } : { width?: string, height?: string, checklist?: boolean }) {
@@ -100,8 +101,8 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
 
             <ol className="p-2 pt-8 w-full flex-1 flex flex-col justify-start items-start space-y-2">
                 {
-                    slug.type === QUESTION_TYPE_ID_MAP.WRITTEN_ANSWER_TYPE ?
-                    <span className="w-full h-full flex flex-col justify-center items-center text-center font-jbm text-inactive">Answers will be written by survey participants.</span> :
+                    slug.type === QUESTION_TYPE_ID_MAP.RATING_TYPE ?
+                    <span className="w-full h-full flex flex-col justify-center items-center text-center font-jbm text-inactive">Rating will be given by survey participants.</span> :
                     slug.answers.map((answer) => {
                         return (
                             <li key={answer.id} className="p-2 flex flex-row items-center space-x-2">

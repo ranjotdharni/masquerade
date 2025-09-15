@@ -47,7 +47,8 @@ export const PASSWORD_MIN_LENGTH: number = 12
 export const QUESTION_TYPE_ID_MAP = {
     SINGLE_CHOICE_TYPE: 1,
     MULTIPLE_CHOICE_TYPE: 2,
-    WRITTEN_ANSWER_TYPE: 3,
+    RANKING_TYPE: 3,
+    RATING_TYPE: 4,
 } as const
 
 export const MAX_ANSWERS_PER_QUESTION: number = 4

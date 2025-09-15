@@ -13,10 +13,10 @@ type QuestionType = {
 }
 
 export type ChoiceQuestionType = QuestionType & {
-    type: typeof QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE | typeof QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE
+    type: typeof QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE | typeof QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE | typeof QUESTION_TYPE_ID_MAP.RANKING_TYPE
     answers: ChoiceAnswerType[]
 }
 
-export type TextQuestionType = QuestionType & {
-    type: typeof QUESTION_TYPE_ID_MAP.WRITTEN_ANSWER_TYPE
+export type RatingQuestionType = QuestionType & {
+    type: typeof QUESTION_TYPE_ID_MAP.RATING_TYPE
 }
