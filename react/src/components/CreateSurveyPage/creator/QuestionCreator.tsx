@@ -9,6 +9,7 @@ type QuestionCreatorProps = {
     changeType: (current: ChoiceQuestionType | RatingQuestionType) => void
     removeQuestion: (id: string) => void
     addAnswer: (questionId: string, answer: string) => void
+    removeAnswer: (questionId: string, answerId: string) => void
 }
 
 const contentItemNames: Map<QuestionIdType, string> = new Map([
@@ -49,7 +50,7 @@ function AnswerCreator({ onAdd, onCancel } : { onAdd: (answer: string) => void, 
     )
 }
 
-export default function QuestionCreator({ slug, changeType, removeQuestion, addAnswer } : QuestionCreatorProps) {
+export default function QuestionCreator({ slug, changeType, removeQuestion, addAnswer, removeAnswer } : QuestionCreatorProps) {
     const [adding, setAdding] = useState<boolean>(false)
 
     function displayAnswerCreator(event: MouseEvent<HTMLButtonElement>) {
@@ -99,15 +100,20 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
                 <textarea placeholder="Enter Question..." className="w-[98%] h-2/3 bg-accent rounded resize-none outline-none p-1 font-jbm text-inactive focus:text-text"></textarea>
             </section>
 
-            <ol className="p-2 pt-8 w-full flex-1 flex flex-col justify-start items-start space-y-2">
+            <ol className="p-2 pt-8 w-full flex-1 flex flex-col justify-start items-start space-y-4">
                 {
                     slug.type === QUESTION_TYPE_ID_MAP.RATING_TYPE ?
                     <span className="w-full h-full flex flex-col justify-center items-center text-center font-jbm text-inactive">Rating will be given by survey participants.</span> :
                     slug.answers.map((answer) => {
                         return (
-                            <li key={answer.id} className="p-2 flex flex-row items-center space-x-2">
-                                <BulletPoint width="10px" checklist={slug.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE} />
-                                <p className="font-jbm text-text text-sm">{answer.answer}</p>
+                            <li key={answer.id} className="w-full p-2 flex flex-row justify-between items-center space-x-2 border border-primary">
+                                <div className="flex flex-row items-center">
+                                    <BulletPoint width="10px" checklist={slug.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE} />
+                                    <p className="font-jbm text-text text-sm ml-2">{answer.answer}</p>
+                                </div>
+                                <button onClick={() => { removeAnswer(slug.id, answer.id) }} className="h-[20px] aspect-square flex flex-row justify-center items-center text-secondary hover:cursor-pointer hover:text-error">
+                                    <X className="w-full h-full" />
+                                </button>
                             </li>
                         )
                     })

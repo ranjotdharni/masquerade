@@ -125,6 +125,23 @@ export default function CreateSurveyPage() {
         })
     }
 
+    function removeAnswer(questionId: string, answerId: string) {
+        setQuestions(oldQuestions => {
+            let newQuestions = [...oldQuestions]
+            let removeIndex = newQuestions.findIndex(q => q.id === questionId)
+
+            if (removeIndex !== -1 && (newQuestions[removeIndex] as ChoiceQuestionType).answers) {
+                let question: ChoiceQuestionType = newQuestions[removeIndex] as ChoiceQuestionType
+                let newAnswers = question.answers.filter(a => a.id !== answerId)
+
+                question.answers = newAnswers
+                newQuestions[removeIndex] = question
+            }
+
+            return newQuestions
+        })
+    }
+
     return (
         <AppContent>
             <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} />
@@ -132,7 +149,7 @@ export default function CreateSurveyPage() {
             <div className="w-full relative h-[88.5vh] md:h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {
                     questions.map(item => {
-                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} />
+                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} />
                     })
                 }
             </div>
