@@ -2,7 +2,7 @@ import { useState } from "react"
 import CreateSurveyHeader from "../components/CreateSurveyPage/CreateSurveyHeader"
 import AppContent from "../components/layout/AppContent"
 import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../lib/types/client"
-import { MAX_ANSWERS_PER_QUESTION, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
 import { cycleQuestionType, generateClientId } from "../lib/utility/client"
 
@@ -69,6 +69,9 @@ export default function CreateSurveyPage() {
 
     function addQuestion() {
         setQuestions(oldQuestions => {
+            if (oldQuestions.length >= MAX_QUESTIONS_PER_SURVEY)
+                return oldQuestions
+
             let newQuestions = [...oldQuestions]
             newQuestions.push(newSingleChoiceQuestion())
             return newQuestions

@@ -52,3 +52,4 @@ export const QUESTION_TYPE_ID_MAP = {
 } as const
 
 export const MAX_ANSWERS_PER_QUESTION: number = 4
+export const MAX_QUESTIONS_PER_SURVEY: number = 10

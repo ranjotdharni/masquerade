@@ -21,3 +21,9 @@ export type ChoiceQuestionType = QuestionType & {
 export type RatingQuestionType = QuestionType & {
     type: typeof QUESTION_TYPE_ID_MAP.RATING_TYPE
 }
+
+export type SurveyCreationSlug = {
+    name: string
+    inviteOnly: boolean
+    questions: (ChoiceQuestionType | RatingQuestionType)[]
+}
