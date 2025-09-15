@@ -9,6 +9,7 @@ export type ChoiceAnswerType = {
 
 type QuestionType = {
     id: string
+    optional: boolean
     question: string
 }
 

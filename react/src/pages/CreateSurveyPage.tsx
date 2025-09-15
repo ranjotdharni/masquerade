@@ -10,6 +10,7 @@ function newSingleChoiceQuestion(): ChoiceQuestionType {
     return {
         id: generateClientId(),
         type: QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE,
+        optional: false,
         question: "",
         answers: [],
     }
@@ -19,6 +20,7 @@ function newMultipleChoiceQuestion(): ChoiceQuestionType {
     return {
         id: generateClientId(),
         type: QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE,
+        optional: false,
         question: "",
         answers: [],
     }
@@ -28,6 +30,7 @@ function newRankingQuestion(): ChoiceQuestionType {
     return {
         id: generateClientId(),
         type: QUESTION_TYPE_ID_MAP.RANKING_TYPE,
+        optional: false,
         question: "",
         answers: [],
     }
@@ -37,6 +40,7 @@ function newRatingQuestion(): RatingQuestionType {
     return {
         id: generateClientId(),
         type: QUESTION_TYPE_ID_MAP.RATING_TYPE,
+        optional: false,
         question: "",
     }
 }
@@ -56,6 +60,7 @@ function newQuestionByType(type: QuestionIdType): ChoiceQuestionType | RatingQue
 
 export default function CreateSurveyPage() {
     const [name, setName] = useState<string>("")
+    const [inviteOnly, setInviteOnly] = useState<boolean>(false)
     const [questions, setQuestions] = useState<(ChoiceQuestionType | RatingQuestionType)[]>([])
 
     function changeName(name: string) {
@@ -142,14 +147,29 @@ export default function CreateSurveyPage() {
         })
     }
 
+    function setOptional(questionId: string, isOptional: boolean) {
+        setQuestions(oldQuestions => {
+            let newQuestions = [...oldQuestions]
+            let modifyIndex = newQuestions.findIndex(q => q.id === questionId)
+
+            if (modifyIndex !== -1) {
+                let question: ChoiceQuestionType = newQuestions[modifyIndex] as ChoiceQuestionType
+                question.optional = isOptional
+                newQuestions[modifyIndex] = question
+            }
+
+            return newQuestions
+        })
+    }
+
     return (
         <AppContent>
-            <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} />
+            <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} setInviteOnly={setInviteOnly} />
             
             <div className="w-full relative h-[88.5vh] md:h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {
                     questions.map(item => {
-                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} />
+                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} setOptional={setOptional} />
                     })
                 }
             </div>

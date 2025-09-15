@@ -10,6 +10,7 @@ type QuestionCreatorProps = {
     removeQuestion: (id: string) => void
     addAnswer: (questionId: string, answer: string) => void
     removeAnswer: (questionId: string, answerId: string) => void
+    setOptional: (questionId: string, isOptional: boolean) => void
 }
 
 const contentItemNames: Map<QuestionIdType, string> = new Map([
@@ -50,7 +51,7 @@ function AnswerCreator({ onAdd, onCancel } : { onAdd: (answer: string) => void, 
     )
 }
 
-export default function QuestionCreator({ slug, changeType, removeQuestion, addAnswer, removeAnswer } : QuestionCreatorProps) {
+export default function QuestionCreator({ slug, changeType, removeQuestion, addAnswer, removeAnswer, setOptional } : QuestionCreatorProps) {
     const [adding, setAdding] = useState<boolean>(false)
 
     function displayAnswerCreator(event: MouseEvent<HTMLButtonElement>) {
@@ -125,7 +126,7 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
             <footer className="w-full h-[10%] px-4 space-x-4 bg-primary flex flex-row justify-end items-center">
                 <div className="flex flex-row items-center space-x-2">
                     <p className="text-xs font-jbm text-text">Optional</p>
-                    <ToggleButton className="w-12" />
+                    <ToggleButton className="w-12" onActivated={() => {setOptional(slug.id, true)}} onDeactivated={() => {setOptional(slug.id, false)}} />
                 </div>
 
                 <button onClick={displayAnswerCreator} className="py-1 md:p-2 rounded flex flex-row space-x-1 !px-2 font-lato text-background bg-secondary hover:cursor-pointer hover:bg-text">

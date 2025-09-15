@@ -5,9 +5,10 @@ type CreateSurveyHeaderProps = {
     name: string
     changeName: (name: string) => void
     addQuestion: () => void
+    setInviteOnly: (isInviteOnly: boolean) => void
 }
 
-export default function CreateSurveyHeader({ name, changeName, addQuestion } : CreateSurveyHeaderProps) {
+export default function CreateSurveyHeader({ name, changeName, addQuestion, setInviteOnly } : CreateSurveyHeaderProps) {
 
     return (
         <header className="w-[80vw] md:w-[88vw] h-[4vh] md:h-[4vh] left-[17vw] md:left-[11vw] top-[1.5vh] relative p-2 bg-primary flex flex-row justify-between items-center md:items-end rounded">
@@ -22,7 +23,7 @@ export default function CreateSurveyHeader({ name, changeName, addQuestion } : C
                     </button>
                     <div className="flex flex-row items-center space-x-1 md:space-x-2">
                         <p>Invite Only</p>
-                        <ToggleButton className="w-6 md:w-8" />
+                        <ToggleButton className="w-6 md:w-8" onActivated={() => {setInviteOnly(true)}} onDeactivated={() => {setInviteOnly(false)}} />
                     </div>
                 </div>
             </div>
