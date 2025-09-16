@@ -1,10 +1,13 @@
-import { useState } from "react"
+import { useContext, useState, type MouseEvent } from "react"
 import CreateSurveyHeader from "../components/CreateSurveyPage/CreateSurveyHeader"
 import AppContent from "../components/layout/AppContent"
-import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../lib/types/client"
-import { MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType, SurveyCreationSlug } from "../lib/types/client"
+import { API_SURVEY_CREATE, MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
 import { generateClientId } from "../lib/utility/client"
+import type { GenericError, GenericSuccess } from "../lib/types/internal"
+import { authenticatedRequest } from "../lib/utility/internal"
+import { UIContext } from "../components/context/UIContext"
 
 function newSingleChoiceQuestion(): ChoiceQuestionType {
     return {
@@ -68,7 +71,18 @@ function cycleQuestionType(type: QuestionIdType): QuestionIdType {
     return values[typeIndex + 1]
 }
 
+async function createSurvey(slug: SurveyCreationSlug): Promise<GenericSuccess | GenericError> {
+    return await authenticatedRequest(API_SURVEY_CREATE, "POST", slug).then(response => {
+        if (response.error)
+            return response as GenericError
+
+        return { success: true } as GenericSuccess
+    })
+}
+
 export default function CreateSurveyPage() {
+    const { notify, confirm } = useContext(UIContext)
+
     const [name, setName] = useState<string>("")
     const [inviteOnly, setInviteOnly] = useState<boolean>(false)
     const [questions, setQuestions] = useState<(ChoiceQuestionType | RatingQuestionType)[]>([])
@@ -160,7 +174,7 @@ export default function CreateSurveyPage() {
         })
     }
 
-    function setOptional(questionId: string, isOptional: boolean) {
+    function setAnswerOptional(questionId: string, isOptional: boolean) {
         setQuestions(oldQuestions => {
             let newQuestions = [...oldQuestions]
             let modifyIndex = newQuestions.findIndex(q => q.id === questionId)
@@ -175,14 +189,45 @@ export default function CreateSurveyPage() {
         })
     }
 
+    async function submit(event: MouseEvent<HTMLButtonElement>) {
+        event.preventDefault()
+
+        confirm({
+            message: "Once you create a survey, you cannot modify it. Do you still want to continue?",
+            callback: async () => {
+                await createSurvey({
+                    name: name.trim(),
+                    inviteOnly: inviteOnly,
+                    questions: questions
+                }).then(response => {
+                    let message: string = response.message || "Survey Created"
+                    let color: string = "var(--color-text)"
+
+                    if ((response as GenericError).error) {
+                        message = response.message || "500 Internal Server Error"
+                        color = "var(--color-error)"
+                    }
+                    else {
+                        // handle successful survey creation
+                    }
+
+                    notify({
+                        message: message,
+                        color: color
+                    })
+                })
+            }
+        })
+    }
+
     return (
         <AppContent>
-            <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} setInviteOnly={setInviteOnly} />
+            <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} setInviteOnly={setInviteOnly} submit={submit} />
             
             <div className="w-full relative h-[88.5vh] md:h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {
                     questions.map(item => {
-                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} setOptional={setOptional} />
+                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} setOptional={setAnswerOptional} />
                     })
                 }
             </div>
