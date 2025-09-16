@@ -1,5 +1,5 @@
 import { API_REFRESH_TOKENS, HTTP_401_UNAUTHORIZED, PAGE_LOGIN, RESERVED_AUTH_STATUSES } from "../constants"
-import type { GenericError } from "../types/internal"
+import type { GenericError, RecursiveObject } from "../types/internal"
 
 export function getCookie(name: string): string | null {
     let cookieValue = null;
@@ -22,7 +22,7 @@ export function clientSignOut() {
     window.location.href = `/${PAGE_LOGIN}`
 }
 
-export async function authenticatedRequest(endpoint: string, method: "POST" | "PUT" | "DELETE", body?: Record<string | number, string | number | boolean>, refresh: boolean = true): Promise<Record<string | number, string | number | boolean> | GenericError> {
+export async function authenticatedRequest(endpoint: string, method: "POST" | "PUT" | "DELETE", body?: Record<string | number | symbol, RecursiveObject<string | number | boolean>>, refresh: boolean = true): Promise<Record<string | number | symbol, RecursiveObject<string | number | boolean>> | GenericError> {
     const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
     const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
     

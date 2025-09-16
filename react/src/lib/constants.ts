@@ -11,6 +11,7 @@ export const API_BASIC_SIGNIN: string = '/api/auth/basic/signin/'
 export const API_LOGOUT: string = '/api/auth/signout/'
 export const API_REFRESH_TOKENS: string = '/api/auth/refresh/'
 export const API_CONFIRM_AUTH: string = '/api/auth/confirm/'
+export const API_SURVEY_CREATE: string = '/api/survey/create'
 
 export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask.png'
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'

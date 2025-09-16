@@ -4,7 +4,7 @@ import AppContent from "../components/layout/AppContent"
 import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../lib/types/client"
 import { MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
-import { cycleQuestionType, generateClientId } from "../lib/utility/client"
+import { generateClientId } from "../lib/utility/client"
 
 function newSingleChoiceQuestion(): ChoiceQuestionType {
     return {
@@ -56,6 +56,16 @@ function newQuestionByType(type: QuestionIdType): ChoiceQuestionType | RatingQue
         default:
             return newRatingQuestion()
     }
+}
+
+function cycleQuestionType(type: QuestionIdType): QuestionIdType {
+    const values = Object.values(QUESTION_TYPE_ID_MAP)
+    const typeIndex = values.indexOf(type)
+
+    if (typeIndex === -1 || typeIndex + 1 >= values.length)
+        return values[0]
+    
+    return values[typeIndex + 1]
 }
 
 export default function CreateSurveyPage() {
