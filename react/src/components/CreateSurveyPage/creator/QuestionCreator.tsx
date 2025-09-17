@@ -2,11 +2,12 @@ import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../
 import { MAX_ANSWERS_PER_QUESTION, QUESTION_TYPE_ID_MAP } from "../../../lib/constants"
 import { Check, Plus, X } from "lucide-react"
 import ToggleButton from "../../utility/animated/ToggleButton"
-import { useState, type MouseEvent } from "react"
+import { useState, type ChangeEvent, type MouseEvent } from "react"
 
 type QuestionCreatorProps = {
     slug: ChoiceQuestionType | RatingQuestionType
     changeType: (current: ChoiceQuestionType | RatingQuestionType) => void
+    editQuestion: (id: string, question: string) => void
     removeQuestion: (id: string) => void
     addAnswer: (questionId: string, answer: string) => void
     removeAnswer: (questionId: string, answerId: string) => void
@@ -51,7 +52,7 @@ function AnswerCreator({ onAdd, onCancel } : { onAdd: (answer: string) => void, 
     )
 }
 
-export default function QuestionCreator({ slug, changeType, removeQuestion, addAnswer, removeAnswer, setOptional } : QuestionCreatorProps) {
+export default function QuestionCreator({ slug, changeType, removeQuestion, addAnswer, removeAnswer, setOptional, editQuestion } : QuestionCreatorProps) {
     const [adding, setAdding] = useState<boolean>(false)
 
     function displayAnswerCreator(event: MouseEvent<HTMLButtonElement>) {
@@ -66,6 +67,10 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
 
             return prev
         })
+    }
+
+    function modifyQuestion(event: ChangeEvent<HTMLTextAreaElement>) {
+        editQuestion(slug.id, event.target.value)
     }
 
     function editType() {
@@ -98,7 +103,7 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
 
             <section className="w-[98%] h-[20%] p-2 border-b border-primary flex flex-col items-center">
                 <span className="w-[98%] h-1/3 font-jbm-bold text-text flex text-lg">Question</span>
-                <textarea placeholder="Enter Question..." className="w-[98%] h-2/3 bg-accent rounded resize-none outline-none p-1 font-jbm text-inactive focus:text-text"></textarea>
+                <textarea onChange={modifyQuestion} placeholder="Enter Question..." className="w-[98%] h-2/3 bg-accent rounded resize-none outline-none p-1 font-jbm text-inactive focus:text-text"></textarea>
             </section>
 
             <ol className="p-2 pt-8 w-full flex-1 flex flex-col justify-start items-start space-y-4">

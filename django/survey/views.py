@@ -10,6 +10,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from .utils import validate_survey_creation_slug
+
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
@@ -18,9 +20,13 @@ class CreateSurvey(APIView):
         response = None
 
         try:
-            raw_body = request.body
-            data = json.loads(raw_body)
+            raw = request.body
+            data = json.loads(raw)
+
             print(data)
+
+            validate_survey_creation_slug(data)
+
             response = Response({ "success": "true", "message": "New Survey Created" }, status.HTTP_200_OK)
         except Exception as e:
             print(e)

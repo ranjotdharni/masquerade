@@ -91,6 +91,20 @@ export default function CreateSurveyPage() {
         setName(name)
     }
 
+    function editQuestion(id: string, question: string) {
+        setQuestions(oldQuestions => {
+            let newQuestions = [...oldQuestions]
+
+            let editIndex: number = newQuestions.findIndex(q => q.id === id)
+
+            if (editIndex !== -1) {
+                newQuestions[editIndex].question = question
+            }
+
+            return newQuestions
+        })
+    }
+
     function addQuestion() {
         setQuestions(oldQuestions => {
             if (oldQuestions.length >= MAX_QUESTIONS_PER_SURVEY)
@@ -227,7 +241,7 @@ export default function CreateSurveyPage() {
             <div className="w-full relative h-[88.5vh] md:h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {
                     questions.map(item => {
-                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} setOptional={setAnswerOptional} />
+                        return <QuestionCreator key={item.id} slug={item} changeType={changeType} editQuestion={editQuestion} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} setOptional={setAnswerOptional} />
                     })
                 }
             </div>
