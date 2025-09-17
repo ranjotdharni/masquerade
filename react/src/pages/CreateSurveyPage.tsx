@@ -209,16 +209,18 @@ export default function CreateSurveyPage() {
         confirm({
             message: "Once you create a survey, you cannot modify it. Do you still want to continue?",
             callback: async () => {
-                await createSurvey({
+                const slug = {
                     name: name.trim(),
                     inviteOnly: inviteOnly,
                     questions: questions
-                }).then(response => {
-                    let message: string = response.message || "Survey Created"
+                }
+
+                await authenticatedRequest(API_SURVEY_CREATE, "POST", slug).then(response => {
+                    let message: string = response.message as string || "Survey Created"
                     let color: string = "var(--color-text)"
 
                     if ((response as GenericError).error) {
-                        message = response.message || "500 Internal Server Error"
+                        message = response.message as string || "500 Internal Server Error"
                         color = "var(--color-error)"
                     }
                     else {

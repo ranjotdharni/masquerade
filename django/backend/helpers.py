@@ -4,7 +4,7 @@ GENERAL_ERROR_TYPE = 0
 class GenericError():
 
     def __init__(self, message="", type=GENERAL_ERROR_TYPE, content=None):
-        super().__init__(message)
+        super().__init__()
         self.error = True
         self.message = message
         self.type = type
