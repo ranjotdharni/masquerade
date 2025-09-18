@@ -68,7 +68,7 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                             }
                             else {
                                 localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, (refreshResponse as Record<string | number, string | number | boolean>)[import.meta.env.VITE_ACCESS_TOKEN_NAME] as string)
-                                return await authenticatedRequest(endpoint, method, undefined, false)   // Re-attempt original request (only once, refresh = false) if token refreshed successfully
+                                return await authenticatedRequest(endpoint, method, body, false)   // Re-attempt original request (only once, refresh = false) if token refreshed successfully
                             }
                         }
                         else {  // token refresh failed once, log user out
