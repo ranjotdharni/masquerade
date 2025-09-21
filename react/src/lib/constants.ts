@@ -5,6 +5,7 @@ export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'
 export const PAGE_HOME: string = 'home' // child routes (nested in app layout) should not have leading slashes
 export const PAGE_SURVEY_CREATE: string = 'survey/create'
+export const PAGE_SURVEY_FIND: string = 'survey/find'
 
 export const API_GOOGLE_LOGIN: string = '/api/auth/google/init/'
 export const API_GITHUB_LOGIN: string = '/api/auth/github/init/'
@@ -14,6 +15,7 @@ export const API_LOGOUT: string = '/api/auth/signout/'
 export const API_REFRESH_TOKENS: string = '/api/auth/refresh/'
 export const API_CONFIRM_AUTH: string = '/api/auth/confirm/'
 export const API_SURVEY_CREATE: string = '/api/survey/create/'
+export const API_SURVEY_RETRIEVE: string = '/api/survey/retrieve/'
 
 export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask.png'
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'

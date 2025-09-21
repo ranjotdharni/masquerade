@@ -22,7 +22,7 @@ export function clientSignOut() {
     window.location.href = `/${PAGE_LOGIN}`
 }
 
-export async function authenticatedRequest(endpoint: string, method: "POST" | "PUT" | "DELETE", body?: Record<string | number | symbol, RecursiveObject<string | number | boolean>>, refresh: boolean = true): Promise<Record<string | number | symbol, RecursiveObject<string | number | boolean>> | GenericError> {
+export async function authenticatedRequest(endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE", body?: Record<string | number | symbol, RecursiveObject<string | number | boolean>>, refresh: boolean = true): Promise<Record<string | number | symbol, RecursiveObject<string | number | boolean>> | GenericError> {
     const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
     const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
     
@@ -51,7 +51,7 @@ export async function authenticatedRequest(endpoint: string, method: "POST" | "P
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrfCookie
             },
-            body: JSON.stringify(body)
+            body: body ? JSON.stringify(body) : undefined
         }).then(async middle => { 
 
             const reservedAuthStatusIndex: number = RESERVED_AUTH_STATUSES.findIndex(item => item.status === middle.status)
