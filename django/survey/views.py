@@ -4,13 +4,14 @@ import json
 
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from .utils import validate_survey_creation_slug
+from .utils import validate_survey_creation_slug, create_mongo_survey_object
 
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
@@ -26,7 +27,10 @@ class CreateSurvey(APIView):
             valid = validate_survey_creation_slug(data)
 
             if "success" in valid:
-                # Create Survey
+                mongo_object = create_mongo_survey_object(request.headers.get("Authorization"), data)
+                
+                surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+                surveysCollection.insert_one(mongo_object)
 
                 response = Response({ "success": True, "message": "New Survey Created" }, status.HTTP_200_OK)
             else:

@@ -7,6 +7,7 @@ export type NotificationProps = {
 export type ConfirmProps = {
     message: string,
     callback: () => void | Promise<void>,
+    loaderText?: string
 }
 
 export type UIContextValue = {

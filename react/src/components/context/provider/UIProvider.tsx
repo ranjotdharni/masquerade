@@ -2,6 +2,7 @@ import { useEffect, useState, type MouseEvent } from "react"
 import type { ConfirmProps, NotificationProps, UIContextValue } from "../../../lib/types/context"
 import { UIContext } from "../UIContext"
 import useTimeout from "../../../lib/hooks/useTimeout"
+import FullScreenLoader from "../../utility/FullScreenLoader"
 
 const UI_NOTIFICATION_MILLISECONDS: number = 8000
 
@@ -37,11 +38,14 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
     )
 }
 
-function Confirm({ message, callback, reset } : ConfirmProps & { reset: () => void }) {
+function Confirm({ message, callback, loaderText, reset } : ConfirmProps & { reset: () => void }) {
+    const [loader, setLoader] = useState<boolean>(false)
 
     async function onConfirm(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
+        setLoader(true)
         await callback()
+        setLoader(false)
         reset()
     }
 
@@ -52,16 +56,20 @@ function Confirm({ message, callback, reset } : ConfirmProps & { reset: () => vo
 
     return (
         <div className="z-40 absolute w-[100vw] h-[100vh] top-0 left-0 flex flex-col justify-center items-center popInBlur">
-            <aside className="relative w-[90%] h-[50%] md:w-1/5 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center rounded-lg border bg-background border-primary popIn">
-                <h3 className="w-full px-2 border-b border-primary text-xl text-error font-jbm-bold">Are You Sure?</h3>
-                <span className="w-full p-2 flex-1 text-text font-jbm">
-                    <p>{message}</p>
-                </span>
-                <div className="w-full h-auto flex flex-row justify-end space-x-2">
-                    <button onClick={onCancel} className="appButton bg-error! text-background!">Cancel</button>
-                    <button onClick={onConfirm} className="appButton bg-primary! text-background!">Confirm</button>
-                </div>
-            </aside>
+            {
+                loader ?
+                <FullScreenLoader loaderText={loaderText} /> :
+                <aside className="relative w-[90%] h-[50%] md:w-1/5 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center rounded-lg border bg-background border-primary popIn">
+                    <h3 className="w-full px-2 border-b border-primary text-xl text-error font-jbm-bold">Are You Sure?</h3>
+                    <span className="w-full p-2 flex-1 text-text font-jbm">
+                        <p>{message}</p>
+                    </span>
+                    <div className="w-full h-auto flex flex-row justify-end space-x-2">
+                        <button onClick={onCancel} className="appButton bg-error! text-background!">Cancel</button>
+                        <button onClick={onConfirm} className="appButton bg-primary! text-background!">Confirm</button>
+                    </div>
+                </aside>
+            }
         </div>
     )
 }
@@ -98,7 +106,7 @@ export const UIProvider: React.FunctionComponent<UIContextValue & { children: Re
             <>
                 { children }
                 <Notification message={notification.message} color={notification.color} reset={resetNotification} />
-                { confirmation && <Confirm message={confirmation.message} callback={confirmation.callback} reset={resetConfirmation} /> }
+                { confirmation && <Confirm message={confirmation.message} callback={confirmation.callback} loaderText={confirmation.loaderText} reset={resetConfirmation} /> }
             </>
         </UIContext.Provider>
     )

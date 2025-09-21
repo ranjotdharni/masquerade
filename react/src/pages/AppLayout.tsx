@@ -1,23 +1,11 @@
 import { Outlet } from "react-router-dom"
 import AppFooter from "../components/layout/AppFooter"
 import { useEffect, useState } from "react"
-import Loader from "../components/utility/Loader"
-import { API_CONFIRM_AUTH, ICON_LOGO_STICKER } from "../lib/constants"
+import { API_CONFIRM_AUTH } from "../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../lib/utility/internal"
 import { UIProvider } from "../components/context/provider/UIProvider"
 import NavBar from "../components/utility/animated/NavBar"
-
-function ContentLoader() {
-    return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center space-y-4">
-            <img src={ICON_LOGO_STICKER} className="w-16 aspect-square bounceDelay" />
-            <div className="w-10 aspect-square">
-                <Loader />
-            </div>
-            <p className="text-text font-jbm pulse">Masquerade is Loading...</p>
-        </div>
-    )
-}
+import FullScreenLoader from "../components/utility/FullScreenLoader"
 
 function App() {
     return (
@@ -56,7 +44,7 @@ export default function AppLayout() {
     
     return (
         pageIsLoading ? 
-        <ContentLoader /> :
+        <FullScreenLoader /> :
         <App />
     )
 }

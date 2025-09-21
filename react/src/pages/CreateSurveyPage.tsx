@@ -2,12 +2,13 @@ import { useContext, useState, type MouseEvent } from "react"
 import CreateSurveyHeader from "../components/CreateSurveyPage/CreateSurveyHeader"
 import AppContent from "../components/layout/AppContent"
 import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType, SurveyCreationSlug } from "../lib/types/client"
-import { API_SURVEY_CREATE, MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { API_SURVEY_CREATE, MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, PAGE_HOME, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
 import { generateClientId } from "../lib/utility/client"
 import type { GenericError, GenericSuccess } from "../lib/types/internal"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
+import { useNavigate } from "react-router-dom"
 
 function newSingleChoiceQuestion(): ChoiceQuestionType {
     return {
@@ -81,6 +82,7 @@ async function createSurvey(slug: SurveyCreationSlug): Promise<GenericSuccess | 
 }
 
 export default function CreateSurveyPage() {
+    const navigation = useNavigate()
     const { notify, confirm } = useContext(UIContext)
 
     const [name, setName] = useState<string>("")
@@ -208,6 +210,7 @@ export default function CreateSurveyPage() {
 
         confirm({
             message: "Once you create a survey, you cannot modify it. Do you still want to continue?",
+            loaderText: "Creating Survey...",
             callback: async () => {
                 const slug = {
                     name: name.trim(),
@@ -224,7 +227,7 @@ export default function CreateSurveyPage() {
                         color = "var(--color-error)"
                     }
                     else {
-                        // handle successful survey creation
+                        navigation(`/${PAGE_HOME}`)
                     }
 
                     notify({

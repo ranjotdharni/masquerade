@@ -238,6 +238,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MONGO_CONNECTION_STRING = f'mongodb+srv://{os.getenv("MONGO_USER")}:{os.getenv("MONGO_PASSWORD")}@{os.getenv("MONGO_URL")}?retryWrites=true&w=majority&appName={os.getenv("MONGO_APP_NAME")}'
 MONGO_CLIENT = MongoClient(MONGO_CONNECTION_STRING, tlsCAFile=certifi.where())
 
+DB_DATABASE_NAME = os.getenv("DB_DATABASE_NAME")
+DB_SURVEY_COLLECTION_NAME = os.getenv("DB_SURVEY_COLLECTION_NAME")
+
 CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = "None"

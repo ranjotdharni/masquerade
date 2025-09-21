@@ -1,4 +1,6 @@
 
+export const APP_NAME: string = "Masqueraded"
+
 export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'
 export const PAGE_HOME: string = 'home' // child routes (nested in app layout) should not have leading slashes
