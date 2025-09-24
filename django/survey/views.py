@@ -12,6 +12,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from bson.json_util import dumps
+from bson.objectid import ObjectId
+from bson.errors import InvalidId
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object
 
@@ -58,6 +60,35 @@ class RetrieveSurvey(APIView):
             content = json.loads(dumps(survey_list))
 
             response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return response
+    
+    def post(self, request):
+        empty_response = Response({"empty": True}, status.HTTP_404_NOT_FOUND)
+        response = None
+
+        try:
+            raw = request.body
+            data = json.loads(raw)
+
+            if "id" not in data:
+                return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
+
+            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+            result = surveysCollection.find({"_id": ObjectId(data["id"])})
+
+            survey_list = list(result)
+            content = json.loads(dumps(survey_list))
+
+            if len(content) == 0:
+                return empty_response
+
+            response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+        except InvalidId as e:
+            response = empty_response
         except Exception as e:
             print(e)
             response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,5 +1,6 @@
 import { Lock, LockOpen } from "lucide-react"
 import type { RecursiveObject } from "../../lib/types/internal"
+import { PAGE_SURVEY_TAKE } from "../../lib/constants"
 
 type CatalogContent = {
     catalogContent: Record<string | number | symbol, RecursiveObject<string | number | boolean>>[]
@@ -31,7 +32,7 @@ function CatalogCard({ cardContent } : CardContent) {
                         <Lock className="text-error" strokeWidth={2.5} /> :
                         <LockOpen className="text-inactive" opacity={0.25} strokeWidth={2.5} />
                     }
-                    <button className="appButton">Participate</button>
+                    <a href={`/${PAGE_SURVEY_TAKE}/${(cardContent as any)["_id"]["$oid"]}`} className="appButton">Participate</a>
                 </div>
             </div>
         </li>
