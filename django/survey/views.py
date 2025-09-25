@@ -76,9 +76,23 @@ class RetrieveSurvey(APIView):
 
             if "id" not in data:
                 return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
+            
+            format = {
+                "submissions": 0,
+                "inviteOnly": 0,
+                "inviteList": 0,
+                "creator": 0,
+                "questions.submissions": 0,
+                "questions.answers.submissions": 0,
+                "questions.answers.1": 0,
+                "questions.answers.2": 0,
+                "questions.answers.3": 0,
+                "questions.answers.4": 0,
+                "questions.answers.5": 0,
+            }
 
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(data["id"])})
+            result = surveysCollection.find({"_id": ObjectId(data["id"])}, format)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))

@@ -33,6 +33,7 @@ export default function TakeSurveyPage() {
 
                 if ((result as any)["success"]) {
                     // handle returned survey content
+                    console.log((result as any)["content"])
                 }
 
                 setLoader(false)
