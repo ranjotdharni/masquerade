@@ -79,7 +79,6 @@ class RetrieveSurvey(APIView):
             
             format = {
                 "submissions": 0,
-                "inviteOnly": 0,
                 "inviteList": 0,
                 "creator": 0,
                 "questions.submissions": 0,
