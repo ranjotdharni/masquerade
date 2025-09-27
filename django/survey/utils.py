@@ -113,6 +113,7 @@ def create_mongo_survey_object(auth, slug):
                 for a in question["answers"]:
                     if a["answer"].strip() != "":
                         temp = {
+                            "_id": ObjectId(),
                             "answer": a["answer"].strip(),
                         }
 

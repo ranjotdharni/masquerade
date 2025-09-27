@@ -14,19 +14,19 @@ interface BaseQuestion {
 
 interface SingleChoiceQuestion extends BaseQuestion {
     type: typeof QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE
-    answers: { answer: string }[]
+    answers: { answer: string, _id: ObjectId }[]
 }
 
 
 interface MultipleChoiceQuestion extends BaseQuestion {
   type: typeof QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE
-  answers: { answer: string }[]
+  answers: { answer: string, _id: ObjectId }[]
 }
 
 
 interface RankingQuestion extends BaseQuestion {
   type: typeof QUESTION_TYPE_ID_MAP.RANKING_TYPE
-  answers: { answer: string }[]
+  answers: { answer: string, _id: ObjectId }[]
 }
 
 
@@ -34,7 +34,7 @@ interface RatingQuestion extends BaseQuestion {
   type: typeof QUESTION_TYPE_ID_MAP.RATING_TYPE
   answers: {
     answer?: number
-  }
+  } | {}
 }
 
 export type Question =

@@ -2,6 +2,7 @@ import { Check, CircleDot, HandCoins, Star, type LucideIcon } from "lucide-react
 import type { Question, Survey } from "../../lib/types/api"
 import type { QuestionIdType } from "../../lib/types/client"
 import { QUESTION_TYPE_ID_MAP } from "../../lib/constants"
+import { useState, type JSX, type MouseEvent } from "react"
 
 type QuestionClassification = {
     title: string
@@ -28,13 +29,94 @@ const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification> = {
 }
 
 function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answer: string }[] | {} }) {
+
+    const TYPE_TO_ANSWER_PANE: Record<QuestionIdType, JSX.Element> = {
+        [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: <SingleChoicePane />,
+        [QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE]:  <MultipleChoicePane />,
+        [QUESTION_TYPE_ID_MAP.RANKING_TYPE]:  <RankingPane />,
+        [QUESTION_TYPE_ID_MAP.RATING_TYPE]:  <SingleChoicePane />,
+    }
     
     function SingleChoicePane() {
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
                     (answers as Array<{answer: string}>).map((answer, index) => {
-                        return <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg">{answer.answer}</li>
+                        return (
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg space-x-2">
+                                <input type="radio" value={answer.answer} />
+                                <p>{answer.answer}</p>
+                            </li>
+                        )
+                    })
+                }
+            </ol>
+        )
+    }
+
+    function MultipleChoicePane() {
+        return (
+            <ol className="w-full h-full flex flex-col justify-evenly">
+                {
+                    (answers as Array<{answer: string}>).map((answer, index) => {
+                        return (
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg space-x-2">
+                                <input type="checkbox" value={answer.answer} />
+                                <p>{answer.answer}</p>
+                            </li>
+                        )
+                    })
+                }
+            </ol>
+        )
+    }
+    
+    function RankingPane() {
+        const [highlight, setHighlight] = useState<string | undefined>()
+
+        const [ranking, setRanking] = useState<{id: string, answer: string, rank: 1 | 2 | 3 | 4}[]>(
+            (answers as Array<{_id: {$oid: string}, answer: string}>).map((a, i) => { return {id: a._id.$oid, answer: a.answer, rank: i + 1 as 1 | 2 | 3 | 4} })
+        )
+
+        function swap(id: string): (event: MouseEvent<HTMLButtonElement>) => void {
+            return (event: MouseEvent<HTMLButtonElement>) => {
+                event.preventDefault()
+
+                if (highlight === id) {
+                    setHighlight(undefined)
+                    return
+                }
+
+                if (!highlight) {
+                    setHighlight(id)
+                    return
+                }
+
+                // handle swap
+                let newRanking = [...ranking]
+                let firstIndex = newRanking.findIndex(r => r.id === highlight)
+                let secondIndex = newRanking.findIndex(r => r.id === id)
+
+                let firstBuffer: 1 | 2 | 3 | 4 = (0 + newRanking[firstIndex].rank) as 1 | 2 | 3 | 4
+
+                newRanking[firstIndex].rank = newRanking[secondIndex].rank
+                newRanking[secondIndex].rank = firstBuffer
+
+                setRanking(newRanking)
+                setHighlight(undefined)
+            }
+        }
+
+        return (
+            <ol className="w-full h-full flex flex-col justify-evenly">
+                {
+                    ranking.map(answer => {
+                        return (
+                            <li key={answer.id} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg space-x-2">
+                                <button onClick={swap(answer.id)} style={highlight === answer.id ? {background: "var(--color-primary)", color: "var(--color-text)"} : {}} className="h-full px-2 text-primary border-4 border-primary hover:bg-primary hover:text-background hover:cursor-pointer">{answer.rank}</button>
+                                <p>{answer.answer}</p>
+                            </li>
+                        )
                     })
                 }
             </ol>
@@ -43,7 +125,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
 
     return (
         <form className="w-full h-full">
-            { Array.isArray(answers) && <SingleChoicePane /> }
+            { Array.isArray(answers) && TYPE_TO_ANSWER_PANE[type] }
         </form>
     )
 }
