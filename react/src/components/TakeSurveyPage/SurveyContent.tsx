@@ -34,7 +34,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
         [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: <SingleChoicePane />,
         [QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE]:  <MultipleChoicePane />,
         [QUESTION_TYPE_ID_MAP.RANKING_TYPE]:  <RankingPane />,
-        [QUESTION_TYPE_ID_MAP.RATING_TYPE]:  <SingleChoicePane />,
+        [QUESTION_TYPE_ID_MAP.RATING_TYPE]:  <RatingPane />,
     }
     
     function SingleChoicePane() {
@@ -123,9 +123,36 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
         )
     }
 
+    function RatingPane() {
+        const [rating, setRating] = useState<1 | 2 | 3 | 4 | 5>(1)
+
+        function modifyRating(r: 1 | 2 | 3 | 4 | 5): (event: MouseEvent<HTMLButtonElement>) => void {
+            return (event: MouseEvent<HTMLButtonElement>) => {
+                event.preventDefault()
+                setRating(r)
+            }
+        }
+
+        return (
+            <ol className="w-full h-full flex flex-row justify-evenly items-center">
+                {
+                    [0,0,0,0,0].map((arg, index) => {
+                        return (
+                            <li key={`RPA_0${index}`} className="w-16 h-full flex flex-col justify-center items-center font-jbm text-text text-lg">
+                                <button onClick={modifyRating(index + 1 as 1 | 2 | 3 | 4 | 5)} className="w-full aspect-square hover:cursor-pointer">
+                                    <Star className="w-full h-full" style={{color: rating < index + 1 ? "var(--color-text)" : "var(--color-primary)", fill: rating < index + 1 ? undefined : "var(--color-primary)"}} />
+                                </button>
+                            </li>
+                        )
+                    })
+                }
+            </ol>
+        )
+    }
+
     return (
         <form className="w-full h-full">
-            { Array.isArray(answers) && TYPE_TO_ANSWER_PANE[type] }
+            { TYPE_TO_ANSWER_PANE[type] }
         </form>
     )
 }
