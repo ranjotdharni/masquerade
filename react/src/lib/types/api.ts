@@ -1,7 +1,7 @@
 import type { QuestionIdType } from "./client"
 import type { QUESTION_TYPE_ID_MAP } from "../constants"
 
-type ObjectId = {
+export type ObjectId = {
     $oid: string
 }
 
@@ -12,25 +12,25 @@ interface BaseQuestion {
     question: string
 }
 
-interface SingleChoiceQuestion extends BaseQuestion {
+export interface SingleChoiceQuestion extends BaseQuestion {
     type: typeof QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE
     answers: { answer: string, _id: ObjectId }[]
 }
 
 
-interface MultipleChoiceQuestion extends BaseQuestion {
+export interface MultipleChoiceQuestion extends BaseQuestion {
   type: typeof QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE
   answers: { answer: string, _id: ObjectId }[]
 }
 
 
-interface RankingQuestion extends BaseQuestion {
+export interface RankingQuestion extends BaseQuestion {
   type: typeof QUESTION_TYPE_ID_MAP.RANKING_TYPE
   answers: { answer: string, _id: ObjectId }[]
 }
 
 
-interface RatingQuestion extends BaseQuestion {
+export interface RatingQuestion extends BaseQuestion {
   type: typeof QUESTION_TYPE_ID_MAP.RATING_TYPE
   answers: {
     answer?: number

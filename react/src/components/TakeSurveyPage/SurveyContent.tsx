@@ -1,6 +1,5 @@
 import { Check, CircleDot, HandCoins, Star, type LucideIcon } from "lucide-react"
-import type { Question, Survey } from "../../lib/types/api"
-import type { QuestionIdType } from "../../lib/types/client"
+import type { MultipleAnswerSlug, QuestionIdType, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../../lib/types/client"
 import { QUESTION_TYPE_ID_MAP } from "../../lib/constants"
 import { useState, type JSX, type MouseEvent } from "react"
 
@@ -8,6 +7,8 @@ type QuestionClassification = {
     title: string
     Icon: LucideIcon
 }
+
+type EditAnswerFunction = (slug: string | [string, string] | number) => void
 
 const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification> = {
     [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: {
@@ -28,7 +29,7 @@ const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification> = {
     },
 }
 
-function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answer: string }[] | {} }) {
+function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answers: SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug, editAnswer: EditAnswerFunction }) {
 
     const TYPE_TO_ANSWER_PANE: Record<QuestionIdType, JSX.Element> = {
         [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: <SingleChoicePane />,
@@ -41,10 +42,10 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
-                    (answers as Array<{answer: string}>).map((answer, index) => {
+                    (answers as SingleAnswerSlug).answers.map((answer, index) => {
                         return (
-                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg space-x-2">
-                                <input type="radio" value={answer.answer} />
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                                <input type="radio" checked={answers.slug !== undefined && answer._id.$oid === answers.slug} value={answer.answer} name={answer._id.$oid} onClick={(e) => {editAnswer(e.currentTarget.name)}} />
                                 <p>{answer.answer}</p>
                             </li>
                         )
@@ -58,10 +59,10 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
-                    (answers as Array<{answer: string}>).map((answer, index) => {
+                    (answers as MultipleAnswerSlug).answers.map((answer, index) => {
                         return (
-                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg space-x-2">
-                                <input type="checkbox" value={answer.answer} />
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                                <input type="checkbox" checked={(answers as MultipleAnswerSlug).slug !== undefined ? (answers as MultipleAnswerSlug).slug!.findIndex(a => a === answer._id.$oid) !== -1 : false} value={answer.answer}  name={answer._id.$oid} onClick={(e) => {editAnswer(e.currentTarget.name)}} />
                                 <p>{answer.answer}</p>
                             </li>
                         )
@@ -73,10 +74,6 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
     
     function RankingPane() {
         const [highlight, setHighlight] = useState<string | undefined>()
-
-        const [ranking, setRanking] = useState<{id: string, answer: string, rank: 1 | 2 | 3 | 4}[]>(
-            (answers as Array<{_id: {$oid: string}, answer: string}>).map((a, i) => { return {id: a._id.$oid, answer: a.answer, rank: i + 1 as 1 | 2 | 3 | 4} })
-        )
 
         function swap(id: string): (event: MouseEvent<HTMLButtonElement>) => void {
             return (event: MouseEvent<HTMLButtonElement>) => {
@@ -93,27 +90,17 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
                 }
 
                 // handle swap
-                let newRanking = [...ranking]
-                let firstIndex = newRanking.findIndex(r => r.id === highlight)
-                let secondIndex = newRanking.findIndex(r => r.id === id)
-
-                let firstBuffer: 1 | 2 | 3 | 4 = (0 + newRanking[firstIndex].rank) as 1 | 2 | 3 | 4
-
-                newRanking[firstIndex].rank = newRanking[secondIndex].rank
-                newRanking[secondIndex].rank = firstBuffer
-
-                setRanking(newRanking)
-                setHighlight(undefined)
+                editAnswer([highlight, id])
             }
         }
 
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
-                    ranking.map(answer => {
+                    (answers as MultipleAnswerSlug).answers.map((answer, index) => {
                         return (
-                            <li key={answer.id} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text text-lg space-x-2">
-                                <button onClick={swap(answer.id)} style={highlight === answer.id ? {background: "var(--color-primary)", color: "var(--color-text)"} : {}} className="h-full px-2 text-primary border-4 border-primary hover:bg-primary hover:text-background hover:cursor-pointer">{answer.rank}</button>
+                            <li key={answer._id.$oid} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                                <button onClick={swap(answer._id.$oid)} style={highlight === answer._id.$oid ? {background: "var(--color-primary)", color: "var(--color-text)"} : {}} className="h-full px-2 text-primary border-4 border-primary hover:bg-primary hover:text-background hover:cursor-pointer">{(answers as RankingAnswerSlug).slug[index].rank}</button>
                                 <p>{answer.answer}</p>
                             </li>
                         )
@@ -124,12 +111,14 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
     }
 
     function RatingPane() {
-        const [rating, setRating] = useState<1 | 2 | 3 | 4 | 5>(1)
-
         function modifyRating(r: 1 | 2 | 3 | 4 | 5): (event: MouseEvent<HTMLButtonElement>) => void {
             return (event: MouseEvent<HTMLButtonElement>) => {
                 event.preventDefault()
-                setRating(r)
+
+                if ((answers as RatingAnswerSlug).slug === r)
+                    editAnswer(0)
+                else
+                    editAnswer(r)
             }
         }
 
@@ -138,9 +127,9 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
                 {
                     [0,0,0,0,0].map((arg, index) => {
                         return (
-                            <li key={`RPA_0${index}`} className="w-16 h-full flex flex-col justify-center items-center font-jbm text-text text-lg">
+                            <li key={`RPA_0${index}`} className="w-16 h-full flex flex-col justify-center items-center font-jbm text-text md:text-lg">
                                 <button onClick={modifyRating(index + 1 as 1 | 2 | 3 | 4 | 5)} className="w-full aspect-square hover:cursor-pointer">
-                                    <Star className="w-full h-full" style={{color: rating < index + 1 ? "var(--color-text)" : "var(--color-primary)", fill: rating < index + 1 ? undefined : "var(--color-primary)"}} />
+                                    <Star className="w-full h-full" style={{color: (answers as RatingAnswerSlug).slug < index + 1 ? "var(--color-text)" : "var(--color-primary)", fill: (answers as RatingAnswerSlug).slug < index + 1 ? undefined : "var(--color-primary)"}} />
                                 </button>
                             </li>
                         )
@@ -157,7 +146,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: { answe
     )
 }
 
-function SurveyQuestion({ question } : { question: Question }) {
+function SurveyQuestion({ question, editAnswer } : { question: SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug, editAnswer: EditAnswerFunction }) {
     let QuestionClassification: QuestionClassification = SURVEY_TYPE_TO_ICON[question.type]
 
     return (
@@ -174,7 +163,7 @@ function SurveyQuestion({ question } : { question: Question }) {
             </span>
 
             <span className="px-4 h-42 flex flex-col justify-center items-center text-left">
-                <p className="font-jbm-bold text-lg text-text px-2 bg-accent rounded">
+                <p className="font-jbm-bold md:text-lg text-text px-2 bg-accent rounded">
                     {question.question}
                 </p>
             </span>
@@ -182,17 +171,17 @@ function SurveyQuestion({ question } : { question: Question }) {
             <span className="w-[98%] border border-inactive opacity-[0.1]"></span>
 
             <section className="w-full flex-1 p-4">
-                <AnswerPane type={question.type} answers={question.answers} />
+                <AnswerPane type={question.type} answers={question} editAnswer={editAnswer} />
             </section>
         </div>
     )
 }
 
-export default function SurveyContent({ content, index } : { content: Survey, index: number }) {
+export default function SurveyContent({ survey, index, editAnswer } : { survey: (SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[], index: number, editAnswer: EditAnswerFunction }) {
 
     return (
         <section className="w-full h-[88.5vh] top-[2.5vh] flex flex-col justify-center items-center">
-            <SurveyQuestion key={content.questions[index]._id.$oid} question={content.questions[index]} />
+            <SurveyQuestion key={survey[index]._id.$oid} question={survey[index]} editAnswer={editAnswer} />
         </section>
     )
 }
