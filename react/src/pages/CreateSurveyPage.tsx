@@ -1,11 +1,11 @@
 import { useContext, useState, type MouseEvent } from "react"
 import CreateSurveyHeader from "../components/CreateSurveyPage/CreateSurveyHeader"
 import AppContent from "../components/layout/AppContent"
-import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType, SurveyCreationSlug } from "../lib/types/client"
+import type { ChoiceQuestionType, QuestionIdType, RatingQuestionType } from "../lib/types/client"
 import { API_SURVEY_CREATE, MAX_ANSWERS_PER_QUESTION, MAX_QUESTIONS_PER_SURVEY, PAGE_HOME, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import QuestionCreator from "../components/CreateSurveyPage/creator/QuestionCreator"
 import { generateClientId } from "../lib/utility/client"
-import type { GenericError, GenericSuccess } from "../lib/types/internal"
+import type { GenericError } from "../lib/types/internal"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import { useNavigate } from "react-router-dom"
@@ -62,6 +62,7 @@ function newQuestionByType(type: QuestionIdType): ChoiceQuestionType | RatingQue
     }
 }
 
+// convert a question type to the next question type in the list of existing types
 function cycleQuestionType(type: QuestionIdType): QuestionIdType {
     const values = Object.values(QUESTION_TYPE_ID_MAP)
     const typeIndex = values.indexOf(type)
@@ -70,15 +71,6 @@ function cycleQuestionType(type: QuestionIdType): QuestionIdType {
         return values[0]
     
     return values[typeIndex + 1]
-}
-
-async function createSurvey(slug: SurveyCreationSlug): Promise<GenericSuccess | GenericError> {
-    return await authenticatedRequest(API_SURVEY_CREATE, "POST", slug).then(response => {
-        if (response.error)
-            return response as GenericError
-
-        return { success: true } as GenericSuccess
-    })
 }
 
 export default function CreateSurveyPage() {
@@ -205,7 +197,7 @@ export default function CreateSurveyPage() {
         })
     }
 
-    async function submit(event: MouseEvent<HTMLButtonElement>) {
+    async function createSurvey(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
 
         confirm({
@@ -218,6 +210,7 @@ export default function CreateSurveyPage() {
                     questions: questions
                 }
 
+                // Validate survey draft on server and either reject or create
                 await authenticatedRequest(API_SURVEY_CREATE, "POST", slug).then(response => {
                     let message: string = response.message as string || "Survey Created"
                     let color: string = "var(--color-text)"
@@ -241,7 +234,7 @@ export default function CreateSurveyPage() {
 
     return (
         <AppContent>
-            <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} setInviteOnly={setInviteOnly} submit={submit} />
+            <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} setInviteOnly={setInviteOnly} submit={createSurvey} />
             
             <div className="w-full relative h-[88.5vh] md:h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {

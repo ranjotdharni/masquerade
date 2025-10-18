@@ -2,6 +2,7 @@ import AppContent from "../components/layout/AppContent"
 import { Plus } from "lucide-react"
 import { PAGE_SURVEY_CREATE } from "../lib/constants"
 
+// Will be a kind of general, very basic/simple dashboard. Might even just put invite list here.
 export default function HomePage() {
     return (
         <AppContent className="flex flex-col justify-center items-center">

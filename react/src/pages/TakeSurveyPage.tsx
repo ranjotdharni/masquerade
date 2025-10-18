@@ -14,6 +14,8 @@ import type { MultipleAnswerSlug, RankingAnswerSlug, RatingAnswerSlug, SingleAns
 function SurveyContainer({ content } : { content: Survey }) {
     const [index, setIndex] = useState<number>(0)
     const [survey, setSurvey] = useState<((SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[])>(content.questions.map(q => {
+        // Ranking and Rating type require placeholder values
+
         if (q.type === QUESTION_TYPE_ID_MAP.RANKING_TYPE) {
             const slug = q.answers.map((a, i) => { return { _id: a._id, rank: i + 1 } })
             return {...q, slug: slug}
@@ -102,6 +104,7 @@ export default function TakeSurveyPage() {
         async function getSurvey() {
             await authenticatedRequest(API_SURVEY_RETRIEVE, "POST", { id: id as string }).then(result => {
                 if (result.error) {
+                    // possible invite permission failure
                     notify({
                         message: result.message as string | undefined || "500 Internal Server Error",
                         color: "var(--color-error)"

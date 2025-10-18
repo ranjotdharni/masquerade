@@ -10,6 +10,7 @@ export default function CatalogPage() {
     const [content, setContent] = useState<Record<string | number | symbol, RecursiveObject<string | number | boolean>>[] | undefined>()
 
     useEffect(() => {
+        // placeholder function. for now, just fills page with all existing surveys.
         async function test() {
             await authenticatedRequest(API_SURVEY_RETRIEVE, "GET").then(result => {
                 setContent((result as any)["content"] as Record<string | number | symbol, RecursiveObject<string | number | boolean>>[])

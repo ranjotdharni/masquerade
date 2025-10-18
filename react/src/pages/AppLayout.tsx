@@ -25,6 +25,7 @@ export default function AppLayout() {
     const [pageIsLoading, setPageIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
+        // make sure user is signed in to view a page wrapped in AppLayout
         async function performAuthCheck() {
             const authResult = await authenticatedRequest(API_CONFIRM_AUTH, "POST")
 

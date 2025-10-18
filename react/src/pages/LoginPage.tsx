@@ -71,6 +71,7 @@ export default function LoginPage() {
     }, [])
 
     useEffect(() => {
+        // send user immediately to home page if they're already authenticated
         async function performAuthCheck() {
             const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
             const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
