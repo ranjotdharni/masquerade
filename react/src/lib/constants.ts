@@ -18,6 +18,7 @@ export const API_REFRESH_TOKENS: string = '/api/auth/refresh/'
 export const API_CONFIRM_AUTH: string = '/api/auth/confirm/'
 export const API_SURVEY_CREATE: string = '/api/survey/create/'
 export const API_SURVEY_RETRIEVE: string = '/api/survey/retrieve/'
+export const API_SURVEY_SUBMIT: string = '/api/survey/submit/'
 
 export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask.png'
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'

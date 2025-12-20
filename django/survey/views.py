@@ -107,3 +107,24 @@ class RetrieveSurvey(APIView):
             response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
+
+@method_decorator(csrf_protect, name="dispatch")
+class SubmitSurvey(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        success = Response({ "success": True }, status.HTTP_200_OK)
+
+        try:
+            raw = request.body
+            data = json.loads(raw)
+
+            # Order of questions, Id, Type, Optionality all need to be confirmed with scrutiny since its the easy + sure way to validate
+            print(data)
+            
+
+        except Exception as e:
+            print(e)
+            return Response({"error": True, "message": "500 Internal Server Error"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return success

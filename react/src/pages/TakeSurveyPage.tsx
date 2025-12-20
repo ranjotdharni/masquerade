@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom"
 import AppContent from "../components/layout/AppContent"
 import { useContext, useEffect, useState, type MouseEvent } from "react"
 import { authenticatedRequest } from "../lib/utility/internal"
-import { API_SURVEY_RETRIEVE, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { API_SURVEY_RETRIEVE, API_SURVEY_SUBMIT, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { UIContext } from "../components/context/UIContext"
 import { generateClientId } from "../lib/utility/client"
@@ -10,9 +10,10 @@ import type { ObjectId, Survey } from "../lib/types/api"
 import SurveyContent from "../components/TakeSurveyPage/SurveyContent"
 import SurveyHeader from "../components/TakeSurveyPage/SurveyHeader"
 import type { MultipleAnswerSlug, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../lib/types/client"
+import type { GenericError } from "../lib/types/internal"
 
 function SurveyContainer({ content } : { content: Survey }) {
-    const { confirm } = useContext(UIContext)
+    const { confirm, notify } = useContext(UIContext)
 
     const [index, setIndex] = useState<number>(0)
     const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE)).length)
@@ -108,7 +109,25 @@ function SurveyContainer({ content } : { content: Survey }) {
 
         async function submitToServer() {
             // submit survey
-            
+            const slug = {
+                id: content._id.$oid,
+                answers: JSON.parse(JSON.stringify(survey))
+            }
+
+            await authenticatedRequest(API_SURVEY_SUBMIT, "POST", slug).then(response => {
+                let message: string = response.message as string || "Survey Complete!"
+                let color: string = "var(--color-text)"
+
+                if ((response as GenericError).error) {
+                    message = response.message as string || "500 Internal Server Error"
+                    color = "var(--color-error)"
+                }
+
+                notify({
+                    message: message,
+                    color: color
+                })
+            })
         }
 
         confirm({
