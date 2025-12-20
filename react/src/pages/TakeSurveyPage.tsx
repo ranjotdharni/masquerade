@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import AppContent from "../components/layout/AppContent"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, type MouseEvent } from "react"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { API_SURVEY_RETRIEVE, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
@@ -12,7 +12,10 @@ import SurveyHeader from "../components/TakeSurveyPage/SurveyHeader"
 import type { MultipleAnswerSlug, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../lib/types/client"
 
 function SurveyContainer({ content } : { content: Survey }) {
+    const { confirm } = useContext(UIContext)
+
     const [index, setIndex] = useState<number>(0)
+    const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE)).length)
     const [survey, setSurvey] = useState<((SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[])>(content.questions.map(q => {
         // Ranking and Rating type require placeholder values
 
@@ -38,6 +41,20 @@ function SurveyContainer({ content } : { content: Survey }) {
         setIndex(prev => {
             return (prev - 1 < 0 ? content.questions.length - 1 : prev - 1)
         })
+    }
+
+    function updateRemaining() {
+        // always check required
+        // single answer, check if slug is defined
+        // multiple answer, check if slug exists and if it is not empty
+        // ranking/rating answer is always fine
+
+        let remnants1 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE))
+        let remnants2 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE))
+        remnants1 = remnants1.filter(q => q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE && !(q as SingleAnswerSlug).slug)
+        remnants2 = remnants2.filter(q => q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE && (!(q as MultipleAnswerSlug).slug || (q as MultipleAnswerSlug).slug?.length === 0))
+
+        setRemaining(remnants1.length + remnants2.length)
     }
 
     function editAnswer(slug: string | [string, string] | number) {
@@ -80,12 +97,35 @@ function SurveyContainer({ content } : { content: Survey }) {
                 newSurvey4[index].slug = slug as number
                 setSurvey(newSurvey4)
         }
+
+        updateRemaining()
+    }
+
+    async function submit(event: MouseEvent<HTMLButtonElement>): Promise<void> {
+        event.preventDefault()
+        updateRemaining()
+        if (remaining !== 0) return
+
+        async function submitToServer() {
+            // submit survey
+            
+        }
+
+        confirm({
+            message: "Once you turn a survey in, you cannot take back your submission. Do you still want to continue?",
+            loaderText: "Submitting Survey...",
+            callback: submitToServer
+        })
     }
 
     return (
         <section className="w-full md:w-[92vw] h-full relative left-[4vw] p-2">
             <SurveyHeader name={content.name} index={index} length={content.questions.length} cycleForward={cycleForward} cycleBackward={cycleBackward} />
             <SurveyContent survey={survey} index={index} editAnswer={editAnswer} />
+            <footer className="w-full h-[5vh] flex flex-row justify-end items-end">
+                <p className="text-sm mr-2 font-jbm-italic text-inactive">*{remaining} Remaining</p>
+                <button onClick={submit} className="border-2 border-text text-text rounded px-2 font-jbm hover:bg-text hover:text-background hover:cursor-pointer transition" style={remaining === 0 ? undefined : {background: "none", borderColor: "var(--color-accent)", color: "var(--color-accent)"}}>Submit</button>
+            </footer>
         </section>
     )
 }

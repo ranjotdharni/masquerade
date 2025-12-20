@@ -150,7 +150,7 @@ function SurveyQuestion({ question, editAnswer } : { question: SingleAnswerSlug 
     let QuestionClassification: QuestionClassification = SURVEY_TYPE_TO_ICON[question.type]
 
     return (
-        <div style={{flexShrink: 0}} className="w-4/5 md:w-1/3 h-[80vh] md:h-4/5 mb-6 rounded-lg shadow-xl border-2 border-primary flex flex-col items-center">
+        <div style={{flexShrink: 0}} className="w-4/5 md:w-1/3 h-[80vh] md:h-[90%] mb-6 rounded-lg shadow-xl border-2 border-primary flex flex-col items-center">
             <span className="w-full h-[8%] p-2 bg-primary flex flex-row justify-between items-center">
                 <span className="h-full flex flex-row justify-center items-center font-jbm text-text space-x-2">
                     <QuestionClassification.Icon className="text-background" />
@@ -180,7 +180,7 @@ function SurveyQuestion({ question, editAnswer } : { question: SingleAnswerSlug 
 export default function SurveyContent({ survey, index, editAnswer } : { survey: (SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[], index: number, editAnswer: EditAnswerFunction }) {
 
     return (
-        <section className="w-full h-[88.5vh] top-[2.5vh] flex flex-col justify-center items-center">
+        <section className="w-full h-[85vh] top-[2.5vh] flex flex-col justify-center items-center">
             <SurveyQuestion key={survey[index]._id.$oid} question={survey[index]} editAnswer={editAnswer} />
         </section>
     )
