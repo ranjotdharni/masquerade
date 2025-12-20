@@ -125,7 +125,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
         return (
             <ol className="w-full h-full flex flex-row justify-evenly items-center">
                 {
-                    [0,0,0,0,0].map((arg, index) => {
+                    [0,0,0,0,0].map((_, index) => {
                         return (
                             <li key={`RPA_0${index}`} className="w-16 h-full flex flex-col justify-center items-center font-jbm text-text md:text-lg">
                                 <button onClick={modifyRating(index + 1 as 1 | 2 | 3 | 4 | 5)} className="w-full aspect-square hover:cursor-pointer">
