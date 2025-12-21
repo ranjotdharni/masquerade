@@ -118,10 +118,28 @@ class SubmitSurvey(APIView):
         try:
             raw = request.body
             data = json.loads(raw)
-
-            # Order of questions, Id, Type, Optionality all need to be confirmed with scrutiny since its the easy + sure way to validate
-            print(data)
+            if "id" not in data:
+                return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
             
+            format = {
+                
+            }
+
+            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+            result = surveysCollection.find({"_id": ObjectId(data["id"])}, format)
+
+            survey_list = list(result)
+            content = json.loads(dumps(survey_list))
+
+            if len(content) == 0:
+                return Response({ "error": True, "message": "Could not find survey." }, status.HTTP_404_NOT_FOUND)
+            
+            # Check if invite only survey
+            print(content)
+
+            # Order of questions, Id, Type, Optionality, and finally a valid Answer all need to be confirmed with scrutiny since its the easy + sure way to validate
+            ### print(data)
+
 
         except Exception as e:
             print(e)
