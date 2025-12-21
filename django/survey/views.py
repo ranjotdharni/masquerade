@@ -113,13 +113,14 @@ class SubmitSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        success = Response({ "success": True }, status.HTTP_200_OK)
+        success = Response({ "success": True, "message": "Survey Submitted!" }, status.HTTP_200_OK)
+        failure = Response({ "error": True, "message": "Could not validate survey. Try again later." }, status.HTTP_409_CONFLICT)
 
         try:
             raw = request.body
             data = json.loads(raw)
             if "id" not in data:
-                return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
+                return Response({"error": True, "message": "Cannot find survey (missing 'id')."}, status.HTTP_400_BAD_REQUEST)
             
             format = {
                 
