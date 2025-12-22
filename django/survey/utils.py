@@ -148,19 +148,13 @@ def validate_survey_submission_slug(survey, submission):
         "success": True,
     }
 
-    failure = {
-        "error": True,
-        "message": "",
-    }
-
     payload = []
 
     try: 
         
     except Exception as e:
         print(e)
-        failure["message"] = "Could not validate survey. Try again later."
-        return failure
+        return GenericError("Could not validate survey (failed to read submission data).")
         
     success["payload"] = payload
     return success
