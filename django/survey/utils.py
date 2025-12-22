@@ -7,6 +7,19 @@ from bson.objectid import ObjectId
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
 
+from interpreters import (
+    validate_answer_submission_single, 
+    validate_answer_submission_multi, 
+    validate_answer_submission_rank, 
+    validate_answer_submission_rate,
+
+    generate_answer_object_single, 
+    generate_answer_object_multi, 
+    generate_answer_object_rank, 
+    generate_answer_object_rate,
+)
+
+
 User = get_user_model()
 
 survey_creation_schema = {
@@ -146,15 +159,36 @@ def create_mongo_survey_object(auth, slug):
 def create_mongo_answer_object(question, answer):
     success = {
         "success": True,
+        "payload": []
     }
 
-    payload = []
-
     try: 
-        
+        validation = { "success": False, "empty": True }
+
+        match answer["type"]:
+            case settings.SINGLE_CHOICE_ID:
+                validation = validate_answer_submission_single(question, answer)
+                if "success" in validation and validation["answered"]:
+                    success["payload"] = generate_answer_object_single(question["_id"]["$oid"], answer)
+            case settings.MULTIPLE_CHOICE_ID:
+                validation = validate_answer_submission_multi(question, answer)
+                if "success" in validation and validation["answered"]:
+                    success["payload"] = generate_answer_object_multi(question["_id"]["$oid"], answer)
+            case settings.RANKING_ID:
+                validation = validate_answer_submission_rank(question, answer)
+                if "success" in validation and validation["answered"]:
+                    success["payload"] = generate_answer_object_rank(question["_id"]["$oid"], answer)
+            case settings.RATING_ID:
+                validation = validate_answer_submission_rate(question, answer)
+                if "success" in validation and validation["answered"]:
+                    success["payload"] = generate_answer_object_rate(question["_id"]["$oid"], answer)
+            case _:
+                return GenericError("Could not validate survey (server failed to classify submission data).")
+            
+        if "error" in validation:
+            return validation
     except Exception as e:
         print(e)
-        return GenericError("Could not validate survey (failed to read submission data).")
+        return GenericError("Could not validate survey (server failed to read submission data).")
         
-    success["payload"] = payload
     return success

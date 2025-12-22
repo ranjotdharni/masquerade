@@ -6,13 +6,6 @@ from both the user and MongoDB ("interpreting" between client and database).
 from bson.objectid import ObjectId
 from backend.helpers import GenericError
 
-'''
-SINGLE_CHOICE_ID = 1
-MULTIPLE_CHOICE_ID = 2
-RANKING_ID = 3
-RATING_ID = 4
-'''
-
 from django.conf import settings
 
 def validate_answer_submission_single(question, answer) -> dict[str, bool] | GenericError:
