@@ -143,7 +143,7 @@ def create_mongo_survey_object(auth, slug):
         return GenericError(message=str(e).strip() or "Malformed data was detected.").to_dict()
 
 
-def validate_survey_submission_slug(survey, submission):
+def create_mongo_answer_object(question, answer):
     success = {
         "success": True,
     }
