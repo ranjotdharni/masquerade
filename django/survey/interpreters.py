@@ -15,7 +15,7 @@ RATING_ID = 4
 
 from django.conf import settings
 
-def validate_answer_single(question, answer) -> dict[str, bool] | GenericError:
+def validate_answer_submission_single(question, answer) -> dict[str, bool] | GenericError:
     success = { "success": True, "answered": False }
 
     # Check inccorrect type or question/answer id mismatch
@@ -37,7 +37,7 @@ def validate_answer_single(question, answer) -> dict[str, bool] | GenericError:
     
     return GenericError("Required question not answered.")
 
-def generate_answer_single(survey_id, answer):
+def generate_answer_object_single(survey_id, answer):
     qid = ObjectId(answer["_id"]["$oid"])
     aid = ObjectId(answer["slug"])
     return {
