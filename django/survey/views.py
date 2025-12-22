@@ -15,7 +15,9 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from .utils import validate_survey_creation_slug, create_mongo_survey_object
+from pymongo import UpdateOne
+
+from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
 
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
@@ -114,7 +116,7 @@ class SubmitSurvey(APIView):
 
     def post(self, request):
         success = Response({ "success": True, "message": "Survey Submitted!" }, status.HTTP_200_OK)
-        failure = Response({ "error": True, "message": "Could not validate survey. Try again later." }, status.HTTP_409_CONFLICT)
+        failure = Response({ "error": True, "message": "Could not validate survey. Check submission or try again later." }, status.HTTP_409_CONFLICT)
 
         try:
             raw = request.body
@@ -142,19 +144,36 @@ class SubmitSurvey(APIView):
             survey_list = list(result)
             search_results = json.loads(dumps(survey_list))
 
-            if len(search_results) == 0:
+            if len(search_results) == 0 or len(data["answers"]) == 0:
                 return Response({ "error": True, "message": "Could not find survey." }, status.HTTP_404_NOT_FOUND)
             
-            # Check if invite only survey
+            # Check if invite only survey   
+
             survey = search_results[0]
             submission = data["answers"]
 
-            print(submission)
+            if len(survey["questions"]) != len(submission):
+                return failure
+            
+            updates = []
 
-            # Order of questions, Id, Type, Optionality, and finally a valid Answer all need to be confirmed with scrutiny since its the easy + sure way to validate
-            ### print(data)
+            for question, answer in zip(survey["questions"], submission):
+                mongo_answer_object = create_mongo_answer_object(question, answer)
 
-
+                if "error" in mongo_answer_object:
+                    return Response(mongo_answer_object, status.HTTP_409_CONFLICT)
+                
+                if "success" in mongo_answer_object:
+                    for update in mongo_answer_object["payload"]:
+                        updates.append(UpdateOne(update["filters"], update["increments"], array_filters=update["array_filters"]))
+                else:
+                    return failure
+            
+            if len(updates) == 0:
+                return failure
+            
+            updates.append(UpdateOne({"_id": survey["_id"]}, {"$inc": {"submissions": 1}}))
+            result = surveysCollection.bulk_write(updates, ordered=False) # If no exception is raised, this succeeded and survey submission is complete
         except Exception as e:
             print(e)
             return Response({"error": True, "message": "500 Internal Server Error"}, status.HTTP_500_INTERNAL_SERVER_ERROR)

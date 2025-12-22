@@ -7,7 +7,7 @@ from bson.objectid import ObjectId
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
 
-from interpreters import (
+from .interpreters import (
     validate_answer_submission_single, 
     validate_answer_submission_multi, 
     validate_answer_submission_rank, 
