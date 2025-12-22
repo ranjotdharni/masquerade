@@ -48,14 +48,17 @@ function SurveyContainer({ content } : { content: Survey }) {
         // always check required
         // single answer, check if slug is defined
         // multiple answer, check if slug exists and if it is not empty
-        // ranking/rating answer is always fine
+        // ranking answer, check that slug is not 0
+        // rating answer is always fine
 
-        let remnants1 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE))
-        let remnants2 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE))
+        let remnants1 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
+        let remnants2 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
+        let remnants3 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
         remnants1 = remnants1.filter(q => q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE && !(q as SingleAnswerSlug).slug)
         remnants2 = remnants2.filter(q => q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE && (!(q as MultipleAnswerSlug).slug || (q as MultipleAnswerSlug).slug?.length === 0))
+        remnants3 = remnants3.filter(q => q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE && (q as RatingAnswerSlug).slug < 1)
 
-        setRemaining(remnants1.length + remnants2.length)
+        setRemaining(remnants1.length + remnants2.length + remnants3.length)
     }
 
     function editAnswer(slug: string | [string, string] | number) {
