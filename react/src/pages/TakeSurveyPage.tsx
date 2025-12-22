@@ -122,7 +122,7 @@ function SurveyContainer({ content } : { content: Survey }) {
                 let color: string = "var(--color-text)"
 
                 if ((response as GenericError).error) {
-                    message = response.message as string || "500 Internal Server Error"
+                    message = response.message as string || "Uknown Error"
                     color = "var(--color-error)"
                 }
 
