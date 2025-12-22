@@ -119,24 +119,37 @@ class SubmitSurvey(APIView):
         try:
             raw = request.body
             data = json.loads(raw)
-            if "id" not in data:
-                return Response({"error": True, "message": "Cannot find survey (missing 'id')."}, status.HTTP_400_BAD_REQUEST)
+
+            if "id" not in data or "answers" not in data:
+                return Response({ "error": True, "message": "Cannot find survey/submission (missing parameters)." }, status.HTTP_400_BAD_REQUEST)
             
             format = {
-                
+                "submissions": 0,
+                "inviteList": 0,
+                "creator": 0,
+                "questions.submissions": 0,
+                "questions.answers.submissions": 0,
+                "questions.answers.1": 0,
+                "questions.answers.2": 0,
+                "questions.answers.3": 0,
+                "questions.answers.4": 0,
+                "questions.answers.5": 0,
             }
 
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
             result = surveysCollection.find({"_id": ObjectId(data["id"])}, format)
 
             survey_list = list(result)
-            content = json.loads(dumps(survey_list))
+            search_results = json.loads(dumps(survey_list))
 
-            if len(content) == 0:
+            if len(search_results) == 0:
                 return Response({ "error": True, "message": "Could not find survey." }, status.HTTP_404_NOT_FOUND)
             
             # Check if invite only survey
-            print(content)
+            survey = search_results[0]
+            submission = data["answers"]
+
+            print(submission)
 
             # Order of questions, Id, Type, Optionality, and finally a valid Answer all need to be confirmed with scrutiny since its the easy + sure way to validate
             ### print(data)

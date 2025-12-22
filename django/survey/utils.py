@@ -141,3 +141,26 @@ def create_mongo_survey_object(auth, slug):
     except Exception as e:
         print(e)
         return GenericError(message=str(e).strip() or "Malformed data was detected.").to_dict()
+
+
+def validate_survey_submission_slug(survey, submission):
+    success = {
+        "success": True,
+    }
+
+    failure = {
+        "error": True,
+        "message": "",
+    }
+
+    payload = []
+
+    try: 
+        
+    except Exception as e:
+        print(e)
+        failure["message"] = "Could not validate survey. Try again later."
+        return failure
+        
+    success["payload"] = payload
+    return success
