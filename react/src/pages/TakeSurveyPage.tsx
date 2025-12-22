@@ -16,7 +16,7 @@ function SurveyContainer({ content } : { content: Survey }) {
     const { confirm, notify } = useContext(UIContext)
 
     const [index, setIndex] = useState<number>(0)
-    const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE)).length)
+    const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE) || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE).length)
     const [survey, setSurvey] = useState<((SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[])>(content.questions.map(q => {
         // Ranking and Rating type require placeholder values
 
@@ -53,10 +53,10 @@ function SurveyContainer({ content } : { content: Survey }) {
 
         let remnants1 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
         let remnants2 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
-        let remnants3 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
+        let remnants3 = survey.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
         remnants1 = remnants1.filter(q => q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE && !(q as SingleAnswerSlug).slug)
         remnants2 = remnants2.filter(q => q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE && (!(q as MultipleAnswerSlug).slug || (q as MultipleAnswerSlug).slug?.length === 0))
-        remnants3 = remnants3.filter(q => q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE && (q as RatingAnswerSlug).slug < 1)
+        remnants3 = remnants3.filter(q => q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE && (!(q as RatingAnswerSlug).slug || (q as RatingAnswerSlug).slug < 1))
 
         setRemaining(remnants1.length + remnants2.length + remnants3.length)
     }
@@ -157,7 +157,6 @@ export default function TakeSurveyPage() {
     const { notify } = useContext(UIContext)
 
     const [content, setContent] = useState<Survey>()
-
     function notFoundPage() {
         window.location.href = `/${generateClientId()}`
     }

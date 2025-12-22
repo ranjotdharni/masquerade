@@ -49,29 +49,17 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
 
     async function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
+
         setLoader(true)
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`)
-        const response = await result.json()
-
-        if (response.redirect)
-            window.location.href = response.redirect
-        else
-            setError("500 Internal Server Error")
-
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`
         setLoader(false)
     }
 
     async function signInWithGithub(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
+        
         setLoader(true)
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`)
-        const response = await result.json()
-
-        if (response.redirect)
-            window.location.href = response.redirect
-        else
-            setError("500 Internal Server Error")
-
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`
         setLoader(false)
     }
 

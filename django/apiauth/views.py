@@ -176,7 +176,7 @@ class GoogleSignIn(APIView):
             f"&flowName=GeneralOAuthFlow"
         )
 
-        return Response({ "redirect": google_oauth_url }, status=301)
+        return redirect(google_oauth_url)
     
 class GoogleTokenExchange(APIView):
     permission_classes = [AllowAny]
@@ -270,7 +270,7 @@ class GithubSignIn(APIView):
             f"&amp;scope=user"
         )
 
-        return Response({ "redirect": github_oauth_url }, status=301)
+        return redirect(github_oauth_url)
     
 class GithubTokenExchange(APIView):
     permission_classes = [AllowAny]
@@ -284,17 +284,18 @@ class GithubTokenExchange(APIView):
         try:
             code = request.GET.get("code")
 
-            github_token_url = f"https://github.com/login/oauth/access_token?client_id={settings.GITHUB_CLIENT_ID}&amp;client_secret={settings.GITHUB_CLIENT_SECRET}&amp;code={code}"
+            github_token_url = f"https://github.com/login/oauth/access_token?client_id={settings.GITHUB_CLIENT_ID}&client_secret={settings.GITHUB_CLIENT_SECRET}&code={code}"
 
             token_response = requests.get(github_token_url)
             decryption_result = decode_github_token_response(response=token_response)
 
-            if ("error" in decryption_result):
-                print(decryption_result.message)
+            if ("email" not in decryption_result or "id" not in decryption_result):
+                print(decryption_result["message"])
                 redirect_url = (
                     f"{settings.FRONTEND_URL}/login?"
                     f"error=500_INTERNAL_SERVER_ERROR"
                 )
+                response = redirect(redirect_url)
             else:
                 # log user in here
                 email = decryption_result["email"]
