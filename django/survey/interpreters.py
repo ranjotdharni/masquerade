@@ -54,14 +54,18 @@ def generate_answer_object_single(survey_id, answer):
 
 def validate_answer_submission_multi(question, answer) -> dict[str, bool] | GenericError:
     success = { "success": True, "answered": True }
+    slug = answer["slug"] # When everything goes as planned, this is the ids of all the user's selected answers
 
-    # Check incorrect type or question/answer id mismatch
-    if question["type"] != settings.MULTIPLE_CHOICE_ID or answer["type"] != settings.MULTIPLE_CHOICE_ID or question["_id"]["$oid"] != answer["_id"]["$oid"]:
+    # Check duplicate answers and overfilled answer array and incorrect type and question/answer id mismatch
+    if len(slug) > settings.MAX_ANSWERS_PER_QUESTION or len(set(slug)) != len(slug) or question["type"] != settings.MULTIPLE_CHOICE_ID or answer["type"] != settings.MULTIPLE_CHOICE_ID or question["_id"]["$oid"] != answer["_id"]["$oid"]:
         return GenericError("Could not validate survey (malformed or misordered submission).")
     
     optional = question["optional"]
-    slug = answer["slug"] # When everything goes as planned, this is the id of all the user's selected answers
     all_answers = [a["_id"]["$oid"] for a in question["answers"]]
+
+    if len(slug) < 1:
+        success["answered"] = False
+        return success if optional else GenericError("Required question not answered.")
 
     # Valid if all user's selected answers exist in possible answers
     for a in slug:
@@ -78,8 +82,17 @@ def generate_answer_object_multi(survey_id, answer):
     qid = ObjectId(answer["_id"]["$oid"])
     aids = answer["slug"]
     payload = []
+    incremented = False
 
     for aid in aids:
+        inc = {
+            "questions.$[q].answers.$[a].submissions": 1
+        }
+
+        if not incremented:
+            incremented = True
+            inc["questions.$[q].submissions"] = 1
+
         oaid = ObjectId(aid)
         payload.append({
             "filters": {
@@ -88,10 +101,7 @@ def generate_answer_object_multi(survey_id, answer):
                 "questions.answers._id": oaid
             },
             "increments": {
-                "$inc": {
-                    "questions.$[q].submissions": 1,
-                    "questions.$[q].answers.$[a].submissions": 1
-                }
+                "$inc": inc
             },
             "array_filters": [
                 {"q._id": qid},
@@ -128,6 +138,9 @@ def validate_answer_submission_rank(question, answer) -> dict[str, bool] | Gener
         total_sum += current_length
         current_length -= 1
     
+    if total_sum < 1 or total_sum > 10:
+        return GenericError("Could not validate survey (malformed or misordered submission).")
+
     for a in slug:
         if a["_id"]["$oid"] not in all_answers:
             if optional:
@@ -149,9 +162,18 @@ def generate_answer_object_rank(survey_id, answer):
     qid = ObjectId(answer["_id"]["$oid"])
     aids = answer["slug"]
     payload = []
+    incremented = False
 
     for aid in aids:
         oaid = ObjectId(aid["_id"]["$oid"])
+        inc = {
+            f"questions.$[q].answers.$[a].{aid['rank']}": 1
+        }
+
+        if not incremented:
+            incremented = True
+            inc["questions.$[q].submissions"] = 1
+
         payload.append({
             "filters": {
                 "_id": sid,
@@ -159,10 +181,7 @@ def generate_answer_object_rank(survey_id, answer):
                 "questions.answers._id": oaid
             },
             "increments": {
-                "$inc": {
-                    "questions.$[q].submissions": 1,
-                    f"questions.$[q].answers.$[a].{aid["rank"]}": 1
-                }
+                "$inc": inc
             },
             "array_filters": [
                 {"q._id": qid},
@@ -204,7 +223,7 @@ def generate_answer_object_rate(survey_id, answer):
         "increments": {
             "$inc": {
                 "questions.$.submissions": 1,
-                f"questions.$.answers.{answer["slug"]}": 1
+                f"questions.$.answers.{answer['slug']}": 1
             }
         },
         "array_filters": []
