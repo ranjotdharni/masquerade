@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import AppContent from "../components/layout/AppContent"
 import { useContext, useEffect, useState, type MouseEvent } from "react"
 import { authenticatedRequest } from "../lib/utility/internal"
-import { API_SURVEY_RETRIEVE, API_SURVEY_SUBMIT, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { API_SURVEY_RETRIEVE, API_SURVEY_SUBMIT, PAGE_SURVEY_SUBMITTED, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { UIContext } from "../components/context/UIContext"
 import { generateClientId } from "../lib/utility/client"
@@ -14,6 +14,7 @@ import type { GenericError } from "../lib/types/internal"
 
 function SurveyContainer({ content } : { content: Survey }) {
     const { confirm, notify } = useContext(UIContext)
+    const navigation = useNavigate()
 
     const [index, setIndex] = useState<number>(0)
     const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE) || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE).length)
@@ -124,6 +125,9 @@ function SurveyContainer({ content } : { content: Survey }) {
                 if ((response as GenericError).error) {
                     message = response.message as string || "Uknown Error"
                     color = "var(--color-error)"
+                }
+                else {
+                    navigation(`/${PAGE_SURVEY_SUBMITTED}`)
                 }
 
                 notify({

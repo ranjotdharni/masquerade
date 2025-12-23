@@ -8,6 +8,7 @@ export const PAGE_SURVEY_CREATE: string = 'survey/create'
 export const PAGE_SURVEY_FIND: string = 'survey/find'
 export const PAGE_SURVEY_VIEW: string = 'survey/view'
 export const PAGE_SURVEY_TAKE: string = 'survey/take'
+export const PAGE_SURVEY_SUBMITTED: string = 'survey/submitted'
 
 export const API_GOOGLE_LOGIN: string = '/api/auth/google/init/'
 export const API_GITHUB_LOGIN: string = '/api/auth/github/init/'
