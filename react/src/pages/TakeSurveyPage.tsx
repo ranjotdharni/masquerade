@@ -6,7 +6,7 @@ import { API_SURVEY_RETRIEVE, API_SURVEY_SUBMIT, PAGE_SURVEY_SUBMITTED, QUESTION
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { UIContext } from "../components/context/UIContext"
 import { generateClientId } from "../lib/utility/client"
-import type { ObjectId, Survey } from "../lib/types/api"
+import type { ObjectId, Question, Survey } from "../lib/types/api"
 import SurveyContent from "../components/TakeSurveyPage/SurveyContent"
 import SurveyHeader from "../components/TakeSurveyPage/SurveyHeader"
 import type { MultipleAnswerSlug, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../lib/types/client"
@@ -17,7 +17,7 @@ function SurveyContainer({ content } : { content: Survey }) {
     const navigation = useNavigate()
 
     const [index, setIndex] = useState<number>(0)
-    const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE) || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE).length)
+    const [remaining, setRemaining] = useState<number>(content.questions.filter(q => !q.optional && (q.type !== QUESTION_TYPE_ID_MAP.RANKING_TYPE)).length)
     const [survey, setSurvey] = useState<((SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[])>(content.questions.map(q => {
         // Ranking and Rating type require placeholder values
 
@@ -52,9 +52,9 @@ function SurveyContainer({ content } : { content: Survey }) {
         // ranking answer, check that slug is not 0
         // rating answer is always fine
 
-        let remnants1 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
-        let remnants2 = content.questions.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
-        let remnants3 = survey.filter(q => !q.optional && (q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE || q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE))
+        let remnants1 = content.questions.filter(q => !q.optional && (q.type !== QUESTION_TYPE_ID_MAP.RANKING_TYPE))
+        let remnants2 = JSON.parse(JSON.stringify(remnants1)) as Question[]
+        let remnants3 = survey.filter(q => !q.optional && (q.type !== QUESTION_TYPE_ID_MAP.RANKING_TYPE))
         remnants1 = remnants1.filter(q => q.type === QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE && !(q as SingleAnswerSlug).slug)
         remnants2 = remnants2.filter(q => q.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE && (!(q as MultipleAnswerSlug).slug || (q as MultipleAnswerSlug).slug?.length === 0))
         remnants3 = remnants3.filter(q => q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE && (!(q as RatingAnswerSlug).slug || (q as RatingAnswerSlug).slug < 1))
@@ -109,7 +109,13 @@ function SurveyContainer({ content } : { content: Survey }) {
     async function submit(event: MouseEvent<HTMLButtonElement>): Promise<void> {
         event.preventDefault()
         updateRemaining()
-        if (remaining !== 0) return
+        if (remaining !== 0) {
+            notify(({
+                message: "Complete all required questions to submit.",
+                color: "var(--color-error)"
+            }))
+            return
+        }
 
         async function submitToServer() {
             // submit survey
@@ -161,6 +167,7 @@ export default function TakeSurveyPage() {
     const { notify } = useContext(UIContext)
 
     const [content, setContent] = useState<Survey>()
+    
     function notFoundPage() {
         window.location.href = `/${generateClientId()}`
     }
