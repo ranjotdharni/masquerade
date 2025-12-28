@@ -32,7 +32,7 @@ function CatalogCard({ cardContent } : CardContent) {
                         <Lock className="text-error" strokeWidth={2.5} /> :
                         <LockOpen className="text-inactive" opacity={0.25} strokeWidth={2.5} />
                     }
-                    <a href={`/${PAGE_SURVEY_TAKE}/${(cardContent as any)["_id"]["$oid"]}`} className="appButton">Participate</a>
+                    <a href={`/${PAGE_SURVEY_TAKE}/${(cardContent as any)["_id"]["$oid"]}`} className="font-lato appButton">Participate</a>
                 </div>
             </div>
         </li>

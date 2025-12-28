@@ -12,6 +12,7 @@ import NotFound from "./components/utility/NotFound"
 import CatalogPage from "./pages/CatalogPage"
 import TakeSurveyPage from "./pages/TakeSurveyPage"
 import SubmittedPage from "./pages/SubmittedPage"
+import ViewSurveyPage from "./pages/ViewSurveyPage"
 
 const routes = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const routes = createBrowserRouter([
       { path: PAGE_SURVEY_CREATE, element: <CreateSurveyPage /> },
       { path: PAGE_SURVEY_FIND, element: <CatalogPage /> },
       { path: PAGE_SURVEY_VIEW, element: <CatalogPage /> },
-      { path: `${PAGE_SURVEY_VIEW}/:id`, element: <CatalogPage /> },
+      { path: `${PAGE_SURVEY_VIEW}/:id`, element: <ViewSurveyPage /> },
       { path: PAGE_SURVEY_SUBMITTED, element: <SubmittedPage /> },
       { path: `${PAGE_SURVEY_TAKE}/:id`, element: <TakeSurveyPage /> },
     ],
