@@ -52,8 +52,7 @@ class RetrieveSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        response = None
-
+        response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
         try:
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
             result = surveysCollection.find({})
@@ -64,7 +63,6 @@ class RetrieveSurvey(APIView):
             response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
         except Exception as e:
             print(e)
-            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
     
