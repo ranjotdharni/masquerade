@@ -1,6 +1,6 @@
-import { Lock, LockOpen } from "lucide-react"
+import { ChevronRight, Lock, LockOpen } from "lucide-react"
 import type { RecursiveObject } from "../../lib/types/internal"
-import { PAGE_SURVEY_TAKE } from "../../lib/constants"
+import { PAGE_SURVEY_PREVIEW, PAGE_SURVEY_TAKE } from "../../lib/constants"
 
 type CatalogContent = {
     catalogContent: Record<string | number | symbol, RecursiveObject<string | number | boolean>>[]
@@ -22,8 +22,11 @@ function CatalogCard({ cardContent } : CardContent) {
                     <h3>{`${(cardContent as any)["questions"].length} Question(s)`}</h3>
                 </span>
 
-                <span className="flex flex-1 flex-row justify-end items-end px-5 space-x-2 font-lato">
-                    <p className="font-jbm-italic text-inactive text-sm mr-2">{(cardContent as any)["inviteOnly"] ? "Private" : "Public"}</p>
+                <span className="px-3 text-sm flex flex-1 flex-row justify-end items-end font-lato">
+                    <a href={`/${PAGE_SURVEY_PREVIEW}/${(cardContent as any)["_id"]["$oid"]}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text">
+                        <p className="font-jbm-italic">View</p>
+                        <ChevronRight />
+                    </a>
                 </span>
 
                 <div className="p-4 flex flex-row justify-between items-center">

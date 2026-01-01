@@ -1,5 +1,5 @@
 
-export const APP_NAME: string = "Masqueraded"
+export const APP_NAME: string = "Masquerade"
 
 export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'

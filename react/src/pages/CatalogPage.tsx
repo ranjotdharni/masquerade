@@ -11,13 +11,13 @@ export default function CatalogPage() {
 
     useEffect(() => {
         // placeholder function. for now, just fills page with all existing surveys.
-        async function test() {
+        async function getCatalog() {
             await authenticatedRequest(API_SURVEY_RETRIEVE, "GET").then(result => {
                 setContent((result as any)["content"] as Record<string | number | symbol, RecursiveObject<string | number | boolean>>[])
             })
         }
 
-        test()
+        getCatalog()
     }, [])
 
     return (
