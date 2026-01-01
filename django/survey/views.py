@@ -19,6 +19,19 @@ from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
 
+PUBLIC_SURVEY_DATA_FORMAT = {
+    "submissions": 0,
+    "inviteList": 0,
+    "creator": 0,
+    "questions.submissions": 0,
+    "questions.answers.submissions": 0,
+    "questions.answers.1": 0,
+    "questions.answers.2": 0,
+    "questions.answers.3": 0,
+    "questions.answers.4": 0,
+    "questions.answers.5": 0,
+}
+
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
@@ -53,9 +66,16 @@ class RetrieveSurvey(APIView):
 
     def get(self, request):
         response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         try:
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({})
+            requestHasParams = "id" in request.GET
+            result = None
+
+            if (requestHasParams):
+                result = surveysCollection.find({"_id": ObjectId(request.GET["id"])}, PUBLIC_SURVEY_DATA_FORMAT)
+            else:
+                result = surveysCollection.find({}, PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -76,22 +96,9 @@ class RetrieveSurvey(APIView):
 
             if "id" not in data:
                 return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
-            
-            format = {
-                "submissions": 0,
-                "inviteList": 0,
-                "creator": 0,
-                "questions.submissions": 0,
-                "questions.answers.submissions": 0,
-                "questions.answers.1": 0,
-                "questions.answers.2": 0,
-                "questions.answers.3": 0,
-                "questions.answers.4": 0,
-                "questions.answers.5": 0,
-            }
 
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(data["id"])}, format)
+            result = surveysCollection.find({"_id": ObjectId(data["id"])}, PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -122,22 +129,9 @@ class SubmitSurvey(APIView):
 
             if "id" not in data or "answers" not in data:
                 return Response({ "error": True, "message": "Cannot find survey/submission (missing parameters)." }, status.HTTP_400_BAD_REQUEST)
-            
-            format = {
-                "submissions": 0,
-                "inviteList": 0,
-                "creator": 0,
-                "questions.submissions": 0,
-                "questions.answers.submissions": 0,
-                "questions.answers.1": 0,
-                "questions.answers.2": 0,
-                "questions.answers.3": 0,
-                "questions.answers.4": 0,
-                "questions.answers.5": 0,
-            }
 
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(data["id"])}, format)
+            result = surveysCollection.find({"_id": ObjectId(data["id"])}, PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             search_results = json.loads(dumps(survey_list))

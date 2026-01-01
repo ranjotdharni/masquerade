@@ -109,7 +109,7 @@ def generate_basic_response(request: HttpRequest, user: User) -> HttpResponseRed
 
         csrf_token = get_token(request=request)
 
-        response = Response({ "success": "true", "message": "Account Created.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
+        response = Response({ "success": "true", "message": "You are logged in.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
 
         response.set_cookie(
             key=settings.CSRF_COOKIE_NAME,
