@@ -6,7 +6,7 @@ export const PAGE_LOGIN: string = 'login'
 export const PAGE_HOME: string = 'home' // child routes (nested in app layout) should not have leading slashes
 export const PAGE_SURVEY_CREATE: string = 'survey/create'
 export const PAGE_SURVEY_FIND: string = 'survey/find'
-export const PAGE_SURVEY_VIEW: string = 'survey/view'
+export const PAGE_SURVEY_PREVIEW: string = 'survey/preview'
 export const PAGE_SURVEY_TAKE: string = 'survey/take'
 export const PAGE_SURVEY_SUBMITTED: string = 'survey/submitted'
 

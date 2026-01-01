@@ -5,7 +5,7 @@ import { UIContext } from "../components/context/UIContext"
 import { PAGE_SURVEY_FIND } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 
-export default function ViewSurveyPage() {
+export default function PreviewSurveyPage() {
     const { notify } = useContext(UIContext)
     const navigate = useNavigate()
     const { id } = useParams()

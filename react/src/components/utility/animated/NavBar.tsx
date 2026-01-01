@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react"
-import { API_LOGOUT, ICON_LOGO, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW } from "../../../lib/constants"
+import { API_LOGOUT, ICON_LOGO, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND } from "../../../lib/constants"
 import "../../../css/animated.css"
 import { ChevronLeft, CircleQuestionMark, HomeIcon, ListChecks, LogOut, MessageCircleWarning, Minimize, NotebookText, PencilRuler, Settings, TextSearch, type LucideIcon } from "lucide-react"
 import { authenticatedRequest, clientSignOut } from "../../../lib/utility/internal"
@@ -93,7 +93,7 @@ export default function NavBar() {
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Home" Icon={HomeIcon} href={`/${PAGE_HOME}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Create" Icon={PencilRuler} href={`/${PAGE_SURVEY_CREATE}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Browse" Icon={TextSearch} href={`/${PAGE_SURVEY_FIND}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="My Surveys" Icon={ListChecks} href={`/${PAGE_SURVEY_VIEW}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="My Surveys" Icon={ListChecks} href={`/${PAGE_SURVEY_FIND}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Settings" Icon={Settings} href={`/${PAGE_HOME}`} />
                 </section>
 
