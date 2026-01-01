@@ -23,7 +23,7 @@ function CatalogCard({ cardContent } : CardContent) {
                 </span>
 
                 <span className="flex flex-1 flex-row justify-end items-end px-5 space-x-2 font-lato">
-                    <p className="text-text text-3xl before:text-inactive before:content-['Submissions'] before:text-xs before:mr-2">{(cardContent as any)["submissions"]}</p>
+                    <p className="font-jbm-italic text-inactive text-sm mr-2">{(cardContent as any)["inviteOnly"] ? "Private" : "Public"}</p>
                 </span>
 
                 <div className="p-4 flex flex-row justify-between items-center">
