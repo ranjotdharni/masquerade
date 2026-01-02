@@ -18,6 +18,7 @@ from bson.errors import InvalidId
 from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
+from apiauth.utils import extract_user_from_request
 
 PUBLIC_SURVEY_DATA_FORMAT = {
     "submissions": 0,
@@ -56,12 +57,12 @@ class CreateSurvey(APIView):
                 response = Response({ "error": True, "message": valid["message"] }, status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
-    
+
 @method_decorator(csrf_protect, name="dispatch")
-class RetrieveSurvey(APIView):
+class SurveyCatalog(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -89,7 +90,7 @@ class RetrieveSurvey(APIView):
             return response
         except Exception as e:
             print(e)
-            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
     
@@ -118,7 +119,50 @@ class RetrieveSurvey(APIView):
             response = empty_response
         except Exception as e:
             print(e)
-            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return response
+
+@method_decorator(csrf_protect, name="dispatch")
+class SurveyDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        try:
+            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+            requestHasParams = "id" in request.GET
+            result = None
+
+            user = extract_user_from_request(request)
+
+            if isinstance(user, dict) and user["error"]:
+                return Response({"error": True, "message": user["message"]}, status.HTTP_400_BAD_REQUEST)
+
+            if (requestHasParams):
+                id = request.GET["id"]
+
+                oid = ObjectId(id)
+
+                result = surveysCollection.find({"_id": oid})
+            else:
+                result = surveysCollection.find({"creator": user.username})
+
+            survey_list = list(result)
+            content = json.loads(dumps(survey_list))
+
+            if len(content) != 0:
+                for survey in content:
+                    if survey["creator"] != user.username:
+                        return Response({"error": True, "message": "You don't have permission to see details of this survey(s)."}, status.HTTP_400_BAD_REQUEST)
+
+            response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+        except (InvalidId, TypeError) as e:
+            print(e)
+            response = Response({"error": True, "message": "Invalid Survey ID"}, status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
 
         return response
 

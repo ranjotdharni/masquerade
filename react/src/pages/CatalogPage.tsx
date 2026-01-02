@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import AppContent from "../components/layout/AppContent"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { authenticatedRequest } from "../lib/utility/internal"
-import { API_SURVEY_RETRIEVE } from "../lib/constants"
+import { API_SURVEY_CATALOG } from "../lib/constants"
 import Catalog from "../components/CatalogPage/Catalog"
 import type { RecursiveObject } from "../lib/types/internal"
 
@@ -12,7 +12,7 @@ export default function CatalogPage() {
     useEffect(() => {
         // placeholder function. for now, just fills page with all existing surveys.
         async function getCatalog() {
-            await authenticatedRequest(API_SURVEY_RETRIEVE, "GET").then(result => {
+            await authenticatedRequest(API_SURVEY_CATALOG, "GET").then(result => {
                 setContent((result as any)["content"] as Record<string | number | symbol, RecursiveObject<string | number | boolean>>[])
             })
         }

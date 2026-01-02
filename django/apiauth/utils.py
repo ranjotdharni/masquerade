@@ -19,7 +19,7 @@ def get_user_from_access_token(token):
     try:
         validated_token = UntypedToken(token)
     except Exception as e:
-        return GenericError(message="Could not decode token.").to_dict()
+        return GenericError(message="Could not decode access token.").to_dict()
 
     user_id = validated_token['user_id']
 
@@ -28,6 +28,20 @@ def get_user_from_access_token(token):
         return user
     except User.DoesNotExist:
         return GenericError(message="User not found.").to_dict()
+    
+def extract_user_from_request(request):
+    error = GenericError(message="Cannot find user, please log in again.")
+    header = request.META['HTTP_AUTHORIZATION'] # When passed correctly, this is in the form 'Bearer <access_token>'
+
+    if not header:
+        return error
+    
+    segments = str(header).split()
+
+    if len(segments) != 2:
+        return error
+
+    return get_user_from_access_token(segments[1])
 
 def decode_google_jwt(id_token):
     certs_response = requests.get(GOOGLE_CERTS_URL)

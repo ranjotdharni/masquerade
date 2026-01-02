@@ -1,9 +1,10 @@
 from django.urls import path
 
-from .views import CreateSurvey, RetrieveSurvey, SubmitSurvey
+from .views import CreateSurvey, SubmitSurvey, SurveyCatalog, SurveyDetail
 
 urlpatterns = [
     path('create/', CreateSurvey.as_view(), name="create_survey"),
-    path('retrieve/', RetrieveSurvey.as_view(), name="retrieve_survey"),
     path('submit/', SubmitSurvey.as_view(), name="submit_survey"),
+    path('catalog/', SurveyCatalog.as_view(), name="survey_catalog"),
+    path('detail/', SurveyDetail.as_view(), name="survey_detail"),
 ]

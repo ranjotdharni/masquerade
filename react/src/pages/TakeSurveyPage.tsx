@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import AppContent from "../components/layout/AppContent"
 import { useContext, useEffect, useState, type MouseEvent } from "react"
 import { authenticatedRequest } from "../lib/utility/internal"
-import { API_SURVEY_RETRIEVE, API_SURVEY_SUBMIT, PAGE_SURVEY_SUBMITTED, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { API_SURVEY_CATALOG, API_SURVEY_SUBMIT, PAGE_SURVEY_SUBMITTED, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { UIContext } from "../components/context/UIContext"
 import { generateClientId } from "../lib/utility/client"
@@ -174,7 +174,7 @@ export default function TakeSurveyPage() {
 
     useEffect(() => {
         async function getSurvey() {
-            await authenticatedRequest(API_SURVEY_RETRIEVE, "POST", { id: id as string }).then(result => {
+            await authenticatedRequest(API_SURVEY_CATALOG, "POST", { id: id as string }).then(result => {
                 if (result.error) {
                     // possible invite permission failure
                     notify({
