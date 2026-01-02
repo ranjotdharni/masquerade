@@ -33,6 +33,10 @@ PUBLIC_SURVEY_DATA_FORMAT = {
     "questions.answers.5": 0,
 }
 
+PRIVATE_SURVEY_DATA_FORMAT = {
+    "inviteList": 0,
+}
+
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
@@ -145,9 +149,9 @@ class SurveyDetail(APIView):
 
                 oid = ObjectId(id)
 
-                result = surveysCollection.find({"_id": oid})
+                result = surveysCollection.find({"_id": oid}, PRIVATE_SURVEY_DATA_FORMAT)
             else:
-                result = surveysCollection.find({"creator": user.username})
+                result = surveysCollection.find({"creator": user.username}, PRIVATE_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
