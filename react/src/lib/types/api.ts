@@ -44,8 +44,12 @@ export type Question =
   | RatingQuestion
 
 export interface Survey {
-    _id: ObjectId
-    name: string
-    inviteOnly: boolean
-    questions: Question[]
+  _id: ObjectId
+  name: string
+  inviteOnly: boolean
+  questions: Question[]
+}
+
+export type SurveyMetadata = Omit<Survey, "questions"> & {
+  numberOfQuestions: number
 }

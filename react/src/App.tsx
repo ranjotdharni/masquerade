@@ -1,6 +1,6 @@
 import "./App.css"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { PAGE_HOME, PAGE_LOGIN, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_SUBMITTED, PAGE_SURVEY_TAKE, PAGE_SURVEY_PREVIEW, PAGE_WELCOME } from "./lib/constants"
+import { PAGE_HOME, PAGE_LOGIN, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_SUBMITTED, PAGE_SURVEY_TAKE, PAGE_SURVEY_PREVIEW, PAGE_WELCOME, PAGE_SURVEY_VIEW } from "./lib/constants"
 import WelcomePage from "./pages/WelcomePage"
 import HomePage from "./pages/HomePage"
 import AppLayout from "./pages/AppLayout"
@@ -12,7 +12,9 @@ import NotFound from "./components/utility/NotFound"
 import CatalogPage from "./pages/CatalogPage"
 import TakeSurveyPage from "./pages/TakeSurveyPage"
 import SubmittedPage from "./pages/SubmittedPage"
-import ViewSurveyPage from "./pages/PreviewSurveyPage"
+import PreviewSurveyPage from "./pages/PreviewSurveyPage"
+import MySurveysPage from "./pages/MySurveysPage"
+import ViewSurveyPage from "./pages/ViewSurveyPage"
 
 const routes = createBrowserRouter([
   {
@@ -31,7 +33,9 @@ const routes = createBrowserRouter([
       { path: PAGE_HOME, element: <HomePage /> },
       { path: PAGE_SURVEY_CREATE, element: <CreateSurveyPage /> },
       { path: PAGE_SURVEY_FIND, element: <CatalogPage /> },
-      { path: `${PAGE_SURVEY_PREVIEW}/:id`, element: <ViewSurveyPage /> },
+      { path: PAGE_SURVEY_VIEW, element: <MySurveysPage /> },
+      { path: `${PAGE_SURVEY_VIEW}/:id`, element: <ViewSurveyPage /> },
+      { path: `${PAGE_SURVEY_PREVIEW}/:id`, element: <PreviewSurveyPage /> },
       { path: PAGE_SURVEY_SUBMITTED, element: <SubmittedPage /> },
       { path: `${PAGE_SURVEY_TAKE}/:id`, element: <TakeSurveyPage /> },
     ],
