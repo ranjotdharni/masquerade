@@ -1,9 +1,40 @@
-import { useState, type MouseEvent } from "react"
-import { API_LOGOUT, ICON_LOGO, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW } from "../../../lib/constants"
-import "../../../css/animated.css"
 import { ChevronLeft, CircleQuestionMark, HomeIcon, ListChecks, LogOut, MessageCircleWarning, Minimize, NotebookText, PencilRuler, Settings, TextSearch, type LucideIcon } from "lucide-react"
+import { API_LOGOUT, ICON_LOGO, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW } from "../../../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../../../lib/utility/internal"
 import type { GenericError } from "../../../lib/types/internal"
+import { useState, type MouseEvent } from "react"
+import "../../../css/animated.css"
+
+type NavCSSType = {
+    spaceX: string
+    spaceY: string
+    unitsX: string
+    unitsY: string
+    getX: (add?: number) => string,
+    getY: (add?: number) => string,
+}
+
+const NAV_CSS_SPACE_X: string = "6.5"
+const NAV_CSS_UNITS_X: string = "vh"
+const NAV_CSS_SPACE_Y: string = "6"
+const NAV_CSS_UNITS_Y: string = "vh"
+
+export const NAV_CSS: NavCSSType = {
+    spaceX: NAV_CSS_SPACE_X,
+    spaceY: NAV_CSS_SPACE_Y,
+    unitsX: NAV_CSS_UNITS_X,
+    unitsY: NAV_CSS_UNITS_Y,
+
+    getX: (add?: number) => {
+        let u: number = parseFloat(NAV_CSS_SPACE_X) + (add ? add : 0)
+        return `${u}${NAV_CSS_UNITS_X}`
+    },
+    
+    getY: (add?: number) => {
+        let u: number = parseFloat(NAV_CSS_SPACE_Y) + (add ? add : 0)
+        return `${u}${NAV_CSS_UNITS_Y}`
+    },
+}
 
 const CLOSED_STATE: number = 0
 const MINIMIZED_STATE: number = 1
@@ -76,7 +107,7 @@ export default function NavBar() {
                 <img src={ICON_LOGO} className="w-full h-full" />
             </button>
 
-            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : 'translate-x-[-125%] md:translate-none md:w-[6.5vh]'} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
+            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : `translate-x-[-125%] md:translate-none md:w-[${NAV_CSS_SPACE_X}]`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
                 <header className="w-full h-[5%] flex flex-row justify-center">
                     <div className={`${barState === OPEN_STATE ? 'w-4/5' : 'w-full'} h-full flex flex-row justify-start`}>
                         <img onClick={() => { setBarState(OPEN_STATE) }} src={ICON_LOGO} className={`${barState === OPEN_STATE ? 'h-full' : 'w-full max-w-[2.8vw]'} aspect-square hover:cursor-pointer`} />
