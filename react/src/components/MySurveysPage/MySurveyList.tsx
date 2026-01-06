@@ -12,7 +12,7 @@ function SurveyWidget({ survey } : { survey: SurveyMetadata }) {
 export default function MySurveyList({ surveys } : { surveys: SurveyMetadata[] }) {
 
     return (
-        <ul>
+        <ul className="border-t border-accent">
             {
                 surveys.map(s => {
                     return <SurveyWidget key={s._id.$oid} survey={s} />
