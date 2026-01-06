@@ -10,29 +10,91 @@ type NavCSSType = {
     spaceY: string
     unitsX: string
     unitsY: string
+
+    w: string
+    h: string
+
+    px: string
+    py: string
+    pl: string
+    pt: string
+    pr: string
+    pb: string
+    mx: string
+    my: string
+    ml: string
+    mt: string
+    mr: string
+    mb: string
+
+    md_w: string
+    md_h: string
+
+    md_px: string
+    md_py: string
+    md_pl: string
+    md_pt: string
+    md_pr: string
+    md_pb: string
+    md_mx: string
+    md_my: string
+    md_ml: string
+    md_mt: string
+    md_mr: string
+    md_mb: string
+
     getX: (add?: number) => string,
     getY: (add?: number) => string,
 }
 
-const NAV_CSS_SPACE_X: string = "6.5"
-const NAV_CSS_UNITS_X: string = "vh"
-const NAV_CSS_SPACE_Y: string = "6"
-const NAV_CSS_UNITS_Y: string = "vh"
-
 export const NAV_CSS: NavCSSType = {
-    spaceX: NAV_CSS_SPACE_X,
-    spaceY: NAV_CSS_SPACE_Y,
-    unitsX: NAV_CSS_UNITS_X,
-    unitsY: NAV_CSS_UNITS_Y,
+    spaceX: "6.5",
+    spaceY: "6",
+    unitsX: "vh",
+    unitsY: "vh",
+
+    w: "w-[6.5vh]",
+    h: "h-[6vh]",
+
+    px: "px-[6.5vh]",
+    pl: "pl-[6.5vh]",
+    pr: "pr-[6.5vh]",
+    py: "py-[6vh]",
+    pt: "pt-[6vh]",
+    pb: "pb-[6vh]",
+
+    mx: "mx-[6.5vh]",
+    ml: "ml-[6.5vh]",
+    mr: "mr-[6.5vh]",
+    my: "my-[6vh]",
+    mt: "mt-[6vh]",
+    mb: "mb-[6vh]",
+
+    md_w: "md:w-[6.5vh]",
+    md_h: "md:h-[6vh]",
+
+    md_px: "md:px-[6.5vh]",
+    md_pl: "md:pl-[6.5vh]",
+    md_pr: "md:pr-[6.5vh]",
+    md_py: "md:py-[6vh]",
+    md_pt: "md:pt-[6vh]",
+    md_pb: "md:pb-[6vh]",
+
+    md_mx: "md:mx-[6.5vh]",
+    md_ml: "md:ml-[6.5vh]",
+    md_mr: "md:mr-[6.5vh]",
+    md_my: "md:my-[6vh]",
+    md_mt: "md:mt-[6vh]",
+    md_mb: "md:mb-[6vh]",
 
     getX: (add?: number) => {
-        let u: number = parseFloat(NAV_CSS_SPACE_X) + (add ? add : 0)
-        return `${u}${NAV_CSS_UNITS_X}`
+        let u: number = 6.5 + (add ? add : 0)
+        return `${u}vh`
     },
-    
+
     getY: (add?: number) => {
-        let u: number = parseFloat(NAV_CSS_SPACE_Y) + (add ? add : 0)
-        return `${u}${NAV_CSS_UNITS_Y}`
+        let u: number = 6 + (add ? add : 0)
+        return `${u}vh`
     },
 }
 
@@ -107,7 +169,7 @@ export default function NavBar() {
                 <img src={ICON_LOGO} className="w-full h-full" />
             </button>
 
-            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : `translate-x-[-125%] md:translate-none md:w-[${NAV_CSS_SPACE_X}]`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
+            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : `translate-x-[-125%] md:translate-none ${NAV_CSS.md_w}`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
                 <header className="w-full h-[5%] flex flex-row justify-center">
                     <div className={`${barState === OPEN_STATE ? 'w-4/5' : 'w-full'} h-full flex flex-row justify-start`}>
                         <img onClick={() => { setBarState(OPEN_STATE) }} src={ICON_LOGO} className={`${barState === OPEN_STATE ? 'h-full' : 'w-full max-w-[2.8vw]'} aspect-square hover:cursor-pointer`} />

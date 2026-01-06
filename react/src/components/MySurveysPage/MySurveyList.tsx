@@ -35,7 +35,7 @@ export default function MySurveyList({ surveys } : { surveys: SurveyMetadata[] }
     let baseStyle: Record<string | number | symbol, string | undefined> = surveys.length === 0 ? {display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"} : {} 
 
     return (
-        <ul style={{...baseStyle}} className={`h-full border-t border-text overflow-y-scroll overflow-x-hidden px-4 pb-4 md:pl-[${NAV_CSS.spaceX}${NAV_CSS.unitsX}]`}>
+        <ul style={baseStyle} className={`h-full border-t border-text overflow-y-scroll overflow-x-hidden px-4 pb-4 ${NAV_CSS.md_pl}`}>
             {
                 surveys.length === 0 ?
                 <a href={`/${PAGE_SURVEY_CREATE}`} className="appButton font-jbm flex flex-row"><Plus className="mr-2" /> Create</a> : 

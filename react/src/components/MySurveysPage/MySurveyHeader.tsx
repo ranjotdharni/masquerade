@@ -1,7 +1,7 @@
 import { NAV_CSS } from "../utility/animated/NavBar"
 
 export default function MySurveyHeader({ username, numberOfSurveys } : { username: string, numberOfSurveys: number }) {
-    let containerCSS: string = `w-full h-1/4 p-4 pt-[1vh] pl-[${NAV_CSS.spaceX}vh]`
+    let containerCSS: string = `w-full h-1/4 p-4 pt-[1vh] ${NAV_CSS.pl}`
 
     return (
         <section className={containerCSS}>
