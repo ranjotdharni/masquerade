@@ -110,11 +110,16 @@ const NAVBAR_STATES = {
 
 type NavbarStateType = typeof NAVBAR_STATES[keyof typeof NAVBAR_STATES]
 
-function LinkItem({ text, href, open, Icon, close } : { text: string, href: string, open: boolean, Icon: LucideIcon, close: () => void }) {
+function LinkItem({ text, href, open, Icon, close, hoverContent } : { text: string, href: string, open: boolean, Icon: LucideIcon, close: () => void, hoverContent: string }) {
     
+    let tailwind = `
+        w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
+        after:left-[90%] after:rounded after:border-accent after:bg-text after:text-background after:px-2 tooltip
+    `
+
     return (
         <div className="w-full">
-            <a onClick={() => { close() }} href={href} className={`w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light`}>
+            <a onClick={() => { close() }} href={href} data-tooltip={open ? "" : hoverContent} className={tailwind}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
             </a>
@@ -122,10 +127,15 @@ function LinkItem({ text, href, open, Icon, close } : { text: string, href: stri
     )
 }
 
-function ActionItem({ text, action, open, Icon } : { text: string, action: () => void, open: boolean, Icon: LucideIcon }) {
+function ActionItem({ text, action, open, Icon, hoverContent } : { text: string, action: () => void, open: boolean, Icon: LucideIcon, hoverContent: string }) {
+    let tailwind = `
+        w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
+        after:left-[90%] after:rounded after:border-accent after:bg-text after:text-background after:px-2 tooltip
+    `
+
     return (
         <div className="w-full">
-            <button onClick={e => { e.preventDefault(); action() }} className={`w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light`}>
+            <button onClick={e => { e.preventDefault(); action() }} data-tooltip={open ? "" : hoverContent} className={tailwind}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
             </button>
@@ -180,22 +190,22 @@ export default function NavBar() {
                 </header>
 
                 <section className="w-full h-[50%] flex flex-col justify-evenly overflow-hidden">
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Home" Icon={HomeIcon} href={`/${PAGE_HOME}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Create" Icon={PencilRuler} href={`/${PAGE_SURVEY_CREATE}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Browse" Icon={TextSearch} href={`/${PAGE_SURVEY_FIND}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="My Surveys" Icon={ListChecks} href={`/${PAGE_SURVEY_VIEW}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Settings" Icon={Settings} href={`/${PAGE_HOME}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Home' text="Home" Icon={HomeIcon} href={`/${PAGE_HOME}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Create' text="Create" Icon={PencilRuler} href={`/${PAGE_SURVEY_CREATE}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Browse' text="Browse" Icon={TextSearch} href={`/${PAGE_SURVEY_FIND}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='My Surveys' text="My Surveys" Icon={ListChecks} href={`/${PAGE_SURVEY_VIEW}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Settings' text="Settings" Icon={Settings} href={`/${PAGE_HOME}`} />
                 </section>
 
                 <section  className="w-full h-[20%] flex flex-col justify-evenly overflow-hidden">
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Usage" Icon={NotebookText} href={`/${PAGE_HOME}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="About" Icon={CircleQuestionMark} href={`/${PAGE_HOME}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Report" Icon={MessageCircleWarning} href={`/${PAGE_HOME}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Usage' text="Usage" Icon={NotebookText} href={`/${PAGE_HOME}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='About' text="About" Icon={CircleQuestionMark} href={`/${PAGE_HOME}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Report' text="Report" Icon={MessageCircleWarning} href={`/${PAGE_HOME}`} />
                 </section>
 
                 <footer className="w-full h-[15%] flex flex-col justify-evenly overflow-hidden">
-                    <ActionItem open={barState === OPEN_STATE} text="Sign Out" Icon={LogOut} action={async () => { await signOut() }} />
-                    <ActionItem open={barState === OPEN_STATE} text="Close" Icon={Minimize} action={fullClose} />
+                    <ActionItem open={barState === OPEN_STATE}  hoverContent='Sign Out' text="Sign Out" Icon={LogOut} action={async () => { await signOut() }} />
+                    <ActionItem open={barState === OPEN_STATE}  hoverContent='Close' text="Close" Icon={Minimize} action={fullClose} />
                 </footer>
             </nav>
         </>

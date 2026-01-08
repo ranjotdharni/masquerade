@@ -125,3 +125,26 @@
 .navbarClosed {
     transform: translateX(-125%);
 }
+
+
+/* Fade In NavBar Tooltip */
+
+.tooltip::after {
+    content: none;
+    position: absolute;
+    white-space: nowrap;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

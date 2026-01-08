@@ -5,10 +5,10 @@ type ViewSurveyHeaderProps = {
 }
 
 export default function ViewSurveyBody({ questions } : ViewSurveyHeaderProps) {
-    console.log(questions.length)
+
     return (
         <section className="w-full h-3/4">
-
+            
         </section>
     )
 }
