@@ -169,7 +169,7 @@ export default function NavBar() {
                 <img src={ICON_LOGO} className="w-full h-full" />
             </button>
 
-            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : `translate-x-[-125%] md:translate-none ${NAV_CSS.md_w}`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar  ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
+            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : `translate-x-[-125%] md:translate-none ${NAV_CSS.md_w}`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
                 <header className="w-full h-[5%] flex flex-row justify-center">
                     <div className={`${barState === OPEN_STATE ? 'w-4/5' : 'w-full'} h-full flex flex-row justify-start`}>
                         <img onClick={() => { setBarState(OPEN_STATE) }} src={ICON_LOGO} className={`${barState === OPEN_STATE ? 'h-full' : 'w-full max-w-[2.8vw]'} aspect-square hover:cursor-pointer`} />
@@ -179,7 +179,7 @@ export default function NavBar() {
                     </button>
                 </header>
 
-                <section className="w-full h-[50%] flex flex-col justify-evenly">
+                <section className="w-full h-[50%] flex flex-col justify-evenly overflow-hidden">
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Home" Icon={HomeIcon} href={`/${PAGE_HOME}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Create" Icon={PencilRuler} href={`/${PAGE_SURVEY_CREATE}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Browse" Icon={TextSearch} href={`/${PAGE_SURVEY_FIND}`} />
@@ -187,13 +187,13 @@ export default function NavBar() {
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Settings" Icon={Settings} href={`/${PAGE_HOME}`} />
                 </section>
 
-                <section  className="w-full h-[20%] flex flex-col justify-evenly">
+                <section  className="w-full h-[20%] flex flex-col justify-evenly overflow-hidden">
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Usage" Icon={NotebookText} href={`/${PAGE_HOME}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="About" Icon={CircleQuestionMark} href={`/${PAGE_HOME}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} text="Report" Icon={MessageCircleWarning} href={`/${PAGE_HOME}`} />
                 </section>
 
-                <footer className="w-full h-[15%] flex flex-col justify-evenly">
+                <footer className="w-full h-[15%] flex flex-col justify-evenly overflow-hidden">
                     <ActionItem open={barState === OPEN_STATE} text="Sign Out" Icon={LogOut} action={async () => { await signOut() }} />
                     <ActionItem open={barState === OPEN_STATE} text="Close" Icon={Minimize} action={fullClose} />
                 </footer>
