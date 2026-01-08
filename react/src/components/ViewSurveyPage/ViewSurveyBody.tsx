@@ -1,14 +1,13 @@
 import type { Question } from "../../lib/types/api"
+import QuestionViewer from "./viewer/QuestionViewer"
 
-type ViewSurveyHeaderProps = {
+type ViewSurveyBodyProps = {
     questions: Question[]
 }
 
-export default function ViewSurveyBody({ questions } : ViewSurveyHeaderProps) {
+export default function ViewSurveyBody({ questions } : ViewSurveyBodyProps) {
 
     return (
-        <section className="w-full h-3/4">
-            
-        </section>
+        <QuestionViewer survey={questions} />
     )
 }
