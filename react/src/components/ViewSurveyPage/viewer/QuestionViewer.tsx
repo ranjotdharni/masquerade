@@ -2,6 +2,7 @@ import { Check, CircleDot, HandCoins, Star, type LucideIcon } from "lucide-react
 import type { MultipleAnswerSlug, QuestionIdType, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../../../lib/types/client"
 import { QUESTION_TYPE_ID_MAP } from "../../../lib/constants"
 import { type JSX } from "react"
+import type { Question } from "../../../lib/types/api"
 
 type QuestionClassification = {
     title: string
@@ -113,7 +114,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: SingleA
     )
 }
 
-function SurveyQuestion({ question } : { question: SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug }) {
+function SurveyQuestion({ question } : { question: Question }) {
     let QuestionClassification: QuestionClassification = SURVEY_TYPE_TO_ICON[question.type]
 
     return (
@@ -144,7 +145,7 @@ function SurveyQuestion({ question } : { question: SingleAnswerSlug | MultipleAn
     )
 }
 
-export default function QuestionViewer({ survey, index } : { survey: (SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug)[], index: number }) {
+export default function QuestionViewer({ survey, index } : { survey: Question[], index: number }) {
 
     return (
         <section className="w-full h-3/4 flex flex-col justify-center items-center">

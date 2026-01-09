@@ -219,7 +219,7 @@ class SubmitSurvey(APIView):
             if len(updates) == 0:
                 return failure
             
-            updates.append(UpdateOne({"_id": survey["_id"]}, {"$inc": {"submissions": 1}}))
+            updates.append(UpdateOne({"_id": ObjectId(survey["_id"]["$oid"])}, {"$inc": {"submissions": 1}}))
             result = surveysCollection.bulk_write(updates, ordered=False) # If no exception is raised, this succeeded and survey submission is complete
         except Exception as e:
             print(e)
