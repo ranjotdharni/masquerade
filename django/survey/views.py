@@ -181,6 +181,9 @@ class SubmitSurvey(APIView):
         try:
             raw = request.body
             data = json.loads(raw)
+            print(data)
+            print(settings.BASE_DIR)
+            return failure
 
             if "id" not in data or "answers" not in data:
                 return Response({ "error": True, "message": "Cannot find survey/submission (missing parameters)." }, status.HTTP_400_BAD_REQUEST)
@@ -212,10 +215,18 @@ class SubmitSurvey(APIView):
                 
                 if "success" in mongo_answer_object:
                     for update in mongo_answer_object["payload"]:
-                        updates.append(UpdateOne(update["filters"], update["increments"], array_filters=update["array_filters"]))
+                        segment = {
+                            "updateOne": {
+                                "filter": update["filters"],
+                                "update": update["increments"],
+                                "arrayFilters": update["array_filters"]
+                            }
+                        }
+                        print(segment)
+                        updates.append(segment)
                 else:
                     return failure
-            
+            # return success
             if len(updates) == 0:
                 return failure
             

@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # sample data
-*/sampledata/*
+*/sampledata/local/*
