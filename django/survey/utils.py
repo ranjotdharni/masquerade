@@ -156,32 +156,32 @@ def create_mongo_survey_object(auth, slug):
         return GenericError(message=str(e).strip() or "Malformed data was detected.").to_dict()
 
 
-def create_mongo_answer_object(question, answer):
+def create_mongo_answer_object(surveyId, question, answer):
     success = {
         "success": True,
         "payload": []
     }
 
-    try: 
-        validation = { "success": False, "empty": True }
+    validation = { "success": False, "empty": True }
 
+    try: 
         match answer["type"]:
             case settings.SINGLE_CHOICE_ID:
                 validation = validate_answer_submission_single(question, answer)
                 if "success" in validation and validation["answered"]:
-                    success["payload"] = generate_answer_object_single(question["_id"]["$oid"], answer)
+                    success["payload"] = generate_answer_object_single(surveyId, answer)
             case settings.MULTIPLE_CHOICE_ID:
                 validation = validate_answer_submission_multi(question, answer)
                 if "success" in validation and validation["answered"]:
-                    success["payload"] = generate_answer_object_multi(question["_id"]["$oid"], answer)
+                    success["payload"] = generate_answer_object_multi(surveyId, answer)
             case settings.RANKING_ID:
                 validation = validate_answer_submission_rank(question, answer)
                 if "success" in validation and validation["answered"]:
-                    success["payload"] = generate_answer_object_rank(question["_id"]["$oid"], answer)
+                    success["payload"] = generate_answer_object_rank(surveyId, answer)
             case settings.RATING_ID:
                 validation = validate_answer_submission_rate(question, answer)
                 if "success" in validation and validation["answered"]:
-                    success["payload"] = generate_answer_object_rate(question["_id"]["$oid"], answer)
+                    success["payload"] = generate_answer_object_rate(surveyId, answer)
             case _:
                 return GenericError("Could not validate survey (server failed to classify submission data).")
             
@@ -190,5 +190,8 @@ def create_mongo_answer_object(question, answer):
     except Exception as e:
         print(e)
         return GenericError("Could not validate survey (server failed to read submission data).")
-        
+
+    if not validation["answered"]:
+        success["empty"] = True
+
     return success

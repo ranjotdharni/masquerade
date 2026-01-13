@@ -5,7 +5,6 @@ from both the user and MongoDB ("interpreting" between client and database).
 
 from bson.objectid import ObjectId
 from backend.helpers import GenericError
-
 from django.conf import settings
 
 def validate_answer_submission_single(question, answer) -> dict[str, bool] | GenericError:
@@ -34,13 +33,11 @@ def generate_answer_object_single(survey_id, answer):
     sid = ObjectId(survey_id)
     qid = ObjectId(answer["_id"]["$oid"])
     aid = ObjectId(answer["slug"])
-    return [{
-        "filters": {
-            "_id": sid,
-            "questions._id": qid,
-            "questions.answers._id": aid
+    return {
+        "filter": {
+            "_id": sid
         },
-        "increments": {
+        "update": {
             "$inc": {
                 "questions.$[q].submissions": 1,
                 "questions.$[q].answers.$[a].submissions": 1
@@ -50,7 +47,7 @@ def generate_answer_object_single(survey_id, answer):
             {"q._id": qid},
             {"a._id": aid}
         ]
-    }]
+    }
 
 def validate_answer_submission_multi(question, answer) -> dict[str, bool] | GenericError:
     success = { "success": True, "answered": True }
@@ -81,35 +78,33 @@ def generate_answer_object_multi(survey_id, answer):
     sid = ObjectId(survey_id)
     qid = ObjectId(answer["_id"]["$oid"])
     aids = answer["slug"]
-    payload = []
-    incremented = False
+    answerIndex = 0
+
+    filter = {
+        "_id": sid
+    }
+
+    inc = {
+        "questions.$[q].submissions": 1,
+    }
+
+    array_filters = [
+        { "q._id": qid }
+    ]
 
     for aid in aids:
-        inc = {
-            "questions.$[q].answers.$[a].submissions": 1
-        }
-
-        if not incremented:
-            incremented = True
-            inc["questions.$[q].submissions"] = 1
-
         oaid = ObjectId(aid)
-        payload.append({
-            "filters": {
-                "_id": sid,
-                "questions._id": qid,
-                "questions.answers._id": oaid
-            },
-            "increments": {
-                "$inc": inc
-            },
-            "array_filters": [
-                {"q._id": qid},
-                {"a._id": oaid}
-            ]
-        })
+        inc[f"questions.$[q].answers.$[a{answerIndex}].submissions"] = 1
+        array_filters.append({ f"a{answerIndex}._id": oaid })
+        answerIndex += 1
 
-    return payload
+    return {
+        "filter": filter,
+        "update": {
+            "$inc": inc
+        },
+        "array_filters": array_filters
+    }
 
 def validate_answer_submission_rank(question, answer) -> dict[str, bool] | GenericError:
     success = { "success": True, "answered": False }
@@ -161,35 +156,33 @@ def generate_answer_object_rank(survey_id, answer):
     sid = ObjectId(survey_id)
     qid = ObjectId(answer["_id"]["$oid"])
     aids = answer["slug"]
-    payload = []
-    incremented = False
+    answerIndex = 0
+
+    filter = {
+        "_id": sid
+    }
+
+    inc = {
+        "questions.$[q].submissions": 1,
+    }
+
+    array_filters = [
+        { "q._id": qid }
+    ]
 
     for aid in aids:
         oaid = ObjectId(aid["_id"]["$oid"])
-        inc = {
-            f"questions.$[q].answers.$[a].{aid['rank']}": 1
-        }
+        inc[f"questions.$[q].answers.$[a{answerIndex}].{aid['rank']}"] = 1
+        array_filters.append({ f"a{answerIndex}._id": oaid })
+        answerIndex += 1
 
-        if not incremented:
-            incremented = True
-            inc["questions.$[q].submissions"] = 1
-
-        payload.append({
-            "filters": {
-                "_id": sid,
-                "questions._id": qid,
-                "questions.answers._id": oaid
-            },
-            "increments": {
-                "$inc": inc
-            },
-            "array_filters": [
-                {"q._id": qid},
-                {"a._id": oaid}
-            ]
-        })
-
-    return payload
+    return {
+        "filter": filter,
+        "update": {
+            "$inc": inc
+        },
+        "array_filters": array_filters
+    }
 
 def validate_answer_submission_rate(question, answer) -> dict[str, bool] | GenericError:
     success = { "success": True, "answered": True }
@@ -215,16 +208,18 @@ def validate_answer_submission_rate(question, answer) -> dict[str, bool] | Gener
 def generate_answer_object_rate(survey_id, answer):
     sid = ObjectId(survey_id)
     qid = ObjectId(answer["_id"]["$oid"])
-    return [{
-        "filters": {
+
+    return {
+        "filter": {
             "_id": sid,
-            "questions._id": qid,
         },
-        "increments": {
+        "update": {
             "$inc": {
-                "questions.$.submissions": 1,
-                f"questions.$.answers.{answer['slug']}": 1
+                "questions.$[q].submissions": 1,
+                f"questions.$[q].answers.{answer['slug']}": 1
             }
         },
-        "array_filters": []
-    }]
+        "array_filters": [
+            { "q._id": qid }
+        ]
+    }
