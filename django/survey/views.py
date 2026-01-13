@@ -19,6 +19,7 @@ from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
 from apiauth.utils import extract_user_from_request
+from backend.lib.utility import json_file_to_dict
 
 PUBLIC_SURVEY_DATA_FORMAT = {
     "submissions": 0,
@@ -181,9 +182,6 @@ class SubmitSurvey(APIView):
         try:
             raw = request.body
             data = json.loads(raw)
-            print(data)
-            print(settings.BASE_DIR)
-            return failure
 
             if "id" not in data or "answers" not in data:
                 return Response({ "error": True, "message": "Cannot find survey/submission (missing parameters)." }, status.HTTP_400_BAD_REQUEST)
@@ -222,7 +220,7 @@ class SubmitSurvey(APIView):
                                 "arrayFilters": update["array_filters"]
                             }
                         }
-                        print(segment)
+                        # print(segment)
                         updates.append(segment)
                 else:
                     return failure
@@ -231,7 +229,99 @@ class SubmitSurvey(APIView):
                 return failure
             
             updates.append(UpdateOne({"_id": ObjectId(survey["_id"]["$oid"])}, {"$inc": {"submissions": 1}}))
-            result = surveysCollection.bulk_write(updates, ordered=False) # If no exception is raised, this succeeded and survey submission is complete
+            result = surveysCollection.bulk_write(updates, ordered=False) 
+        except Exception as e:
+            print(e)
+            return Response({"error": True, "message": "500 Internal Server Error"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return success
+
+@method_decorator(csrf_protect, name="dispatch")
+class SurveyTest(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        success = Response({ "success": True, "message": "Survey Submitted!" }, status.HTTP_200_OK)
+        failure = Response({ "error": True, "message": "Could not validate survey. Check submission or try again later." }, status.HTTP_409_CONFLICT)
+
+        try:
+            data = json_file_to_dict("/sampledata/local/submission.json")
+
+            if "error" in data:
+                return Response({ "error": True, "message": data["message"] }, status.HTTP_400_BAD_REQUEST)
+
+            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+            result = surveysCollection.find({"_id": ObjectId(data["id"])}, PUBLIC_SURVEY_DATA_FORMAT)
+
+            survey_list = list(result)
+            search_results = json.loads(dumps(survey_list))
+
+            if len(search_results) == 0 or len(data["answers"]) == 0:
+                return Response({ "error": True, "message": "Could not find survey." }, status.HTTP_404_NOT_FOUND)
+            
+            # Check if invite only survey   
+
+            survey = search_results[0]
+            submission = data["answers"]
+
+            if len(survey["questions"]) != len(submission):
+                return failure
+            
+            updates = []
+
+            for question, answer in zip(survey["questions"], submission):
+                mongo_answer_object = create_mongo_answer_object(question, answer)
+
+                if "error" in mongo_answer_object:
+                    return Response(mongo_answer_object, status.HTTP_409_CONFLICT)
+                
+                if "success" in mongo_answer_object:
+                    for update in mongo_answer_object["payload"]:
+                        segment = {
+                            "updateOne": {
+                                "filter": update["filters"],
+                                "update": update["increments"],
+                                "arrayFilters": update["array_filters"]
+                            }
+                        }
+                        # print(segment)
+                        updates.append(segment)
+                else:
+                    return failure
+            # return success
+            if len(updates) == 0:
+                return failure
+            
+            # Below format is working for Single-Choice Questions!
+            operation = UpdateOne(
+                filter={"_id": ObjectId("6957485eab032fecf888b324")},
+                update={ "$inc": { "questions.$[q].submissions": 1, "questions.$[q].answers.$[a].submissions": 1 } },
+                array_filters=[{ "q._id": ObjectId("6957485eab032fecf888b314") }, { "a._id": ObjectId("6957485eab032fecf888b315") }]
+            )
+            surveysCollection.bulk_write([operation], ordered=False)
+            return success
+        
+            raw = {
+                "updateOne":{
+                    "filter":{
+                        "q._id":"ObjectId(6957485eab032fecf888b314)",
+                    },
+                    "update":{
+                        "$inc":{
+                            "$[q].submissions":1,
+                            "$[q].answers.$[a].submissions":1
+                        }
+                    },
+                    "arrayFilters":[
+                        {
+                            "a._id":"ObjectId(6957485eab032fecf888b318)"
+                        }
+                    ]
+                }
+            }
+
+            updates.append(UpdateOne({"_id": ObjectId(survey["_id"]["$oid"])}, {"$inc": {"submissions": 1}}))
+            result = surveysCollection.bulk_write([updates[0]], ordered=False) 
         except Exception as e:
             print(e)
             return Response({"error": True, "message": "500 Internal Server Error"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
