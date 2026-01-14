@@ -5,6 +5,9 @@ import { UIContext } from "../components/context/UIContext"
 import { API_SURVEY_CATALOG, PAGE_SURVEY_FIND } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { authenticatedRequest } from "../lib/utility/internal"
+import type { Survey } from "../lib/types/api"
+import PreviewSurveyHeader from "../components/PreviewSurveyPage/PreviewSurveyHeader"
+import PreviewSurveyBody from "../components/PreviewSurveyPage/PreviewSurveyBody"
 
 export default function PreviewSurveyPage() {
     const { notify } = useContext(UIContext)
@@ -14,7 +17,16 @@ export default function PreviewSurveyPage() {
     if (id === undefined)
         navigate(`/${PAGE_SURVEY_FIND}`)
 
-    const [content, setContent] = useState<any>()
+    const [content, setContent] = useState<Survey>()
+
+    function PageContent({ content } : { content: Survey }) {
+        return (
+            <>
+                <PreviewSurveyHeader name={content.name} inviteOnly={content.inviteOnly} />
+                <PreviewSurveyBody id={content._id.$oid} numberOfQuestions={content.questions.length} />
+            </>
+        )
+    }
 
     useEffect(() => {
         async function getSurvey() {
@@ -28,7 +40,7 @@ export default function PreviewSurveyPage() {
                     })
                 }
                 else {
-                    setContent(result)
+                    setContent((result as unknown as { content: Survey[] }).content[0] as unknown as Survey)
                 }
             })
         }
@@ -40,7 +52,7 @@ export default function PreviewSurveyPage() {
         <AppContent className="flex flex-col justify-center items-center">
             {
                 content ?
-                <pre>{JSON.stringify(content)}</pre> :
+                <PageContent content={content} /> :
                 <FullScreenLoader loaderText="Retrieving Survey..." width="25%" aspectRatio={"9 / 16"} />
             }
         </AppContent>
