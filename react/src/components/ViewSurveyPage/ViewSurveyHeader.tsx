@@ -2,12 +2,11 @@ import { Lock, LockOpen } from "lucide-react"
 import { NAV_CSS } from "../utility/animated/NavBar"
 
 type ViewSurveyHeaderProps = {
-    id: string
     name: string
     inviteOnly: boolean
 }
 
-export default function ViewSurveyHeader({ id, name, inviteOnly } : ViewSurveyHeaderProps) {
+export default function ViewSurveyHeader({ name, inviteOnly } : ViewSurveyHeaderProps) {
     let containerCSS: string = `w-full h-1/4 p-4 pt-[1vh] ${NAV_CSS.pl}`
     
     return (

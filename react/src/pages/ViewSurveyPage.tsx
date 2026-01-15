@@ -22,7 +22,7 @@ export default function ViewSurveyPage() {
     function PageContent({ content } : { content: Survey }) {
         return (
             <>
-                <ViewSurveyHeader id={content._id.$oid} name={content.name} inviteOnly={content.inviteOnly} />
+                <ViewSurveyHeader name={content.name} inviteOnly={content.inviteOnly} />
                 <ViewSurveyBody questions={content.questions} />
             </>
         )
@@ -42,7 +42,6 @@ export default function ViewSurveyPage() {
                 }
                 else {
                     setContent(validResult[0])
-                    console.log(validResult)
                 }
             })
         }
