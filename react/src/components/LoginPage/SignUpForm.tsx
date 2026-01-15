@@ -1,7 +1,7 @@
 import { useState, type MouseEvent } from "react"
 import type { GenericError } from "../../lib/types/internal"
 import { isValidEmail, isValidPassword } from "../../lib/utility/client"
-import { API_BASIC_SIGNUP, PAGE_HOME } from "../../lib/constants"
+import { API_BASIC_SIGNUP, DEFAULT_ERROR_MESSAGE, PAGE_HOME } from "../../lib/constants"
 import { useNavigate } from "react-router-dom"
 
 type SignUpFormProps = {
@@ -28,10 +28,10 @@ export default function SignUpForm({ setError, setLoader } : SignUpFormProps) {
         const invalidPassword: GenericError | undefined = isValidPassword(checkPassword, checkConfirm)
 
         if (invalidEmail !== undefined) {
-            setError(invalidEmail.message || "Error")
+            setError(invalidEmail.message || DEFAULT_ERROR_MESSAGE)
         }
         else if (invalidPassword !== undefined) {
-            setError(invalidPassword.message || "Error")
+            setError(invalidPassword.message || DEFAULT_ERROR_MESSAGE)
         }
         else {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_BASIC_SIGNUP}`, {

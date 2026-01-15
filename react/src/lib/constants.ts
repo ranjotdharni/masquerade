@@ -1,5 +1,6 @@
 
-export const APP_NAME: string = "Masquerade"
+export const APP_NAME: string = "Masquerades"
+export const DEFAULT_ERROR_MESSAGE: string = "Uknown Error Occurred"
 
 export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'

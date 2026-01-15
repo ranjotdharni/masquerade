@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import AppContent from "../components/layout/AppContent"
 import { useContext, useEffect, useState, type MouseEvent } from "react"
 import { authenticatedRequest } from "../lib/utility/internal"
-import { API_SURVEY_CATALOG, API_SURVEY_SUBMIT, PAGE_SURVEY_SUBMITTED, QUESTION_TYPE_ID_MAP } from "../lib/constants"
+import { API_SURVEY_CATALOG, API_SURVEY_SUBMIT, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_SUBMITTED, QUESTION_TYPE_ID_MAP } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { UIContext } from "../components/context/UIContext"
 import { generateClientId } from "../lib/utility/client"
@@ -178,7 +178,7 @@ export default function TakeSurveyPage() {
                 if (result.error) {
                     // possible invite permission failure
                     notify({
-                        message: result.message as string | undefined || "500 Internal Server Error",
+                        message: result.message as string | undefined || DEFAULT_ERROR_MESSAGE,
                         color: "var(--color-error)"
                     })
                 }

@@ -1,4 +1,4 @@
-import { API_CONFIRM_AUTH, AUTH_ID_LIST, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
+import { API_CONFIRM_AUTH, AUTH_ID_LIST, DEFAULT_ERROR_MESSAGE, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
 import LoginPageImage from "../assets/svg/loginPageImage.svg"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import SignInForm from "../components/LoginPage/SignInForm"
@@ -11,7 +11,7 @@ import { getCookie } from "../lib/utility/internal"
 export default function LoginPage() {
     let navigate = useNavigate()
     
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [searchParams] = useSearchParams()
 
     const [loader, setLoader] = useState<boolean>(false)
     const [error, setError] = useNotify()
@@ -21,7 +21,7 @@ export default function LoginPage() {
         const duplicateError: number = Number(error)
 
         if (isNaN(duplicateError)) {
-            setError("500 Internal Server Error")
+            setError(DEFAULT_ERROR_MESSAGE)
             return
         }
 
@@ -29,14 +29,14 @@ export default function LoginPage() {
             const providerResponse: string | null = searchParams.get("provider")
 
             if (!providerResponse) {
-                setError("500 Internal Server Error")
+                setError(DEFAULT_ERROR_MESSAGE)
                 return
             }
 
             const provider: number = Number(providerResponse)
 
             if (isNaN(provider) || !AUTH_ID_LIST[provider]) {
-                setError("500 Internal Server Error")
+                setError(DEFAULT_ERROR_MESSAGE)
                 return
             }
 

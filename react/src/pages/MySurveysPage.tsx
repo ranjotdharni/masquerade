@@ -3,7 +3,7 @@ import MySurveyList from "../components/MySurveysPage/MySurveyList"
 import MySurveyHeader from "../components/MySurveysPage/MySurveyHeader"
 import { useContext, useEffect, useState } from "react"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
-import { API_SURVEY_DETAIL } from "../lib/constants"
+import { API_SURVEY_DETAIL, DEFAULT_ERROR_MESSAGE } from "../lib/constants"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import type { Survey } from "../lib/types/api"
@@ -26,7 +26,7 @@ export default function MySurveysPage() {
     useEffect(() => {
         async function getMySurveys() {
             await authenticatedRequest(API_SURVEY_DETAIL, "GET").then(result => {
-                let message = result.message as string || "Unknow Client/Server Error"
+                let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
                 if (result.error) {
                     notify({

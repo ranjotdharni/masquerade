@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import AppContent from "../components/layout/AppContent"
-import { API_SURVEY_DETAIL, PAGE_SURVEY_FIND } from "../lib/constants"
+import { API_SURVEY_DETAIL, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_FIND } from "../lib/constants"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import type { Survey } from "../lib/types/api"
 import { useContext, useEffect, useState } from "react"
@@ -31,7 +31,7 @@ export default function ViewSurveyPage() {
     useEffect(() => {
         async function getSurvey() {
             await authenticatedRequest(`${API_SURVEY_DETAIL}?id=${id}`, "GET").then(result => {
-                let message = result.message as string || "Unknow Client/Server Error"
+                let message = result.message as string || DEFAULT_ERROR_MESSAGE
                 let validResult = (result as any)?.content as (Survey[] | undefined)
 
                 if (result.error || validResult === undefined || validResult.length === 0) {
@@ -42,6 +42,7 @@ export default function ViewSurveyPage() {
                 }
                 else {
                     setContent(validResult[0])
+                    console.log(validResult)
                 }
             })
         }

@@ -1,19 +1,31 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import AppContent from "../components/layout/AppContent"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { authenticatedRequest } from "../lib/utility/internal"
-import { API_SURVEY_CATALOG } from "../lib/constants"
+import { API_SURVEY_CATALOG, DEFAULT_ERROR_MESSAGE } from "../lib/constants"
 import Catalog from "../components/CatalogPage/Catalog"
 import type { RecursiveObject } from "../lib/types/internal"
+import { UIContext } from "../components/context/UIContext"
 
 export default function CatalogPage() {
+    const { notify } = useContext(UIContext)
     const [content, setContent] = useState<Record<string | number | symbol, RecursiveObject<string | number | boolean>>[] | undefined>()
 
     useEffect(() => {
         // placeholder function. for now, just fills page with all existing surveys.
         async function getCatalog() {
             await authenticatedRequest(API_SURVEY_CATALOG, "GET").then(result => {
-                setContent((result as any)["content"] as Record<string | number | symbol, RecursiveObject<string | number | boolean>>[])
+                let message = result.message as string || DEFAULT_ERROR_MESSAGE
+                
+                if (result.error) {
+                    notify({
+                        message: message,
+                        color: "var(--color-error)"
+                    })
+                }
+                else {
+                    setContent((result as any)["content"] as Record<string | number | symbol, RecursiveObject<string | number | boolean>>[])
+                }
             })
         }
 
