@@ -42,7 +42,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
-                    (answers as SingleAnswerSlug).answers.map((answer, index) => {
+                    (answers as SingleAnswerSlug).answers?.map((answer, index) => {
                         return (
                             <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
                                 <input type="radio" checked={answers.slug !== undefined && answer._id.$oid === answers.slug} value={answer.answer} name={answer._id.$oid} onClick={(e) => {editAnswer(e.currentTarget.name)}} />
@@ -59,7 +59,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
-                    (answers as MultipleAnswerSlug).answers.map((answer, index) => {
+                    (answers as MultipleAnswerSlug).answers?.map((answer, index) => {
                         return (
                             <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
                                 <input type="checkbox" checked={(answers as MultipleAnswerSlug).slug !== undefined ? (answers as MultipleAnswerSlug).slug!.findIndex(a => a === answer._id.$oid) !== -1 : false} value={answer.answer}  name={answer._id.$oid} onClick={(e) => {editAnswer(e.currentTarget.name)}} />
@@ -97,7 +97,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
         return (
             <ol className="w-full h-full flex flex-col justify-evenly">
                 {
-                    (answers as MultipleAnswerSlug).answers.map((answer, index) => {
+                    (answers as MultipleAnswerSlug).answers?.map((answer, index) => {
                         return (
                             <li key={answer._id.$oid} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
                                 <button onClick={swap(answer._id.$oid)} style={highlight === answer._id.$oid ? {background: "var(--color-primary)", color: "var(--color-text)"} : {}} className="h-full px-2 text-primary border-4 border-primary hover:bg-primary hover:text-background hover:cursor-pointer">{(answers as RankingAnswerSlug).slug[index].rank}</button>

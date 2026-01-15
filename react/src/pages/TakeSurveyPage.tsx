@@ -6,7 +6,7 @@ import { API_SURVEY_CATALOG, API_SURVEY_SUBMIT, DEFAULT_ERROR_MESSAGE, PAGE_SURV
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { UIContext } from "../components/context/UIContext"
 import { generateClientId } from "../lib/utility/client"
-import type { ObjectId, Question, Survey } from "../lib/types/api"
+import type { ObjectId, Question, RankingAnswer, Survey } from "../lib/types/api"
 import SurveyContent from "../components/TakeSurveyPage/SurveyContent"
 import SurveyHeader from "../components/TakeSurveyPage/SurveyHeader"
 import type { MultipleAnswerSlug, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../lib/types/client"
@@ -22,8 +22,8 @@ function SurveyContainer({ content } : { content: Survey }) {
         // Ranking and Rating type require placeholder values
 
         if (q.type === QUESTION_TYPE_ID_MAP.RANKING_TYPE) {
-            const slug = q.answers.map((a, i) => { return { _id: a._id, rank: i + 1 } })
-            return {...q, slug: slug}
+            const slug = q.answers?.map((a, i) => { return { _id: a._id, rank: i + 1 } })
+            return {...q, slug: slug || [{ _id: { $oid: DEFAULT_ERROR_MESSAGE }, rank: 0 }]}
         }
 
         if (q.type === QUESTION_TYPE_ID_MAP.RATING_TYPE) {
@@ -87,8 +87,8 @@ function SurveyContainer({ content } : { content: Survey }) {
             case QUESTION_TYPE_ID_MAP.RANKING_TYPE:
                 const newSurvey3 = [...survey]
 
-                let first = (newSurvey3[index].answers as { _id: ObjectId, rank: number }[]).findIndex(a => a._id.$oid === (slug as [string, string])[0])
-                let second = (newSurvey3[index].answers as { _id: ObjectId, rank: number }[]).findIndex(a => a._id.$oid === (slug as [string, string])[1])
+                let first = (newSurvey3[index].answers as RankingAnswer[]).findIndex(a => a._id.$oid === (slug as [string, string])[0])
+                let second = (newSurvey3[index].answers as RankingAnswer[]).findIndex(a => a._id.$oid === (slug as [string, string])[1])
 
                 let firstRank: number = (newSurvey3[index].slug as Array<{ _id: ObjectId, rank: number }>)[first].rank as number
 

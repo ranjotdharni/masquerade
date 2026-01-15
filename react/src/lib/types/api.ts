@@ -8,30 +8,30 @@ export type ObjectId = {
 export type SingleChoiceAnswer = {
   _id: ObjectId
   answer: string
-  submissions: number
+  submissions?: number
 }
 
 export type MultipleChoiceAnswer = {
   _id: ObjectId
   answer: string
-  submissions: number
+  submissions?: number
 }
 
 export type RankingAnswer = {
   _id: ObjectId
   answer: string
-  1: number
-  2: number
-  3: number
-  4: number
+  1?: number
+  2?: number
+  3?: number
+  4?: number
 }
 
 export type RatingAnswer = {
-  1: number
-  2: number
-  3: number
-  4: number
-  5: number
+  1?: number
+  2?: number
+  3?: number
+  4?: number
+  5?: number
 }
 
 export type BaseAnswer = 
@@ -84,6 +84,7 @@ export interface Survey {
   name: string
   inviteOnly: boolean
   submissions?: number
+  inviteList?: string[]
   questions: Question[]
 }
 
