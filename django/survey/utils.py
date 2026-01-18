@@ -96,9 +96,6 @@ def create_mongo_survey_object(auth, slug):
             "submissions": 0,
         }
 
-        if slug["inviteOnly"]:
-            mongo_object["inviteList"] = []
-
         questions = []
 
         for question in slug["questions"]:

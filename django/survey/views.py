@@ -19,11 +19,9 @@ from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
 from apiauth.utils import extract_user_from_request
-from backend.lib.utility import json_file_to_dict
 
 PUBLIC_SURVEY_DATA_FORMAT = {
     "submissions": 0,
-    "inviteList": 0,
     "creator": 0,
     "questions.submissions": 0,
     "questions.answers.submissions": 0,
@@ -35,7 +33,7 @@ PUBLIC_SURVEY_DATA_FORMAT = {
 }
 
 PRIVATE_SURVEY_DATA_FORMAT = {
-    "inviteList": 0,
+    
 }
 
 @method_decorator(csrf_protect, name="dispatch")
