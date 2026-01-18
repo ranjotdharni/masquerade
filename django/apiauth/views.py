@@ -8,7 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.conf import settings
@@ -21,8 +22,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token, generate_provider_response, generate_basic_response
 from .models import SocialAccount
-
-User = get_user_model()
 
 # Create your views here.
 
