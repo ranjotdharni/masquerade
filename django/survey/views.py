@@ -20,22 +20,6 @@ from pymongo import UpdateOne
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
 from apiauth.utils import extract_user_from_request
 
-PUBLIC_SURVEY_DATA_FORMAT = {
-    "submissions": 0,
-    "creator": 0,
-    "questions.submissions": 0,
-    "questions.answers.submissions": 0,
-    "questions.answers.1": 0,
-    "questions.answers.2": 0,
-    "questions.answers.3": 0,
-    "questions.answers.4": 0,
-    "questions.answers.5": 0,
-}
-
-PRIVATE_SURVEY_DATA_FORMAT = {
-    
-}
-
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
@@ -81,9 +65,9 @@ class SurveyCatalog(APIView):
 
                 oid = ObjectId(id)
 
-                result = surveysCollection.find({"_id": oid}, PUBLIC_SURVEY_DATA_FORMAT)
+                result = surveysCollection.find({"_id": oid}, settings.PUBLIC_SURVEY_DATA_FORMAT)
             else:
-                result = surveysCollection.find({}, PUBLIC_SURVEY_DATA_FORMAT)
+                result = surveysCollection.find({}, settings.PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -109,7 +93,7 @@ class SurveyCatalog(APIView):
                 return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
 
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(data["id"])}, PUBLIC_SURVEY_DATA_FORMAT)
+            result = surveysCollection.find({"_id": ObjectId(data["id"])}, settings.PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -148,9 +132,9 @@ class SurveyDetail(APIView):
 
                 oid = ObjectId(id)
 
-                result = surveysCollection.find({"_id": oid}, PRIVATE_SURVEY_DATA_FORMAT)
+                result = surveysCollection.find({"_id": oid}, settings.PRIVATE_SURVEY_DATA_FORMAT)
             else:
-                result = surveysCollection.find({"creator": user.username}, PRIVATE_SURVEY_DATA_FORMAT)
+                result = surveysCollection.find({"creator": user.username}, settings.PRIVATE_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -186,7 +170,7 @@ class SubmitSurvey(APIView):
 
             surveyId = data["id"]
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(surveyId)}, PUBLIC_SURVEY_DATA_FORMAT)
+            result = surveysCollection.find({"_id": ObjectId(surveyId)}, settings.PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             search_results = json.loads(dumps(survey_list))

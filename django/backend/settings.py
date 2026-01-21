@@ -272,3 +272,19 @@ QUESTION_TYPE_IDS = [SINGLE_CHOICE_ID, MULTIPLE_CHOICE_ID, RANKING_ID, RATING_ID
 
 MAX_ANSWERS_PER_QUESTION = 4
 MAX_QUESTIONS_PER_SURVEY = 10
+
+PUBLIC_SURVEY_DATA_FORMAT = {
+    "submissions": 0,
+    "creator": 0,
+    "questions.submissions": 0,
+    "questions.answers.submissions": 0,
+    "questions.answers.1": 0,
+    "questions.answers.2": 0,
+    "questions.answers.3": 0,
+    "questions.answers.4": 0,
+    "questions.answers.5": 0,
+}
+
+PRIVATE_SURVEY_DATA_FORMAT = {
+    
+}
