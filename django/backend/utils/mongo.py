@@ -2,7 +2,7 @@ from django.conf import settings
 from bson import ObjectId
 from ..helpers import GenericError
 
-def get_survey_data(id: str, format=settings.PUBLIC_SURVEY_DATA_FORMAT):
+def get_survey_metadata(id: str, format=settings.PUBLIC_SURVEY_DATA_FORMAT):
     oid = ObjectId(id)
 
     try:
@@ -17,7 +17,7 @@ def get_survey_data(id: str, format=settings.PUBLIC_SURVEY_DATA_FORMAT):
         print(e)
         return GenericError("Failed to retrieve survey data (500 ISE)")
 
-def get_survey_data_bulk(ids: list[str], format=settings.PUBLIC_SURVEY_DATA_FORMAT):
+def get_survey_metadata_bulk(ids: list[str], format=settings.PUBLIC_SURVEY_DATA_FORMAT):
     try:
         surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
         surveys = surveysCollection.find(
