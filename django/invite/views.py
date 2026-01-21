@@ -4,72 +4,50 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
+from bson import ObjectId
+from bson.errors import InvalidId
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from apiauth.utils import extract_user_from_request
+from backend.utils.mongo import get_survey_metadata_bulk
+from .serializers import InviteSerializer
+from .models import Invite
+
 @method_decorator(csrf_protect, name="dispatch")
-class Invites(APIView):
+class SentInvites(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        response = Response({ "error": True, "message": "Invalid Survey ID" }, status.HTTP_400_BAD_REQUEST)
+        response = Response({ "error": True, "message": "500 Internal Server Error (Unknown)." }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         try:
-            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+            user = extract_user_from_request(request)
             requestHasParams = "id" in request.GET
-            result = None
+
+            if isinstance(user, dict) and user["error"]:
+                return Response({"error": True, "message": user["message"] or "Improper request format."}, status.HTTP_400_BAD_REQUEST)
 
             if (requestHasParams):
-                id = request.GET["id"]
-
-                oid = ObjectId(id)
-
-                result = surveysCollection.find({"_id": oid}, PUBLIC_SURVEY_DATA_FORMAT)
+                sid = request.GET["id"]
+                invites = Invite.objects.filter(survey=sid, sender=user.username)
             else:
-                result = surveysCollection.find({}, PUBLIC_SURVEY_DATA_FORMAT)
+                invites = Invite.objects.filter(sender=user.username)
 
-            survey_list = list(result)
-            content = json.loads(dumps(survey_list))
+            bulk_metadata = get_survey_metadata_bulk([invite.survey for invite in invites], settings.SURVEY_METADATA_FORMAT)
+            serializer = InviteSerializer(
+                invites,
+                many=True,
+                context={
+                    "with_metadata": True,
+                    "bulk_metadata": bulk_metadata
+                }
+            )
 
-            response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+            response = Response({ "success": True, "content": serializer.data }, status.HTTP_200_OK)
         except (InvalidId, TypeError):
             return response
-        except Exception as e:
-            print(e)
-            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
-    
-    def post(self, request):
-        empty_response = Response({"empty": True}, status.HTTP_404_NOT_FOUND)
-        response = None
-
-        try:
-            raw = request.body
-            data = json.loads(raw)
-
-            if "id" not in data:
-                return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
-
-            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(data["id"])}, PUBLIC_SURVEY_DATA_FORMAT)
-
-            survey_list = list(result)
-            content = json.loads(dumps(survey_list))
-
-            if len(content) == 0:
-                return empty_response
-
-            response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
-        except InvalidId as e:
-            response = empty_response
-        except Exception as e:
-            print(e)
-            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return response
-    
-    def delete(self, request):
-        placeholder = "add code here"

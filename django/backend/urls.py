@@ -28,4 +28,5 @@ urlpatterns = [
     path('api/auth/', include('allauth.urls')),
     path('api/auth/', include('apiauth.urls')),
     path('api/survey/', include('survey.urls')),
+    path('api/invite/', include('invite.urls')),
 ]
