@@ -20,7 +20,7 @@ class Invites(APIView):
     
     def post(self, request):
         surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-        response = Response({ "success": True, "message": "Invitation processed." }, status.HTTP_200_OK)
+        response = Response({ "success": True, "message": "Invitation processed (sent if possible)." }, status.HTTP_200_OK)
 
         try:
             sender = extract_user_from_request(request)
@@ -57,6 +57,7 @@ class Invites(APIView):
 
         return response
 
+''''
 @method_decorator(csrf_protect, name="dispatch")
 class SentInvites(APIView):
     permission_classes = [IsAuthenticated]
@@ -87,6 +88,7 @@ class SentInvites(APIView):
             return response
 
         return response
+'''
 
 @method_decorator(csrf_protect, name="dispatch")
 class ReceivedInvites(APIView):
