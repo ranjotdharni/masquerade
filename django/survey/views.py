@@ -125,7 +125,7 @@ class SurveyDetail(APIView):
             user = extract_user_from_request(request)
 
             if isinstance(user, dict) and user["error"]:
-                return Response({"error": True, "message": user["message"]}, status.HTTP_400_BAD_REQUEST)
+                return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
 
             if (requestHasParams):
                 id = request.GET["id"]
