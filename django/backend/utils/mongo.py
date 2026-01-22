@@ -25,7 +25,13 @@ def get_survey_metadata_bulk(ids: list[str], format=settings.PUBLIC_SURVEY_DATA_
             format
         )
 
-        return { str(survey["_id"]["$oid"]): survey for survey in surveys }
+        result = {}
+
+        for survey in surveys:
+            read_in = survey
+            result[str(read_in["_id"])] = read_in
+
+        return result
     except Exception as e:
         print(e)
         return GenericError(str(e) or "Failed to retrieve survey data (500 ISE)")

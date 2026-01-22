@@ -1,7 +1,10 @@
+import json
+
 from django.conf import settings
 from rest_framework import serializers
 from .models import Invite
 from backend.utils.mongo import get_survey_metadata
+from backend.utils.static.encoders import MongoJSONEncoder
 
 class InviteSerializer(serializers.ModelSerializer):
     metadata = serializers.SerializerMethodField()
@@ -16,9 +19,7 @@ class InviteSerializer(serializers.ModelSerializer):
         if not self.context.get("with_metadata") and not bulk_metadata:
             return None
 
-        if self.many or bulk_metadata:
-            if not bulk_metadata:
-                return None
-            return bulk_metadata.get(invite.survey)
+        if bulk_metadata:
+            return json.loads(MongoJSONEncoder().encode(bulk_metadata.get(invite.survey)))
         
-        return get_survey_metadata(invite.survey, settings.SURVEY_METADATA_FORMAT)
+        return json.loads(MongoJSONEncoder().encode(get_survey_metadata(invite.survey, settings.SURVEY_METADATA_FORMAT)))
