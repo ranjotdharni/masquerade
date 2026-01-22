@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.conf import settings
 
+from backend.helpers import GenericError
+from invite.models import Invite
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -60,14 +62,21 @@ class SurveyCatalog(APIView):
             requestHasParams = "id" in request.GET
             result = None
 
+            aggregationPipeline = []
+
             if (requestHasParams):
                 id = request.GET["id"]
-
                 oid = ObjectId(id)
+                aggregationPipeline.append({ "$match": { "_id": oid } })
 
-                result = surveysCollection.find({"_id": oid}, settings.PUBLIC_SURVEY_DATA_FORMAT)
-            else:
-                result = surveysCollection.find({}, settings.PUBLIC_SURVEY_DATA_FORMAT)
+            aggregationPipeline.append({
+                "$project": {
+                    **settings.SURVEY_METADATA_FORMAT,
+                    "numberOfQuestions": { "$size": "$questions" }
+                }
+            })
+
+            result = surveysCollection.aggregate(aggregationPipeline)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -92,8 +101,9 @@ class SurveyCatalog(APIView):
             if "id" not in data:
                 return Response({"error": True, "message": "Malformed Data"}, status.HTTP_400_BAD_REQUEST)
 
+            surveyId = data["id"]
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
-            result = surveysCollection.find({"_id": ObjectId(data["id"])}, settings.PUBLIC_SURVEY_DATA_FORMAT)
+            result = surveysCollection.find({"_id": ObjectId(surveyId)}, settings.PUBLIC_SURVEY_DATA_FORMAT)
 
             survey_list = list(result)
             content = json.loads(dumps(survey_list))
@@ -101,12 +111,25 @@ class SurveyCatalog(APIView):
             if len(content) == 0:
                 return empty_response
 
+            survey = content[0]
+            surveyRequiresInvite = survey["inviteOnly"]
+
+            # Check if user has an invite 
+            if surveyRequiresInvite:
+                user = extract_user_from_request(request)
+
+                if isinstance(user, dict) and user["error"]:
+                    return Response(GenericError(user["message"] or "Cannot identify you. Please log in."), status.HTTP_401_UNAUTHORIZED)
+                
+                userDoesNotHaveInvite = not Invite.objects.filter(survey=surveyId, recipient=user.username).exists()
+
+                if userDoesNotHaveInvite:
+                    return Response(GenericError("Missing invitation."), status.HTTP_400_BAD_REQUEST)
+
             response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
-        except InvalidId as e:
-            response = empty_response
-        except Exception as e:
+        except (TypeError, InvalidId) as e:
             print(e)
-            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            response = empty_response
 
         return response
 
@@ -132,7 +155,7 @@ class SurveyDetail(APIView):
 
                 oid = ObjectId(id)
 
-                result = surveysCollection.find({"_id": oid}, settings.PRIVATE_SURVEY_DATA_FORMAT)
+                result = surveysCollection.find_one({"_id": oid, "creator": user.username}, settings.PRIVATE_SURVEY_DATA_FORMAT)
             else:
                 result = surveysCollection.find({"creator": user.username}, settings.PRIVATE_SURVEY_DATA_FORMAT)
 
@@ -177,10 +200,22 @@ class SubmitSurvey(APIView):
 
             if len(search_results) == 0 or len(data["answers"]) == 0:
                 return Response({ "error": True, "message": "Could not find survey." }, status.HTTP_404_NOT_FOUND)
-            
-            # Check if invite only survey   
 
             survey = search_results[0]
+            surveyRequiresInvite = survey["inviteOnly"]
+
+            # Check if user has an invite 
+            if surveyRequiresInvite:
+                user = extract_user_from_request(request)
+
+                if isinstance(user, dict) and user["error"]:
+                    return Response(GenericError(user["message"] or "Cannot identify you. Please log in."), status.HTTP_401_UNAUTHORIZED)
+                
+                userDoesNotHaveInvite = not Invite.objects.filter(survey=surveyId, recipient=user.username).exists()
+
+                if userDoesNotHaveInvite:
+                    return Response(GenericError("Missing invitation."), status.HTTP_400_BAD_REQUEST)
+
             submission = data["answers"]
 
             if len(survey["questions"]) != len(submission):
@@ -210,9 +245,14 @@ class SubmitSurvey(APIView):
             
             updates.append(UpdateOne({"_id": ObjectId(survey["_id"]["$oid"])}, {"$inc": {"submissions": 1}})) # increment submission count for survey at top level of document
 
-            result = surveysCollection.bulk_write(updates, ordered=False) 
-        except Exception as e:
+            result = surveysCollection.bulk_write(updates, ordered=False)
+
+            # delete any existing invite upon submission
+            if surveyRequiresInvite:
+                toBeDeletedInvite = Invite.objects.get(survey=surveyId, recipient=user.username)
+                toBeDeletedInvite.delete()
+        except (InvalidId, TypeError, Invite.DoesNotExist) as e:
             print(e)
-            return Response({"error": True, "message": "500 Internal Server Error"}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": True, "message": "Improper request detected (invalid survey id or missing invite or unknown format issue)."}, status.HTTP_400_BAD_REQUEST)
         
         return success

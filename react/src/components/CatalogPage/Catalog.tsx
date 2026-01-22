@@ -19,7 +19,7 @@ function CatalogCard({ cardContent } : CardContent) {
                 </span>
 
                 <span className="w-full flex flex-row justify-end items-center text-text text-xl lg:text-3xl font-jbm p-2">
-                    <h3>{`${(cardContent as any)["questions"].length} Question(s)`}</h3>
+                    <h3>{`${(cardContent as any)["numberOfQuestions"]} Question(s)`}</h3>
                 </span>
 
                 <span className="px-3 text-sm flex flex-1 flex-row justify-end items-end font-lato">
