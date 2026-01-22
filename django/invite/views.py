@@ -1,5 +1,3 @@
-import json
-
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.conf import settings
@@ -10,13 +8,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import User
 from apiauth.utils import extract_user_from_request
 from backend.utils.mongo import get_survey_metadata_bulk
 from .serializers import InviteSerializer
 from .models import Invite
 
 @method_decorator(csrf_protect, name="dispatch")
-class Invite(APIView):
+class Invites(APIView):
     permission_classes = [IsAuthenticated]
     
     def post(self, request):
@@ -25,7 +24,7 @@ class Invite(APIView):
 
         try:
             sender = extract_user_from_request(request)
-            data = json.loads(request.body)
+            data = request.data.dict()
             requestIsMissingInput = "id" not in data or "recipient" not in data
 
             if isinstance(sender, dict) and sender["error"]:
@@ -38,13 +37,16 @@ class Invite(APIView):
             recipient = data["recipient"]
             oid = ObjectId(sid)
 
+            if (sender.username == recipient):
+                return response
+
             requestIsValid = surveysCollection.find_one({
                 "_id": oid,
                 "creator": sender.username
             }) is not None
 
             if requestIsValid:
-                invite = Invite.objects.create(survey=sid, sender=sender, recipient=recipient)
+                invite = Invite.objects.create(survey=sid, sender=sender, recipient=User.objects.get(username=recipient))
         except Exception as e:
             '''
             INTENTIONAL CATCH-ALL EXCEPTION! DO NOT REMOVE!
