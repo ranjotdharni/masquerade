@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from bson.json_util import dumps
+from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
@@ -61,32 +61,29 @@ class SurveyCatalog(APIView):
             surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
             requestHasParams = "id" in request.GET
             result = None
+            surveys = None
+            content = None
 
-            aggregationPipeline = []
-
-            if (requestHasParams):
+            if requestHasParams:
                 id = request.GET["id"]
                 oid = ObjectId(id)
-                aggregationPipeline.append({ "$match": { "_id": oid } })
 
-            aggregationPipeline.append({
-                "$project": {
-                    **settings.SURVEY_METADATA_FORMAT,
-                    "numberOfQuestions": { "$size": "$questions" }
-                }
-            })
+                result = surveysCollection.find({"_id": oid}, settings.PUBLIC_SURVEY_DATA_FORMAT)
+                surveys = list(result)
+                content = json.loads(dumps(surveys))
+            else:
+                result = surveysCollection.find({}, settings.PUBLIC_SURVEY_DATA_FORMAT)
+                surveys = list(result)
+                content = json.loads(dumps(surveys))
 
-            result = surveysCollection.aggregate(aggregationPipeline)
-
-            survey_list = list(result)
-            content = json.loads(dumps(survey_list))
+            for survey in content:
+                survey["numberOfQuestions"] = len(survey["questions"])
+                survey["questions"] = None
 
             response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
-        except (InvalidId, TypeError):
-            return response
-        except Exception as e:
+        except (InvalidId, TypeError) as e:
             print(e)
-            response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return response
 
         return response
     
@@ -155,7 +152,7 @@ class SurveyDetail(APIView):
 
                 oid = ObjectId(id)
 
-                result = surveysCollection.find_one({"_id": oid, "creator": user.username}, settings.PRIVATE_SURVEY_DATA_FORMAT)
+                result = surveysCollection.find({"_id": oid, "creator": user.username}, settings.PRIVATE_SURVEY_DATA_FORMAT)
             else:
                 result = surveysCollection.find({"creator": user.username}, settings.PRIVATE_SURVEY_DATA_FORMAT)
 
