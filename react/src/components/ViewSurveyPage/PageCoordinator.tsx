@@ -21,7 +21,7 @@ export type ModeMetadata = {
     ActiveIcon: LucideIcon
 }
 
-const ModeMetadata: ModeMetadata[] = [
+const metadata: ModeMetadata[] = [
     {
         id: MODE_VIEW,
         text: "View",
@@ -42,7 +42,7 @@ export default function PageCoordinator({ content } : { content: Survey }) {
     return (
         <>
             <ViewSurveyHeader name={content.name} inviteOnly={content.inviteOnly} />
-            <ViewSurveyControls mode={mode} setMode={setMode} modeMetadata={ModeMetadata} />
+            <ViewSurveyControls mode={mode} setMode={setMode} modeMetadata={metadata} />
             <ViewSurveyBody mode={mode} questions={content.questions} />
         </>
     )
