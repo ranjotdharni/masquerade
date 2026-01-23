@@ -1,4 +1,4 @@
-import { Check, CircleDot, HandCoins, Star, type LucideIcon } from "lucide-react"
+import { Check, ChevronLeft, ChevronRight, CircleDot, HandCoins, Star, type LucideIcon } from "lucide-react"
 import type { QuestionIdType } from "../../../lib/types/client"
 import { DEFAULT_ERROR_MESSAGE, QUESTION_TYPE_ID_MAP } from "../../../lib/constants"
 import { type JSX } from "react"
@@ -147,11 +147,22 @@ function SurveyQuestion({ question } : { question: Question }) {
     )
 }
 
-export default function QuestionViewer({ survey, index } : { survey: Question[], index: number }) {
+export default function QuestionViewer({ survey, index, prev, next } : { survey: Question[], index: number, prev: () => void, next: () => void }) {
 
     return (
-        <section className="h-[90%] w-full flex flex-col justify-center items-center">
-            <SurveyQuestion key={survey[index]._id.$oid} question={survey[index]} />
-        </section>
+        <>
+            <div className="h-[10%] w-full flex flex-row justify-end items-center pr-8">
+                <button onClick={prev} className="p-2">
+                    <ChevronLeft className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
+                </button>
+                <p className="font-jbm text-inactive px-2">{`${index + 1} / ${survey.length}`}</p>
+                <button onClick={next} className="p-2">
+                    <ChevronRight className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
+                </button>
+            </div>
+            <section className="h-[90%] w-full flex flex-col justify-center items-center">
+                <SurveyQuestion key={survey[index]._id.$oid} question={survey[index]} />
+            </section>
+        </>
     )
 }

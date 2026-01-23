@@ -4,10 +4,9 @@ import { API_SURVEY_DETAIL, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_FIND } from "../l
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 import type { Survey } from "../lib/types/api"
 import { useContext, useEffect, useState } from "react"
-import ViewSurveyHeader from "../components/ViewSurveyPage/ViewSurveyHeader"
-import ViewSurveyBody from "../components/ViewSurveyPage/ViewSurveyBody"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
+import PageCoordinator from "../components/ViewSurveyPage/PageCoordinator"
 
 export default function ViewSurveyPage() {
     const navigate = useNavigate()
@@ -18,15 +17,6 @@ export default function ViewSurveyPage() {
 
     if (id === undefined)
         navigate(`/${PAGE_SURVEY_FIND}`)
-
-    function PageContent({ content } : { content: Survey }) {
-        return (
-            <>
-                <ViewSurveyHeader name={content.name} inviteOnly={content.inviteOnly} />
-                <ViewSurveyBody questions={content.questions} />
-            </>
-        )
-    }
 
     useEffect(() => {
         async function getSurvey() {
@@ -53,7 +43,7 @@ export default function ViewSurveyPage() {
         <AppContent className="flex flex-col justify-center items-center">
             {
                 content ?
-                <PageContent content={content} /> :
+                <PageCoordinator content={content} /> :
                 <FullScreenLoader loaderText={`Searching for ID: ${id}`} width="25%" aspectRatio={"9 / 16"} />
             }
         </AppContent>
