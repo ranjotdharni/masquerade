@@ -1,7 +1,6 @@
 import type { MouseEvent } from "react"
 import { NAV_CSS } from "../../utility/animated/NavBar"
-import { Mail, MailOpen, type LucideIcon } from "lucide-react"
-import { MODE_INVITE, type ModeId, type ModeMetadata } from "../PageCoordinator"
+import { type ModeId, type ModeMetadata } from "../PageCoordinator"
 
 type ViewSurveyControlsProps = {
     mode: ModeId

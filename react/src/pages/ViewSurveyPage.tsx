@@ -8,8 +8,6 @@ import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import PageCoordinator from "../components/ViewSurveyPage/PageCoordinator"
 
-import SAMPLEDATA from "../sampledata/local/privateSurveyData.json"
-
 export default function ViewSurveyPage() {
     const navigate = useNavigate()
     const { notify } = useContext(UIContext)
@@ -38,7 +36,7 @@ export default function ViewSurveyPage() {
             })
         }
 
-        setContent(SAMPLEDATA as Survey)//getSurvey()
+        getSurvey()
     }, [id])
 
     return (
