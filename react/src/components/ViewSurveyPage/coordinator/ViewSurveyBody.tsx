@@ -1,15 +1,21 @@
-import { useState } from "react"
-import type { Question } from "../../lib/types/api"
-import QuestionViewer from "./viewer/QuestionViewer"
-import InvitePanelViewer from "./viewer/InvitePanelViewer"
+import { useState, type JSX } from "react"
+import type { Question } from "../../../lib/types/api"
+import QuestionViewer from "../viewer/QuestionViewer"
+import InvitePanelViewer from "../viewer/InvitePanelViewer"
+import { MODE_INVITE, MODE_VIEW, type ModeId } from "../PageCoordinator"
 
 type ViewSurveyBodyProps = {
-    invitePanelOpen: boolean
     questions: Question[]
+    mode: ModeId
 }
 
-export default function ViewSurveyBody({ invitePanelOpen, questions } : ViewSurveyBodyProps) {
+export default function ViewSurveyBody({ questions, mode } : ViewSurveyBodyProps) {
     const [index, setIndex] = useState<number>(0)
+
+    const ModeMap: Record<ModeId, JSX.Element | JSX.Element[]> = {
+        [MODE_VIEW]: <QuestionViewer prev={cycleBackward} next={cycleForward} index={index} survey={questions} />,
+        [MODE_INVITE]: <InvitePanelViewer />,
+    }
 
     function cycleForward() {
         setIndex(prev => {
@@ -26,9 +32,7 @@ export default function ViewSurveyBody({ invitePanelOpen, questions } : ViewSurv
     return (
         <section className="w-full h-3/4">
             {
-                invitePanelOpen ? 
-                <InvitePanelViewer /> :
-                <QuestionViewer prev={cycleBackward} next={cycleForward} index={index} survey={questions} />
+                ModeMap[mode]
             }
         </section>
     )

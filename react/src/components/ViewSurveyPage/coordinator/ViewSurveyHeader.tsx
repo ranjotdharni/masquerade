@@ -1,5 +1,5 @@
 import { Lock, LockOpen } from "lucide-react"
-import { NAV_CSS } from "../utility/animated/NavBar"
+import { NAV_CSS } from "../../utility/animated/NavBar"
 
 type ViewSurveyHeaderProps = {
     name: string
