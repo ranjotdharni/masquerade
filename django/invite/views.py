@@ -3,6 +3,8 @@ from django.utils.decorators import method_decorator
 from django.conf import settings
 
 from bson import ObjectId
+from bson.errors import InvalidId
+from backend.helpers import GenericError
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -54,6 +56,39 @@ class Invites(APIView):
             Reason: User should not be informed of any failure(s) to preserve anonymity.
             '''
             print(e)
+
+        return response
+    
+@method_decorator(csrf_protect, name="dispatch")
+class DeclineInvites(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        response = Response({ "success": True, "message": "Invitation declined." }, status.HTTP_200_OK)
+
+        try:
+            recipient = extract_user_from_request(request)
+            data = request.data.dict()
+            requestIsMissingInput = "id" not in data
+
+            # validate recipient
+            if isinstance(recipient, dict) and recipient["error"]:
+                return Response({"error": True, "message": recipient["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
+            
+            # check request validity
+            if requestIsMissingInput:
+                return Response({"error": True, "message": "Survey ID (field name: id) was passed improperly or missing."}, status.HTTP_400_BAD_REQUEST)
+            
+            sid = data["id"]
+
+            # decline (delete) invite
+            toBeDeletedInvite = Invite.objects.get(survey=sid, recipient=recipient)
+            toBeDeletedInvite.delete()
+        except (InvalidId, TypeError) as e:
+            print(e)
+            response = Response(GenericError("Request format error (Invalid survey ID or server detected type error)."), status.HTTP_406_NOT_ACCEPTABLE)
+        except Invite.DoesNotExist as e:
+            response = Response(GenericError("Invite was not found for the given survey and/or recipient."), status.HTTP_404_NOT_FOUND)
 
         return response
 

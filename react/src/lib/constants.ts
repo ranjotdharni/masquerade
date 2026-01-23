@@ -26,6 +26,7 @@ export const API_SURVEY_SUBMIT: string = '/api/survey/submit/'
 export const API_INVITE_SEND: string = '/api/invite/send/'
 // export const API_INVITE_SENT: string = '/api/invite/sent/'
 export const API_INVITE_RECEIVED: string = '/api/invite/received/'
+export const API_INVITE_DECLINE: string = '/api/invite/decline/'
 
 export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask.png'
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'
