@@ -1,9 +1,8 @@
 import { useState, type MouseEvent } from "react"
 import type { Survey } from "../../lib/types/api"
-
-import ViewSurveyBody from "./ViewSurveyBody"
-import ViewSurveyControls from "./ViewSurveyControls"
-import ViewSurveyHeader from "./ViewSurveyHeader"
+import ViewSurveyHeader from "./coordinator/ViewSurveyHeader"
+import ViewSurveyControls from "./coordinator/ViewSurveyControls"
+import ViewSurveyBody from "./coordinator/ViewSurveyBody"
 
 
 
