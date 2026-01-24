@@ -1,17 +1,19 @@
 import AppContent from "../components/layout/AppContent"
-import { Plus } from "lucide-react"
-import { PAGE_SURVEY_CREATE } from "../lib/constants"
+import HeaderSection from "../components/HomePage/HeaderSection"
+import QuickLinkSection from "../components/HomePage/QuickLinkSection"
+import InviteSection from "../components/HomePage/InviteSection"
+import { NAV_CSS } from "../components/utility/animated/NavBar"
 
-// Will be a kind of general, very basic/simple dashboard. Might even just put invite list here.
 export default function HomePage() {
     return (
-        <AppContent className="flex flex-col justify-center items-center">
-            <a href={`/${PAGE_SURVEY_CREATE}`} className="w-4/5 h-4/5 md:w-1/5 md:h-1/2 flex flex-col justify-center items-center gap-4 border-2 border-t-28 border-text hover:border-primary rounded shadow-xl">
-                <div className="w-1/5 aspect-square bg-text rounded-[1000px] flex flex-col justify-center items-center">
-                    <Plus className="text-background w-1/2 h-full aspect-square" />
-                </div>
-                <p className="text-text font-jbm">Create Survey</p>
-            </a>
+        <AppContent className="flex flex-col justify-start justify-center items-center overflow-y-scroll md:overflow-hidden">
+            <section className={`w-full h-auto md:h-[10%] px-4 py-4 md:py-2 ${NAV_CSS.md_px}`}>
+                <HeaderSection />
+            </section>
+            <section className={`w-full h-auto md:h-[90%] space-y-10 md:space-y-0 px-4 md:py-4 ${NAV_CSS.md_px} md:flex md:flex-row`}>
+                <QuickLinkSection />
+                <InviteSection />
+            </section>
         </AppContent>
     )
 }
