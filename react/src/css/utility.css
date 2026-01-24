@@ -14,7 +14,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    }
+}
 
 .loading span {
  width: 10%;
@@ -51,4 +51,33 @@
  20% {
   transform: scaleY(1);
  }
+}
+
+
+/* Info Modal Utility Component */
+
+.infoModal {
+    &::before {
+        display: none;
+    }
+}
+
+.infoModal:hover {
+    &::before {
+        display: block;
+    }
+}
+
+/* Add Info Modal content classes below */
+
+/* 
+    Note: you don't need to import this css file anywhere 
+    you use InfoModal component, just create the class 
+    below and add it to the 'classname' prop of InfoModal.
+*/
+
+.infoModalInvitePrivacy:hover {
+    &::before {
+        content: "When an invite is sent, you won't be informed if it was received or not. This is to preserve anonymity; it ensures no user is given any hint as to whether or not another user also exists. If your invite is for a user that you know is on here, rest assured the recipient has it.";
+    }
 }
