@@ -1,4 +1,4 @@
-import { useContext, useState, type ChangeEvent, type JSX, type MouseEvent } from "react"
+import { useContext, useState, type JSX, type MouseEvent } from "react"
 import InfoModal from "../../utility/InfoModal"
 import Loader from "../../utility/Loader"
 import { NAV_CSS } from "../../utility/animated/NavBar"
