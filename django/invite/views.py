@@ -26,7 +26,7 @@ class Invites(APIView):
 
         try:
             sender = extract_user_from_request(request)
-            data = request.data.dict()
+            data = request.data
             requestIsMissingInput = "id" not in data or "recipient" not in data
 
             if isinstance(sender, dict) and sender["error"]:
