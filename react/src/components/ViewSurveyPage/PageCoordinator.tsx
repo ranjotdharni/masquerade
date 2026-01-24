@@ -43,7 +43,7 @@ export default function PageCoordinator({ content } : { content: Survey }) {
         <>
             <ViewSurveyHeader name={content.name} inviteOnly={content.inviteOnly} />
             <ViewSurveyControls mode={mode} setMode={setMode} modeMetadata={metadata} />
-            <ViewSurveyBody mode={mode} questions={content.questions} />
+            <ViewSurveyBody inviteOnly={content.inviteOnly} mode={mode} questions={content.questions} />
         </>
     )
 }

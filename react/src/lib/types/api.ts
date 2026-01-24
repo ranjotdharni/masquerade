@@ -84,7 +84,6 @@ export interface Survey {
   name: string
   inviteOnly: boolean
   submissions?: number
-  inviteList?: string[]
   questions: Question[]
 }
 

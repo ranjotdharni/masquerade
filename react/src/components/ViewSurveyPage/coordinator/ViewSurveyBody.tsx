@@ -5,16 +5,17 @@ import InvitePanelViewer from "../viewer/InvitePanelViewer"
 import { MODE_INVITE, MODE_VIEW, type ModeId } from "../PageCoordinator"
 
 type ViewSurveyBodyProps = {
+    inviteOnly: boolean
     questions: Question[]
     mode: ModeId
 }
 
-export default function ViewSurveyBody({ questions, mode } : ViewSurveyBodyProps) {
+export default function ViewSurveyBody({ inviteOnly, questions, mode } : ViewSurveyBodyProps) {
     const [index, setIndex] = useState<number>(0)
 
     const ModeMap: Record<ModeId, JSX.Element | JSX.Element[]> = {
         [MODE_VIEW]: <QuestionViewer prev={cycleBackward} next={cycleForward} index={index} survey={questions} />,
-        [MODE_INVITE]: <InvitePanelViewer />,
+        [MODE_INVITE]: <InvitePanelViewer inviteOnly={inviteOnly} />,
     }
 
     function cycleForward() {
@@ -30,7 +31,7 @@ export default function ViewSurveyBody({ questions, mode } : ViewSurveyBodyProps
     }
 
     return (
-        <section className="w-full h-3/4">
+        <section className={`h-3/4 w-full`}>
             {
                 ModeMap[mode]
             }
