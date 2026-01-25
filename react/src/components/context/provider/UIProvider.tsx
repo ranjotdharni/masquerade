@@ -61,7 +61,7 @@ function Confirm({ message, callback, loaderText, reset } : ConfirmProps & { res
                 <FullScreenLoader loaderText={loaderText} /> :
                 <aside className="relative w-[90%] h-[50%] md:w-1/5 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center rounded-lg border bg-background border-primary popIn">
                     <h3 className="w-full px-2 border-b border-primary text-xl text-error font-jbm-bold">Are You Sure?</h3>
-                    <span className="w-full p-2 flex-1 text-text font-jbm">
+                    <span className="w-full p-2 flex-1 text-text font-jbm text-sm">
                         <p>{message}</p>
                     </span>
                     <div className="w-full h-auto flex flex-row justify-end space-x-2">

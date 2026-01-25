@@ -14,12 +14,18 @@ class InviteSerializer(serializers.ModelSerializer):
         fields = ("survey", "metadata")
 
     def get_metadata(self, invite):
+        result = None
         bulk_metadata = self.context.get("bulk_metadata")
 
         if not self.context.get("with_metadata") and not bulk_metadata:
             return None
 
         if bulk_metadata:
-            return json.loads(MongoJSONEncoder().encode(bulk_metadata.get(invite.survey)))
-        
-        return json.loads(MongoJSONEncoder().encode(get_survey_metadata(invite.survey, settings.SURVEY_METADATA_FORMAT)))
+            result = json.loads(MongoJSONEncoder().encode(bulk_metadata.get(invite.survey)))
+        else:
+            result = json.loads(MongoJSONEncoder().encode(get_survey_metadata(invite.survey, settings.SURVEY_METADATA_FORMAT)))
+
+        result["numberOfQuestions"] = len(result["questions"])
+        result["questions"] = None
+
+        return result

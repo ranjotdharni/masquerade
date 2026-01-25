@@ -69,12 +69,11 @@ class SurveyCatalog(APIView):
                 oid = ObjectId(id)
 
                 result = surveysCollection.find({"_id": oid}, settings.PUBLIC_SURVEY_DATA_FORMAT)
-                surveys = list(result)
-                content = json.loads(dumps(surveys))
             else:
                 result = surveysCollection.find({}, settings.PUBLIC_SURVEY_DATA_FORMAT)
-                surveys = list(result)
-                content = json.loads(dumps(surveys))
+
+            surveys = list(result)
+            content = json.loads(dumps(surveys))
 
             for survey in content:
                 survey["numberOfQuestions"] = len(survey["questions"])

@@ -68,7 +68,7 @@ class DeclineInvites(APIView):
 
         try:
             recipient = extract_user_from_request(request)
-            data = request.data.dict()
+            data = request.data
             requestIsMissingInput = "id" not in data
 
             # validate recipient
@@ -92,37 +92,11 @@ class DeclineInvites(APIView):
 
         return response
 
-''''
-@method_decorator(csrf_protect, name="dispatch")
-class SentInvites(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        response = Response({ "error": True, "message": "500 Internal Server Error (Unknown)." }, status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        try:
-            user = extract_user_from_request(request)
-            requestHasParams = "id" in request.GET
-
-            if isinstance(user, dict) and user["error"]:
-                return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
-
-            if (requestHasParams):
-                sid = request.GET["id"]
-                invites = Invite.objects.filter(survey=sid, sender=user.username)
-            else:
-                invites = Invite.objects.filter(sender=user.username)
-
-            serializer = InviteSerializer(
-                invites,
-                many=True,
-            )
-
-            response = Response({ "success": True, "content": serializer.data }, status.HTTP_200_OK)
-        except TypeError:
-            return response
-
-        return response
+'''
+Note that there is no sent invites endpoint. This is intentional; a user being 
+able to retrieve all of the invites they've sent would indicate that those 
+invites were successfully sent to other users. THIS IS A HINT THAT A USER DOES 
+IN FACT HAVE AN ACCOUNT AND IS ON HERE; THIS VIOLATES ANONYMITY.
 '''
 
 @method_decorator(csrf_protect, name="dispatch")
@@ -145,7 +119,7 @@ class ReceivedInvites(APIView):
             else:
                 invites = Invite.objects.filter(recipient=user.username)
 
-            bulk_metadata = get_survey_metadata_bulk([invite.survey for invite in invites], settings.SURVEY_METADATA_FORMAT)
+            bulk_metadata = get_survey_metadata_bulk([invite.survey for invite in invites], settings.PUBLIC_SURVEY_DATA_FORMAT)
             serializer = InviteSerializer(
                 invites,
                 many=True,

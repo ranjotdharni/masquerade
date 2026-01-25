@@ -1,11 +1,43 @@
 import { ChevronRight, Trash2 } from "lucide-react"
-import { PAGE_SURVEY_PREVIEW, PAGE_SURVEY_TAKE } from "../../lib/constants"
+import { API_INVITE_DECLINE, API_INVITE_RECEIVED, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_PREVIEW, PAGE_SURVEY_TAKE } from "../../lib/constants"
 import type { SurveyMetadata } from "../../lib/types/api"
-import { useState } from "react"
+import { useContext, useEffect, useState, type MouseEvent } from "react"
 import Loader from "../utility/Loader"
+import { authenticatedRequest } from "../../lib/utility/internal"
+import { UIContext } from "../context/UIContext"
 
+type InviteResult = {
+    survey: string
+    metadata: SurveyMetadata
+}
 
-function InviteCard({ metadata } : { metadata: SurveyMetadata }) {
+function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, notify: (message: string, error: boolean) => void, remove: (id: string) => void }) {
+    const { confirm } = useContext(UIContext)
+
+    async function decline() {
+        await authenticatedRequest(API_INVITE_DECLINE, "POST", { id: metadata._id.$oid }).then(result => {
+            let message = result.message as string || DEFAULT_ERROR_MESSAGE
+
+            if (result.error) {
+                notify(message, true)
+            }
+            else {
+                notify(message, false)
+                remove(metadata._id.$oid)
+            }
+        })
+    }
+
+    async function onDecline(event: MouseEvent<HTMLButtonElement>) {
+        event.preventDefault()
+
+        confirm({
+            message: "After declining, you may not participate in this survey unless you are sent another invite. Would you still like to continue?",
+            callback: decline,
+            loaderText: "Declining Invite..."
+        })
+    }
+
     return (
         <li className="w-full h-50 bg-background flex flex-col justify-center items-center">
             <div className="flex flex-col border-text border-2 rounded-lg w-full h-full overflow-hidden">
@@ -25,9 +57,9 @@ function InviteCard({ metadata } : { metadata: SurveyMetadata }) {
                 </span>
 
                 <div className="p-4 flex flex-row justify-between items-center">
-                    <button className="flex flex-row items-center font-jbm text-xs pr-2 py-[2px] space-x-2 hover:cursor-pointer text-error border-2 hover:text-background hover:bg-error border-error p-[1px] rounded">
+                    <button onClick={onDecline} className="flex flex-row items-center font-jbm text-xs pr-2 py-[2px] space-x-2 hover:cursor-pointer text-error border-2 hover:text-background hover:bg-error border-error p-[1px] rounded">
                         <Trash2 className="scale-75" />
-                        <p>Delete</p>
+                        <p>Decline</p>
                     </button>
                     <a href={`/${PAGE_SURVEY_TAKE}/${metadata._id.$oid}`} className="font-lato appButton">Participate</a>
                 </div>
@@ -37,8 +69,10 @@ function InviteCard({ metadata } : { metadata: SurveyMetadata }) {
 }
 
 export default function InviteSection() {
-    const [isLoading] = useState<boolean>(false)
-    const [invites] = useState<SurveyMetadata[]>([])
+    const { notify } = useContext(UIContext)
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [invites, setInvites] = useState<SurveyMetadata[]>([])
 
     function convertToComponents(invites: SurveyMetadata[]) {
         return (
@@ -47,10 +81,49 @@ export default function InviteSection() {
             <li className="flex flex-row justify-center items-center h-full w-full font-jbm text-inactive">You currently have no invites.</li> : 
 
             invites.map(invite => {
-                return <InviteCard key={invite._id.$oid} metadata={invite} />
+                return <InviteCard key={invite._id.$oid} metadata={invite} notify={simpleNotify} remove={remove} />
             })
         )
     }
+
+    function simpleNotify(message: string, error: boolean) {
+        notify({ message: message, color: error ? "var(--color-error)" : "var(--color-text)" })
+    }
+
+    function remove(id: string) {
+        const newArray = [...invites]
+        const removeIndex = newArray.findIndex(i => i._id.$oid === id)
+
+        if (removeIndex > -1) {
+            newArray.splice(removeIndex, 1)
+            setInvites(newArray)
+        }
+    }
+
+    useEffect(() => {
+        async function getInvites() {
+            setIsLoading(true)
+
+            await authenticatedRequest(API_INVITE_RECEIVED, "GET").then(result => {
+                let message = result.message as string || DEFAULT_ERROR_MESSAGE
+
+                if (result.error) {
+                    notify({
+                        message: message,
+                        color: "var(--color-error)"
+                    })
+                }
+                else {
+                    console.log(result)
+                    setInvites((result as { success: true, content: InviteResult[] }).content.map(i => i.metadata))
+                }
+            })
+
+            setIsLoading(false)
+        }
+
+        getInvites()
+    }, [])
 
     return (
         <div className="w-full h-[85vh] md:w-1/2 md:h-full md:pr-4 flex flex-col items-center md:items-end">
