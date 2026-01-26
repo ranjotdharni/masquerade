@@ -2,7 +2,7 @@ import type { QuestionIdType } from "./client"
 import type { QUESTION_TYPE_ID_MAP } from "../constants"
 
 export type ObjectId = {
-    $oid: string
+  $oid: string
 }
 
 export type SingleChoiceAnswer = {
