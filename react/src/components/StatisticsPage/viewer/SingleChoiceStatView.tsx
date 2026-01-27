@@ -1,11 +1,33 @@
+import type { ApexOptions } from "apexcharts"
 import { DIFF_COLOR_LIST } from "../../../lib/constants"
 import type { SingleChoiceQuestion } from "../../../lib/types/api"
+import { useState } from "react"
+import ReactApexChart from "react-apexcharts"
 
 export type SingleChoiceStatViewProps = {
     question: SingleChoiceQuestion
 }
 
 export default function SingleChoiceStatView({ question } : SingleChoiceStatViewProps) {
+    const [columnChart] = useState<ApexOptions>({
+        series: [{
+            data: question.answers!.map(a => a.submissions!)
+        }],
+        colors: DIFF_COLOR_LIST,
+        plotOptions: {
+            bar: {
+                columnWidth: '10%',
+                distributed: true,
+                borderRadius: 5,
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false
+        },
+    })
 
     return (
         <>
@@ -30,6 +52,7 @@ export default function SingleChoiceStatView({ question } : SingleChoiceStatView
                     </ul>
 
                     <figure className="w-full h-[40%] rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly px-2 py-1">
+                        <ReactApexChart width="100%" height="100%" series={columnChart.series} type="bar" options={columnChart} />
                         <figcaption>This is a figure.</figcaption>
                     </figure>
                 </section>
