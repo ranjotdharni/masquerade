@@ -38,14 +38,18 @@ export default function StatsBody({ survey } : { survey: Survey }) {
 
     return (
         <section style={{height: `calc(100% - ${NAV_CSS.getY()})`}} className={`w-full ${NAV_CSS.md_px}`}>
-            <header className="w-full h-[10%] flex flex-row justify-end items-center">
-                <button onClick={cycleBackward} className="p-2">
-                    <ChevronLeft className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
-                </button>
-                <h2 className="font-jbm text-inactive px-2">{`${questionIndex + 1} / ${survey.questions.length}`}</h2>
-                <button onClick={cycleForward} className="p-2">
-                    <ChevronRight className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
-                </button>
+            <header className="w-full h-[10%] flex flex-row justify-between items-center md:px-2">
+                <h2 className="p-1 text-text font-lato">Survey Submissions: <span className="font-lato-bold">{survey.submissions}</span></h2>
+
+                <div className="flex flex-row items-center">
+                    <button onClick={cycleBackward} className="p-2">
+                        <ChevronLeft className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
+                    </button>
+                    <h2 className="font-jbm text-inactive px-2">{`${questionIndex + 1} / ${survey.questions.length}`}</h2>
+                    <button onClick={cycleForward} className="p-2">
+                        <ChevronRight className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
+                    </button>
+                </div>
             </header>
 
             <article className="w-full h-[90%] md:px-2">
