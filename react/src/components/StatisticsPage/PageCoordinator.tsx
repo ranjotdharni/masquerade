@@ -1,10 +1,13 @@
 import type { Survey } from "../../lib/types/api"
+import StatsBody from "./coordinator/StatsBody"
+import StatsHeader from "./coordinator/StatsHeader"
 
 export default function PageCoordinator({ content } : { content: Survey }) {
 
     return (
         <>
-            <p>This is the Statistics Page.</p>
+            <StatsHeader name={content.name} inviteOnly={content.inviteOnly} />
+            <StatsBody />
         </>
     )
 }
