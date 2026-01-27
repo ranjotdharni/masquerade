@@ -7,7 +7,7 @@ export default function PageCoordinator({ content } : { content: Survey }) {
     return (
         <>
             <StatsHeader name={content.name} inviteOnly={content.inviteOnly} />
-            <StatsBody />
+            <StatsBody survey={content} />
         </>
     )
 }
