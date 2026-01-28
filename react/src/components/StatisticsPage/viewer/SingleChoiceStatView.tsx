@@ -6,13 +6,14 @@ import ReactApexChart from "react-apexcharts"
 
 export type SingleChoiceStatViewProps = {
     question: SingleChoiceQuestion
+    surveySubmissions: number
 }
 
-export default function SingleChoiceStatView({ question } : SingleChoiceStatViewProps) {
+export default function SingleChoiceStatView({ question, surveySubmissions } : SingleChoiceStatViewProps) {
     function getArrayAsPercentages(arr: number[]) {
         let total = 0
         arr.forEach(a => { total += a })
-        return arr.map(a => parseFloat((a * 100 / total).toFixed(2)))
+        return total === 0 ? arr.map(_ => 0) : arr.map(a => parseFloat((a * 100 / total).toFixed(2)))
     }
 
     const [columnChart] = useState<ApexOptions>({
@@ -88,14 +89,17 @@ export default function SingleChoiceStatView({ question } : SingleChoiceStatView
                         total: {
                             show: true,
                             showAlways: true,
-                            fontFamily: "var(--font-jbm)",
+                            fontFamily: "var(--font-jbm-italic)",
                             fontSize: "0.85rem",
                             color: "var(--color-secondary)",
-                            label: "Question Submissions"
+                            label: "Question Submissions",
+                            formatter: function() {
+                                return question.submissions! + ""
+                            }
                         },
                         value: {
                             color: "var(--color-text)",
-                            fontFamily: "var(--font-jbm-bold)"
+                            fontFamily: "var(--font-jbm-bold)",
                         }
                     },
                 },
@@ -175,6 +179,103 @@ export default function SingleChoiceStatView({ question } : SingleChoiceStatView
         labels: question.answers!.map(_ => "Portion"),
     })
 
+    const [pieChart] = useState<ApexOptions>({
+        series: [{
+            name: "Submissions",
+            data: question.answers!.map(a => { return { y: a.submissions!, x: ""} })
+        }],
+        colors: DIFF_COLOR_LIST,
+        stroke: {
+            width: 3,
+            curve: "linestep",
+            lineCap: "round",
+            colors: ["var(--color-background)"]
+        },
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            show: false
+        },
+        chart: {
+            type: "pie",
+            toolbar: {
+                show: false
+            }
+        },
+        tooltip: {
+            style: {
+                fontFamily: "var(--font-jbm-italic)",
+            },
+            
+        }
+    })
+
+    const [answerRateChart] = useState<ApexOptions>({
+        series: [surveySubmissions === 0 ? 0 : Math.floor(question.submissions! * 100 / surveySubmissions)],
+        chart: {
+            type: 'radialBar',
+            toolbar: {
+                show: false
+            }
+        },
+        plotOptions: {
+            radialBar: {
+                startAngle: -135,
+                endAngle: 225,
+                hollow: {
+                    margin: 0,
+                    size: '85%',
+                    background: 'transparent',
+                    imageOffsetX: 0,
+                    imageOffsetY: 0,
+                    position: 'front',
+                },
+                track: {
+                    strokeWidth: '67%',
+                    margin: 0,
+                },
+                dataLabels: {
+                    show: true,
+                    name: {
+                        offsetY: -10,
+                        show: true,
+                        color: "var(--color-secondary)",
+                        fontFamily: "var(--font-jbm-italic)",
+                        fontSize: "0.9rem"
+                    },
+                    value: {
+                        formatter: function(val) {
+                            return val + "%"
+                        },
+                        color: "var(--color-text)",
+                        fontFamily: "var(--font-jbm-bold)",
+                        fontSize: "1rem",
+                    }
+                }
+            }
+        },
+        fill: {
+            type: 'gradient',
+            colors: ["var(--color-primary)"],
+            gradient: {
+                shade: 'dark',
+                type: 'horizontal',
+                shadeIntensity: 0.5,
+                gradientToColors: ['var(--color-text)'],
+                inverseColors: true,
+                opacityFrom: 1,
+                opacityTo: 1,
+                stops: [0, 100]
+            }
+        },
+        stroke: {
+            lineCap: 'round',
+            width: 3,
+        },
+        labels: ['Answer Rate'],
+    })
+
     return (
         <>
             <header className="w-full h-[10%] flex flex-row justify-between items-center">
@@ -194,7 +295,7 @@ export default function SingleChoiceStatView({ question } : SingleChoiceStatView
                                     return (
                                         <li key={a._id.$oid} className="w-full px-2 space-x-2 flex flex-row items-center">
                                             <div aria-hidden style={{backgroundColor: DIFF_COLOR_LIST[i]}} className="w-2 aspect-square rounded-xl"></div>
-                                            <p className="text-sm text-secondary font-jbm-italic">{a.answer}</p>
+                                            <p style={{color: DIFF_COLOR_LIST[i]}} className="text-sm font-jbm-italic">{a.answer}</p>
                                         </li>
                                     )
                                 })
@@ -218,10 +319,11 @@ export default function SingleChoiceStatView({ question } : SingleChoiceStatView
                         </div>
                         <div className="w-full h-[40%] flex flex-row justify-evenly items-center">
                             <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
-
+                                <ReactApexChart width="100%" height="90%" series={pieChart.series} type="pie" options={pieChart} />
+                                <figcaption className="h-[10%] w-full flex flex-row justify-center items-center text-xs font-jbm-bold text-secondary">Pie Visualization</figcaption>
                             </figure>
                             <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
-
+                                <ReactApexChart width="100%" height="100%" series={answerRateChart.series} type="radialBar" options={answerRateChart} />
                             </figure>
                         </div>
                 </section>

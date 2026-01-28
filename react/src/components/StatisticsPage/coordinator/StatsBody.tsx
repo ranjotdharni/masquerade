@@ -26,20 +26,20 @@ export default function StatsBody({ survey } : { survey: Survey }) {
 
         switch (subject.type) {
             case QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE:
-                return <SingleChoiceStatView question={subject as SingleChoiceQuestion} />
+                return <SingleChoiceStatView question={subject as SingleChoiceQuestion} surveySubmissions={survey.submissions!} />
             case QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE:
-                return <MultipleChoiceStatView question={subject as MultipleChoiceQuestion} />
+                return <MultipleChoiceStatView question={subject as MultipleChoiceQuestion} surveySubmissions={survey.submissions!} />
             case QUESTION_TYPE_ID_MAP.RANKING_TYPE:
                 return <RankingStatView question={subject as RankingQuestion} />
             case QUESTION_TYPE_ID_MAP.RATING_TYPE:
-                return <RatingStatView question={subject as RatingQuestion} />
+                return <RatingStatView question={subject as RatingQuestion} surveySubmissions={survey.submissions!} />
         }
     }
 
     return (
         <section style={{height: `calc(100% - ${NAV_CSS.getY()})`}} className={`w-full ${NAV_CSS.md_px}`}>
             <header className="w-full h-[10%] flex flex-row justify-between items-center md:px-2">
-                <h2 className="p-1 text-text font-jbm-bold">Survey Submissions: <span className="font-jbm">{survey.submissions}</span></h2>
+                <h2 className="p-1 text-text font-jbm border-2 border-text rounded">Survey Submissions: <span className="font-jbm-bold">{survey.submissions}</span></h2>
 
                 <div className="flex flex-row items-center">
                     <button onClick={cycleBackward} className="p-2">
