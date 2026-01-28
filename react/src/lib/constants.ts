@@ -72,14 +72,16 @@ export const MAX_ANSWERS_PER_QUESTION: number = 4
 export const MAX_QUESTIONS_PER_SURVEY: number = 10
 
 export const DIFF_COLOR_LIST: string[] = [
+  "#359985", 
+  "#be2f13",
+  "#56554f",
+  "#7352c1",
+  "#F28E2B",
   "#D37295",
   "#4E79A7",
   "#59A14F",
   "#9C755F",
-  "#F28E2B",
   "#B07AA1",
-  "#76B7B2",
   "#EDC948",
-  "#E15759",
-  "#79706E",
+  "#2F6F62",
 ]

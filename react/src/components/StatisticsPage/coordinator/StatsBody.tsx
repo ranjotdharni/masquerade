@@ -39,7 +39,7 @@ export default function StatsBody({ survey } : { survey: Survey }) {
     return (
         <section style={{height: `calc(100% - ${NAV_CSS.getY()})`}} className={`w-full ${NAV_CSS.md_px}`}>
             <header className="w-full h-[10%] flex flex-row justify-between items-center md:px-2">
-                <h2 className="p-1 text-text font-lato">Survey Submissions: <span className="font-lato-bold">{survey.submissions}</span></h2>
+                <h2 className="p-1 text-text font-jbm-bold">Survey Submissions: <span className="font-jbm">{survey.submissions}</span></h2>
 
                 <div className="flex flex-row items-center">
                     <button onClick={cycleBackward} className="p-2">
