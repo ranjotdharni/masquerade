@@ -6,7 +6,7 @@ export default function StatsHeader({ name, inviteOnly } : { name: string, invit
     return (
         <header style={{width: `calc(100% - ${NAV_CSS.getX()})`}} className={`px-4 pt-2 ${NAV_CSS.h} ${NAV_CSS.md_ml}`}>
             <div className="w-full h-full rounded bg-accent flex flex-row justify-between items-center pl-2 pr-4">
-                <h1 className="md:text-xl text-text font-jbm-bold">{name}</h1>
+                <h1 className="text-text font-jbm-bold">Statistics: <span className="font-jbm-italic">{name}</span></h1>
                 {
                     inviteOnly ?
                     <Lock className="text-error ml-1" /> : 

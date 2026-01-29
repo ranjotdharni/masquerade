@@ -3,6 +3,7 @@ import { DIFF_COLOR_LIST } from "../../../lib/constants"
 import type { MultipleChoiceQuestion } from "../../../lib/types/api"
 import { useState } from "react"
 import ReactApexChart from "react-apexcharts"
+import TitleQuestion from "../consistent/TitleQuestion"
 
 export type MultipleChoiceStatViewProps = {
     question: MultipleChoiceQuestion
@@ -24,9 +25,10 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
         colors: DIFF_COLOR_LIST,
         plotOptions: {
             bar: {
-                columnWidth: '10%',
+                columnWidth: 10,
                 distributed: true,
                 borderRadius: 5,
+                borderRadiusApplication: "end",
             }
         },
         dataLabels: {
@@ -280,10 +282,7 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
 
     return (
         <>
-            <header className="w-full h-[10%] flex flex-row justify-between items-center">
-                <h3 className="text-text font-jbm p-2 border border-2 bg-inactive-light">{question.question}</h3>
-                <p className="text-sm text-inactive font-jbm-italic">Hover over chart segments for details</p>
-            </header>
+            <TitleQuestion question={question.question} />
 
             <div className="w-full h-[90%] flex flex-row">
                 <section className="w-1/2 h-full flex flex-col justify-evenly items-center">
