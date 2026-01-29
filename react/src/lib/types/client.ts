@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react"
 import type { QUESTION_TYPE_ID_MAP } from "../constants"
 import type { MultipleChoiceQuestion, ObjectId, RankingQuestion, RatingQuestion, SingleChoiceQuestion } from "./api"
 
@@ -46,4 +47,9 @@ export type RankingAnswerSlug = RankingQuestion & {
 
 export type RatingAnswerSlug = RatingQuestion & {
     slug: number
+}
+
+export type QuestionClassification = {
+    title: string
+    Icon: LucideIcon
 }

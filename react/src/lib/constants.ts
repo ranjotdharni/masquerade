@@ -1,3 +1,5 @@
+import { Check, CircleDot, HandCoins, Star } from "lucide-react"
+import type { QuestionClassification, QuestionIdType } from "./types/client"
 
 export const APP_NAME: string = "Masquerades"
 export const DEFAULT_ERROR_MESSAGE: string = "Uknown Error Occurred"
@@ -70,6 +72,25 @@ export const QUESTION_TYPE_ID_MAP = {
 
 export const MAX_ANSWERS_PER_QUESTION: number = 4
 export const MAX_QUESTIONS_PER_SURVEY: number = 10
+
+export const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification> = {
+    [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: {
+        title: "Multiple Choice",
+        Icon: CircleDot,
+    },
+    [QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE]:  {
+        title: "Check List",
+        Icon: Check,
+    },
+    [QUESTION_TYPE_ID_MAP.RANKING_TYPE]:  {
+        title: "Ranking",
+        Icon: HandCoins,
+    },
+    [QUESTION_TYPE_ID_MAP.RATING_TYPE]:  {
+        title: "Rating",
+        Icon: Star,
+    },
+}
 
 export const DIFF_COLOR_LIST: string[] = [ 
   "#be2f13",

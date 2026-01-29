@@ -1,33 +1,9 @@
-import { Check, CircleDot, HandCoins, Star, type LucideIcon } from "lucide-react"
-import type { MultipleAnswerSlug, QuestionIdType, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../../lib/types/client"
-import { QUESTION_TYPE_ID_MAP } from "../../lib/constants"
+import { Star } from "lucide-react"
+import type { MultipleAnswerSlug, QuestionClassification, QuestionIdType, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../../lib/types/client"
+import { QUESTION_TYPE_ID_MAP, SURVEY_TYPE_TO_ICON } from "../../lib/constants"
 import { useState, type JSX, type MouseEvent } from "react"
 
-type QuestionClassification = {
-    title: string
-    Icon: LucideIcon
-}
-
 type EditAnswerFunction = (slug: string | [string, string] | number) => void
-
-const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification> = {
-    [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: {
-        title: "Multiple Choice",
-        Icon: CircleDot,
-    },
-    [QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE]:  {
-        title: "Check List",
-        Icon: Check,
-    },
-    [QUESTION_TYPE_ID_MAP.RANKING_TYPE]:  {
-        title: "Ranking",
-        Icon: HandCoins,
-    },
-    [QUESTION_TYPE_ID_MAP.RATING_TYPE]:  {
-        title: "Rating",
-        Icon: Star,
-    },
-}
 
 function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answers: SingleAnswerSlug | MultipleAnswerSlug | RankingAnswerSlug | RatingAnswerSlug, editAnswer: EditAnswerFunction }) {
 

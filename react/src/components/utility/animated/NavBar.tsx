@@ -14,6 +14,9 @@ type NavCSSType = {
     w: string
     h: string
 
+    w_diff: string
+    h_diff: string
+
     px: string
     py: string
     pl: string
@@ -29,6 +32,9 @@ type NavCSSType = {
 
     md_w: string
     md_h: string
+
+    md_w_diff: string
+    md_h_diff: string
 
     md_px: string
     md_py: string
@@ -56,6 +62,9 @@ export const NAV_CSS: NavCSSType = {
     w: "w-[6.5vh]",
     h: "h-[6vh]",
 
+    w_diff: "w-[calc(100%-6.5vh)]",
+    h_diff: "h-[calc(100%-6vh)]",
+
     px: "px-[6.5vh]",
     pl: "pl-[6.5vh]",
     pr: "pr-[6.5vh]",
@@ -72,6 +81,9 @@ export const NAV_CSS: NavCSSType = {
 
     md_w: "md:w-[6.5vh]",
     md_h: "md:h-[6vh]",
+
+    md_w_diff: "md:w-[calc(100%-6.5vh)]",
+    md_h_diff: "md:h-[calc(100%-6vh)]",
 
     md_px: "md:px-[6.5vh]",
     md_pl: "md:pl-[6.5vh]",

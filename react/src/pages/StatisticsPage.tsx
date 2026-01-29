@@ -8,8 +8,6 @@ import { UIContext } from "../components/context/UIContext"
 import { API_SURVEY_DETAIL, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_VIEW } from "../lib/constants"
 import { authenticatedRequest } from "../lib/utility/internal"
 
-import SAMPLEDATA from "../sampledata/local/privateSurveyData.json"
-
 export default function StatisticsPage() {
     const navigate = useNavigate()
     const { notify } = useContext(UIContext)
@@ -38,11 +36,11 @@ export default function StatisticsPage() {
             })
         }
 
-        setContent(SAMPLEDATA as Survey)//getSurvey()
+        getSurvey()
     }, [id])
 
     return (
-        <AppContent className="flex flex-col justify-start items-center">
+        <AppContent className="flex flex-col justify-start items-center overflow-y-scroll md:overflow-y-hidden">
             {
                 content ?
                 <PageCoordinator content={content} /> :

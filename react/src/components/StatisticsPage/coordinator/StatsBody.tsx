@@ -37,11 +37,11 @@ export default function StatsBody({ survey } : { survey: Survey }) {
     }
 
     return (
-        <section style={{height: `calc(100% - ${NAV_CSS.getY()})`}} className={`w-full ${NAV_CSS.md_px}`}>
-            <header className="w-full h-[10%] flex flex-row justify-between items-center md:px-2">
-                <h2 className="p-1 text-text font-jbm border-2 border-text rounded">Survey Submissions: <span className="font-jbm-bold">{survey.submissions}</span></h2>
+        <section className={`mt-2 md:mt-0 w-full ${NAV_CSS.md_h_diff} ${NAV_CSS.md_px}`}>
+            <header className="w-full md:h-[10%] flex flex-col md:flex-row justify-between items-end md:items-center px-2">
+                <h2 className="mr-2 md:mr-0 p-1 text-text font-jbm border-2 border-text rounded">Survey Submissions: <span className="font-jbm-bold">{survey.submissions}</span></h2>
 
-                <div className="flex flex-row items-center">
+                <div className="w-full md:w-auto flex flex-row justify-between md:justify-center items-center">
                     <button onClick={cycleBackward} className="p-2">
                         <ChevronLeft className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
                     </button>
@@ -52,7 +52,7 @@ export default function StatsBody({ survey } : { survey: Survey }) {
                 </div>
             </header>
 
-            <article className="w-full h-[90%] md:px-2">
+            <article className="w-full md:h-[90%] px-2">
                 {
                     DetermineView(questionIndex)
                 }

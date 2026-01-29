@@ -280,21 +280,21 @@ export default function SingleChoiceStatView({ question, surveySubmissions } : S
 
     return (
         <>
-            <TitleQuestion question={question.question} />
+            <TitleQuestion question={question.question} type={question.type} />
 
-            <div className="w-full h-[90%] flex flex-row">
-                <section className="w-1/2 h-full flex flex-col justify-evenly items-center">
-                    <div className="w-full h-[40%] rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly">
-                        <header className="w-full h-[15%] flex flex-row justify-end items-center px-8 border-b border-inactive-light">
-                            <h3 className="font-jbm-bold text-text text-lg px-4">Answer Key</h3>
+            <div className="w-full md:h-[90%] mt-4 md:mt-0 flex flex-col items-center md:flex-row">
+                <section className="w-[90%] md:w-1/2 h-full flex flex-col justify-evenly items-center">
+                    <div className="w-full md:h-[40%] rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly">
+                        <header className="w-full md:h-[15%] flex flex-row justify-end items-center py-2 md:py-0 px-8 border-b border-inactive-light">
+                            <h3 className="font-jbm-bold text-text text-lg md:px-4">Answer Key</h3>
                         </header>
-                        <ul className="w-full h-[85%] flex flex-col justify-evenly px-2">
+                        <ul className="w-full md:h-[85%] flex flex-col justify-evenly px-2">
                             {
                                 question.answers?.map((a, i) => {
                                     return (
-                                        <li key={a._id.$oid} className="w-full px-2 space-x-2 flex flex-row items-center">
+                                        <li key={a._id.$oid} className="w-full h-18 md:h-auto px-2 space-x-2 flex flex-row items-center">
                                             <div aria-hidden style={{backgroundColor: DIFF_COLOR_LIST[i]}} className="w-2 aspect-square rounded-xl"></div>
-                                            <p style={{color: DIFF_COLOR_LIST[i]}} className="text-sm font-jbm-italic">{a.answer}</p>
+                                            <p style={{color: DIFF_COLOR_LIST[i]}} className="text-xs md:text-sm font-jbm-italic">{a.answer}</p>
                                         </li>
                                     )
                                 })
@@ -302,26 +302,26 @@ export default function SingleChoiceStatView({ question, surveySubmissions } : S
                         </ul>
                     </div>
 
-                    <figure className="w-full h-[40%] rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly px-2 pt-1 pb-2">
+                    <figure className="w-full h-[40vh] md:h-[40%] mt-6 md:mt-0 rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly px-2 pt-1 pb-2">
                         <ReactApexChart width="100%" height="100%" series={columnChart.series} type="bar" options={columnChart} />
                     </figure>
                 </section>
 
-                <section className="w-1/2 h-full flex flex-col justify-evenly items-center">
-                        <div className="w-full h-[40%] flex flex-row justify-evenly items-center">
-                            <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
+                <section className="w-full md:w-1/2 h-full flex flex-col justify-evenly items-center pb-8 md:pb-0">
+                        <div className="w-full md:h-[40%] flex flex-col md:flex-row justify-evenly items-center">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
                                 <ReactApexChart width="100%" height="100%" series={donutChart.series} type="donut" options={donutChart} />
                             </figure>
-                            <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
                                 <ReactApexChart width="100%" height="100%" series={radialChart.series} type="radialBar" options={radialChart} />
                             </figure>
                         </div>
-                        <div className="w-full h-[40%] flex flex-row justify-evenly items-center">
-                            <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
+                        <div className="w-full md:h-[40%] flex flex-col md:flex-row justify-evenly items-center">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
                                 <ReactApexChart width="100%" height="90%" series={pieChart.series} type="pie" options={pieChart} />
                                 <figcaption className="h-[10%] w-full flex flex-row justify-center items-center text-xs font-jbm-bold text-secondary">Pie Visualization</figcaption>
                             </figure>
-                            <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
                                 <ReactApexChart width="100%" height="100%" series={answerRateChart.series} type="radialBar" options={answerRateChart} />
                             </figure>
                         </div>
