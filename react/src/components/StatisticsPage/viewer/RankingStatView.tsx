@@ -2,7 +2,7 @@ import type { ApexOptions } from "apexcharts"
 import { DIFF_COLOR_LIST } from "../../../lib/constants"
 import ReactApexChart from "react-apexcharts"
 import TitleQuestion from "../consistent/TitleQuestion"
-import type { RankingQuestion } from "../../../lib/types/api"
+import type { RankingQuestion, RatingAnswer } from "../../../lib/types/api"
 import { useState } from "react"
 
 export type RankingStatViewProps = {
@@ -11,14 +11,15 @@ export type RankingStatViewProps = {
 }
 
 export default function RankingStatView({ question, surveySubmissions } : RankingStatViewProps) {
-    function getArrayAsPercentages(arr: number[]) {
-        let total = 0
-        arr.forEach(a => { total += a })
-        return total === 0 ? arr.map(_ => 0) : arr.map(a => parseFloat((a * 100 / total).toFixed(2)))
+    function getAverageRating(answer: RatingAnswer, total: number) {
+        if (total === 0)
+            return 0
+
+        return parseFloat(((answer["1"]! + answer["2"]! * 2 + answer["3"]! * 3 + answer["4"]! * 4) / total).toFixed(2))
     }
 
     const [columnChart] = useState<ApexOptions>({
-        series: question.answers!.map((a, i) => { 
+        series: question.answers!.map(a => { 
             return {
                 name: "",
                 data: [ 
@@ -84,11 +85,11 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
         }
     })
 
-    /*
+    
     const [donutChart] = useState<ApexOptions>({
         series: [{
             name: "Submissions",
-            data: question.answers!.map(a => { return { y: a.submissions!, x: ""} })
+            data: question.answers!.map(a => { return { y: getAverageRating(a, question.submissions!), x: ""} })
         }],
         colors: DIFF_COLOR_LIST,
         stroke: {
@@ -143,8 +144,9 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
         }
     })
 
+    
     const [radialChart] = useState<ApexOptions>({
-        series: getArrayAsPercentages(question.answers!.map(a => a.submissions!)),
+        series: question.answers!.map(a => getAverageRating(a, question.submissions!) * 100 / 4),
         colors: DIFF_COLOR_LIST,
         stroke: {
             width: 3,
@@ -163,14 +165,18 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
                     value: {
                         show: true,
                         fontFamily: "var(--font-jbm-bold)",
-                        color: "var(--color-text)"
+                        color: "var(--color-text)",
+                        offsetY: -12,
+                        formatter: function(val) {
+                            return val * (4 / 100) + " / 4.00"
+                        }
                     },
                     total: {
                         fontFamily: "var(--font-jbm-italic)",
                         fontSize: "0.8rem",
                         color: "var(--color-secondary)",
                         show: true,
-                        label: "Percentages",
+                        label: "Averages",
                         formatter: function() {
                             return ""
                         }
@@ -183,7 +189,7 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
             }
         },
         dataLabels: {
-            enabled: false
+            enabled: false,
         },
         legend: {
             show: false
@@ -194,14 +200,11 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
                 show: false
             }
         },
-        labels: question.answers!.map(_ => "Portion"),
+        labels: question.answers!.map(_ => ""),
     })
 
-    const [pieChart] = useState<ApexOptions>({
-        series: [{
-            name: "Submissions",
-            data: question.answers!.map(a => { return { y: a.submissions!, x: ""} })
-        }],
+    const [polarChart] = useState<ApexOptions>({
+        series: question.answers!.map(a => getAverageRating(a, question.submissions!)),
         colors: DIFF_COLOR_LIST,
         stroke: {
             width: 3,
@@ -210,13 +213,16 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
             colors: ["var(--color-background)"]
         },
         dataLabels: {
-            enabled: false
+            enabled: true,
+            formatter: function(val) {
+                return isNaN(val as number) ? 0 : (val as number).toFixed(2) + "%"
+            }
         },
         legend: {
             show: false
         },
         chart: {
-            type: "pie",
+            type: "polarArea",
             toolbar: {
                 show: false
             }
@@ -226,9 +232,9 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
                 fontFamily: "var(--font-jbm-italic)",
             },
             
-        }
+        },
+        labels: question.answers!.map(_ => ""),
     })
-        */
 
     const [answerRateChart] = useState<ApexOptions>({
         series: [surveySubmissions === 0 ? 0 : Math.floor(question.submissions! * 100 / surveySubmissions)],
@@ -327,16 +333,16 @@ export default function RankingStatView({ question, surveySubmissions } : Rankin
                 <section className="w-1/2 h-full flex flex-col justify-evenly items-center">
                         <div className="w-full h-[40%] flex flex-row justify-evenly items-center">
                             <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
-                                {/*<ReactApexChart width="100%" height="100%" series={donutChart.series} type="donut" options={donutChart} />*/}
+                                <ReactApexChart width="100%" height="100%" series={donutChart.series} type="donut" options={donutChart} />
                             </figure>
                             <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
-                                {/*<ReactApexChart width="100%" height="100%" series={radialChart.series} type="radialBar" options={radialChart} />*/}
+                                <ReactApexChart width="100%" height="100%" series={radialChart.series} type="radialBar" options={radialChart} />
                             </figure>
                         </div>
                         <div className="w-full h-[40%] flex flex-row justify-evenly items-center">
                             <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
-                                {/*<ReactApexChart width="100%" height="90%" series={pieChart.series} type="pie" options={pieChart} />
-                                <figcaption className="h-[10%] w-full flex flex-row justify-center items-center text-xs font-jbm-bold text-secondary">Pie Visualization</figcaption>*/}
+                                <ReactApexChart width="100%" height="90%" series={polarChart.series} type="polarArea" options={polarChart} />
+                                <figcaption className="h-[10%] w-full flex flex-row justify-center items-center text-xs font-jbm-bold text-secondary">Polar Visualization</figcaption>
                             </figure>
                             <figure className="w-[40%] h-full rounded-lg shadow-md border border-background-light p-2">
                                 <ReactApexChart width="100%" height="100%" series={answerRateChart.series} type="radialBar" options={answerRateChart} />
