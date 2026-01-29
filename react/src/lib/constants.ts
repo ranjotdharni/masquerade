@@ -71,11 +71,11 @@ export const QUESTION_TYPE_ID_MAP = {
 export const MAX_ANSWERS_PER_QUESTION: number = 4
 export const MAX_QUESTIONS_PER_SURVEY: number = 10
 
-export const DIFF_COLOR_LIST: string[] = [
-  "#359985", 
+export const DIFF_COLOR_LIST: string[] = [ 
   "#be2f13",
   "#56554f",
   "#7352c1",
+  "#359985",
   "#F28E2B",
   "#D37295",
   "#4E79A7",

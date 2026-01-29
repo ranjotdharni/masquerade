@@ -30,7 +30,7 @@ export default function StatsBody({ survey } : { survey: Survey }) {
             case QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE:
                 return <MultipleChoiceStatView question={subject as MultipleChoiceQuestion} surveySubmissions={survey.submissions!} />
             case QUESTION_TYPE_ID_MAP.RANKING_TYPE:
-                return <RankingStatView question={subject as RankingQuestion} />
+                return <RankingStatView question={subject as RankingQuestion} surveySubmissions={survey.submissions!} />
             case QUESTION_TYPE_ID_MAP.RATING_TYPE:
                 return <RatingStatView question={subject as RatingQuestion} surveySubmissions={survey.submissions!} />
         }
