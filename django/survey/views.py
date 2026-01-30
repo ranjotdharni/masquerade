@@ -49,6 +49,62 @@ class CreateSurvey(APIView):
             response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
+    
+@method_decorator(csrf_protect, name="dispatch")
+class DeleteSurvey(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        try:
+            surveysCollection = settings.MONGO_CLIENT[settings.DB_DATABASE_NAME][settings.DB_SURVEY_COLLECTION_NAME]
+            data = request.data
+            requestHasDetails = "id" in data
+            result = None
+
+            user = extract_user_from_request(request)
+
+            if isinstance(user, dict) and user["error"]:
+                return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
+            
+            if (requestHasDetails):
+                id = data["id"]
+                oid = ObjectId(id)
+
+                creatorOnlyFilter = {
+                    "_id": 0,
+                    "name": 0,
+                    "inviteOnly": 0,
+                    "submissions": 0,
+                    "questions": 0,
+                }
+
+                result = surveysCollection.find({"_id": oid, "creator": user.username}, creatorOnlyFilter)
+            else:
+                return Response({"error": True, "message": "No Survey ID detected or improperly passed."}, status.HTTP_400_BAD_REQUEST)
+
+            survey_list = list(result)
+            content = json.loads(dumps(survey_list))
+
+            if len(content) != 0:
+                for survey in content:
+                    if survey["creator"] != user.username:
+                        return Response({"error": True, "message": "Permission Error"}, status.HTTP_400_BAD_REQUEST)
+                    
+                result = surveysCollection.delete_one({ "_id": ObjectId(data["id"]) })
+
+                if result.acknowledged and result.deleted_count > 0:
+                    response = Response({ "success": True, "message": "Survey Deleted." }, status.HTTP_200_OK)
+            else:
+                response = Response({ "error": True, "message": "No valid survey found." }, status.HTTP_200_OK)
+        except (InvalidId, TypeError) as e:
+            print(e)
+            response = Response({"error": True, "message": "Malformed request detected."}, status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+
+        return response
 
 @method_decorator(csrf_protect, name="dispatch")
 class SurveyCatalog(APIView):
@@ -145,7 +201,7 @@ class SurveyDetail(APIView):
 
             if isinstance(user, dict) and user["error"]:
                 return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
-
+            
             if (requestHasParams):
                 id = request.GET["id"]
 
@@ -162,11 +218,13 @@ class SurveyDetail(APIView):
                 for survey in content:
                     if survey["creator"] != user.username:
                         return Response({"error": True, "message": "You don't have permission to see details of this survey(s)."}, status.HTTP_400_BAD_REQUEST)
-
-            response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+                    
+                response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+            else:
+                response = Response({ "error": True, "message": "No viewable survey found." }, status.HTTP_200_OK)
         except (InvalidId, TypeError) as e:
             print(e)
-            response = Response({"error": True, "message": "Invalid Survey ID"}, status.HTTP_400_BAD_REQUEST)
+            response = Response({"error": True, "message": "Malformed request detected."}, status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
 
