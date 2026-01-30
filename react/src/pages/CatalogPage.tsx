@@ -4,15 +4,14 @@ import FullScreenLoader from "../components/utility/FullScreenLoader"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { API_SURVEY_CATALOG, DEFAULT_ERROR_MESSAGE } from "../lib/constants"
 import Catalog from "../components/CatalogPage/Catalog"
-import type { RecursiveObject } from "../lib/types/internal"
 import { UIContext } from "../components/context/UIContext"
+import type { SurveyMetadata } from "../lib/types/api"
 
 export default function CatalogPage() {
     const { notify } = useContext(UIContext)
-    const [content, setContent] = useState<Record<string | number | symbol, RecursiveObject<string | number | boolean>>[] | undefined>()
+    const [content, setContent] = useState<SurveyMetadata[] | undefined>()
 
     useEffect(() => {
-        // placeholder function. for now, just fills page with all existing surveys.
         async function getCatalog() {
             await authenticatedRequest(API_SURVEY_CATALOG, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
@@ -24,7 +23,7 @@ export default function CatalogPage() {
                     })
                 }
                 else {
-                    setContent((result as any)["content"] as Record<string | number | symbol, RecursiveObject<string | number | boolean>>[])
+                    setContent((result as any)["content"] as SurveyMetadata[])
                 }
             })
         }
