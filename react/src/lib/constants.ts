@@ -35,6 +35,8 @@ export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'
 export const ICON_QUESTION_MARK: string = 'https://img.icons8.com/emoji/100/question-mark-emoji.png'
 
+export const IMG_LANDING_BACKGROUND: string = 'https://images.pexels.com/photos/28428591/pexels-photo-28428591.jpeg'
+
 export const HTTP_401_UNAUTHORIZED: number = 401
 export const HTTP_403_FORBIDDEN: number = 403
 

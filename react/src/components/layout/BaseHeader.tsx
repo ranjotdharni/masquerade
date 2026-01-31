@@ -41,7 +41,7 @@ function NavigationLink({ text, href, Icon } : NavigationItemType) {
 
 export default function BaseHeader() {
     return (
-        <header className="w-full md:px-8 py-4 md:pr-20 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-between items-center bg-primary">
+        <header style={{zIndex: 5}} className="sticky top-0 w-full md:max-h-24 md:px-8 py-4 md:pr-20 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-between items-center bg-primary">
             <h1 className="w-full md:w-auto px-4 md:px-0">
                 <a href={PAGE_WELCOME} className="h-full flex flex-row justify-center items-center space-x-2">
                     <img className="h-16 aspect-square" src={ICON_LOGO} alt='Logo' />
@@ -49,7 +49,7 @@ export default function BaseHeader() {
                 </a>
             </h1>
 
-            <nav className="w-full md:w-auto space-x-6 md:space-x-8 font-jbm text-sm md:text-[1rem] text-text flex flex-row justify-center md:justify-start items-center">
+            <nav className="w-full px-2 md:px-0 md:w-auto space-x-6 md:space-x-8 font-jbm text-sm md:text-[1rem] text-text flex flex-row justify-center md:justify-start items-center">
                 {
                     NAVIGATION_ITEMS.map((navItem, index) => {
                         return <NavigationLink key={`BASE_NAV_LINK_1x${index}`} text={navItem.text} href={navItem.href} Icon={navItem.Icon} />

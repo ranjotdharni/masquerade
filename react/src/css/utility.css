@@ -81,3 +81,12 @@
         content: "When an invite is sent, you won't be informed if it was received or not. This is to preserve anonymity; it ensures no user is given any hint as to whether or not another user also exists. If your invite is for a user that you know is on here, rest assured the recipient has it.";
     }
 }
+
+
+/* Landing Page classes */
+
+.landingImageFilters {
+    filter: contrast(150%) hue-rotate(80deg) saturate(48%) grayscale(74%) sepia(12%) invert(100%);
+    -webkit-mask: linear-gradient(var(--color-background) 15%, transparent);
+    mask: linear-gradient(var(--color-background) 10%, transparent 75%, transparent);
+}
