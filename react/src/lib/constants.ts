@@ -1,8 +1,8 @@
 import { Check, CircleDot, HandCoins, Star } from "lucide-react"
 import type { QuestionClassification, QuestionIdType } from "./types/client"
 
-export const APP_NAME: string = "Masquerades"
-export const DEFAULT_ERROR_MESSAGE: string = "Uknown Error Occurred"
+export const APP_NAME: string = 'Masquerades'
+export const DEFAULT_ERROR_MESSAGE: string = 'Uknown Error Occurred'
 
 export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'
@@ -34,6 +34,15 @@ export const API_INVITE_DECLINE: string = '/api/invite/decline/'
 export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask.png'
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'
 export const ICON_QUESTION_MARK: string = 'https://img.icons8.com/emoji/100/question-mark-emoji.png'
+export const ICON_APEXCHARTS: string = 'https://apexcharts.com/wp-content/themes/apexcharts/img/apexcharts-logo.svg'
+export const ICON_REACT: string = 'https://icon.icepanel.io/Technology/svg/React.svg'
+export const ICON_DJANGO: string = 'https://icon.icepanel.io/Technology/png-shadow-512/Django.png'
+export const ICON_MONGO: string = 'https://icon.icepanel.io/Technology/svg/MongoDB.svg'
+export const ICON_OAUTH: string = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Oauth_logo.svg/960px-Oauth_logo.svg.png?20210406125156'
+export const ICON_GROUP: string = 'https://img.icons8.com/color/100/you-plural.png'
+export const ICON_DATA: string = 'https://img.icons8.com/color/100/combo-chart--v1.png'
+export const ICON_ANONYMOUS: string = 'https://img.icons8.com/color/100/anonymous-mask.png'
+export const ICON_UI: string = 'https://img.icons8.com/color/100/web.png'
 
 export const IMG_LANDING_BACKGROUND: string = 'https://images.pexels.com/photos/28428591/pexels-photo-28428591.jpeg'
 
