@@ -25,7 +25,7 @@ export default function LandingSection() {
             
             <figure className="md:w-full flex flex-col items-center space-y-6">
                 <div style={{zIndex: 1}} className="bg-text shadow-xl rounded-xl max-w-250 w-[90vw] md:w-[55%] mt-16 pt-26 flex flex-row justify-center items-end">
-                    <img src={LandingImage} className="w-[85%] rounded-t-md" />
+                    <img src={LandingImage} alt="dashboard" className="w-[85%] rounded-t-md" />
                 </div>
                 <figcaption className="text-center max-w-180 w-4/5 md:w-auto font-jbm text-secondary">Gather data from your target client base, review submissions at an aggregate level, and make analytical business decision.</figcaption>
             </figure>
