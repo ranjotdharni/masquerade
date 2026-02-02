@@ -30,7 +30,7 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
     }, [message, hideTextTimer.completed, clearTextTimer.completed])
 
     return (
-        <div style={{transform: translateY, transition: "transform 0.4s ease", display: message.trim() === "" ? "none" : "flex"}} className="absolute w-[90%] h-[20vh] left-[5%] top-[90vh] flex-col justify-start items-center md:items-end">
+        <div style={{transform: translateY, transition: "transform 0.4s ease", display: message.trim() === "" ? "none" : "flex"}} className="z-30 absolute w-[90%] h-[20vh] left-[5%] top-[90vh] flex-col justify-start items-center md:items-end">
             <span style={{color: color}} className="w-full h-auto max-h-1/2 py-4 md:w-auto md:px-8 font-jbm flex flex-row justify-center items-center border bg-background border-accent rounded-lg">
                 <p>{message}</p>
             </span>
