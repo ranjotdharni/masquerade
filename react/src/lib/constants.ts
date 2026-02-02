@@ -45,6 +45,9 @@ export const ICON_ANONYMOUS: string = 'https://img.icons8.com/color/100/anonymou
 export const ICON_UI: string = 'https://img.icons8.com/color/100/web.png'
 
 export const IMG_LANDING_BACKGROUND: string = 'https://images.pexels.com/photos/28428591/pexels-photo-28428591.jpeg'
+export const IMG_LANDING_TARGET_AUDIENCE: string = 'https://images.unsplash.com/photo-1599592187465-6dc742367282?q=80&w=1470&auto=format&fit=crop'
+export const IMG_LANDING_USER_PRIVACY: string = 'https://images.unsplash.com/photo-1461685265823-f8d5d0b08b9b?q=80&w=1470&auto=format&fit=crop'
+export const IMG_LANDING_DATA_VISUALIZATION: string = 'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?q=80&w=1474&auto=format&fit=crop'
 
 export const HTTP_401_UNAUTHORIZED: number = 401
 export const HTTP_403_FORBIDDEN: number = 403

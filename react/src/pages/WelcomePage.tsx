@@ -8,6 +8,8 @@ export default function WelcomePage() {
             <LandingSection />
             <IconicInfoSection />
             <InfoGraphicSection />
+
+            <div className="w-full h-[5vh]"></div>
         </>
     )
 }
