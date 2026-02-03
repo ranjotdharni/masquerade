@@ -34,13 +34,13 @@ export default function InfoGraphicSection() {
         {
             src: IMG_LANDING_USER_PRIVACY,
             title: "Keep survey participants anonymous",
-            text: "Now more than ever users are concerned with their online privacy. Make the choice to give them peace of mind and let us handle the rest.",
+            text: "Now more than ever, users are concerned with their online privacy. Make the choice to give them peace of mind and let us handle the rest.",
             buttonText: "Protect Your Users",
             reverse: true,
         },
         {
             src: IMG_LANDING_DATA_VISUALIZATION,
-            title: "User-friendly Visualization",
+            title: "User-friendly visualization",
             text: "Our statistics dashboard lets you review data and find insights from the comfort of an appealing UI.",
             buttonText: `Use ${APP_NAME}`,
             reverse: false,
