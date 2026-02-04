@@ -65,8 +65,8 @@ export default function FAQSection() {
             answer: `
                 No. Simple as that (we don't even store your password). ${APP_NAME} is an open-source project. This means 
                 that the code behind the service can be viewed publicly by anyone, even you. You or any party of your choice 
-                (developer, analyst, etc.) are welcome to hunt for evidence of data collection in the source code, can't say 
-                you'll find any though. Besides this, ${APP_NAME} currently has a single developer working on everything you 
+                (developer, analyst, etc.) are welcome to hunt for (and ideally report) any evidence of data collection in the source code, 
+                can't say you'll find any though. Besides this, ${APP_NAME} currently has a single developer working on everything you 
                 see here and in the web app. Frankly, we do not have the time, money, manpower, or interest in logging, tracking, 
                 or collecting your information.
             `,
@@ -86,9 +86,9 @@ export default function FAQSection() {
             answer: `
                 No, for now and the forseeable future, ${APP_NAME} will not have any sort of paid services. All features 
                 currently present in the web app are completely free. Note that these services are limited as a result of the 
-                ${APP_NAME} project's limited resources (time, money, developers). The service currently has a single developer 
+                ${APP_NAME} project's limited resources (time, money, developers, etc.). The service currently has a single developer 
                 working on everything we offer. Although there are no plans for future expansions as of right now, these conditions 
-                are subject to change (e.g. rise in popularity, more revenue, more development time).
+                are subject to change (e.g. in response to growing user base, more revenue, more development time, etc.).
             `,
         }
     ]
