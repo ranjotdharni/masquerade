@@ -5,9 +5,10 @@ import useTimeout from "../../../lib/hooks/useTimeout"
 import FullScreenLoader from "../../utility/FullScreenLoader"
 
 const UI_NOTIFICATION_MILLISECONDS: number = 8000
+const notificationInitialTranslation: string = "translateY(120%)"
 
 function Notification({ message, color, reset } : NotificationProps & { reset: () => void }) {
-    const [translateY, setTranslateY] = useState<string>("translateY(100%)")
+    const [translateY, setTranslateY] = useState<string>(notificationInitialTranslation)
     const hideTextTimer = useTimeout(0)
     const clearTextTimer = useTimeout(0)
 
@@ -19,7 +20,7 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
         }
         
         if (hideTextTimer.completed) {
-            setTranslateY("translateY(100%)")
+            setTranslateY(notificationInitialTranslation)
         }
 
         if (clearTextTimer.completed) {
@@ -30,11 +31,13 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
     }, [message, hideTextTimer.completed, clearTextTimer.completed])
 
     return (
-        <div style={{transform: translateY, transition: "transform 0.4s ease", display: message.trim() === "" ? "none" : "flex"}} className="z-30 absolute w-[90%] h-[20vh] left-[5%] top-[90vh] flex-col justify-start items-center md:items-end">
-            <span style={{color: color}} className="w-full h-auto max-h-1/2 py-4 md:w-auto md:px-8 font-jbm flex flex-row justify-center items-center border bg-background border-accent rounded-lg">
-                <p>{message}</p>
-            </span>
-        </div>
+        <aside style={{overflowY: message.trim() === "" ? "hidden" : "clip"}} className="z-30 absolute w-[90%] h-[10vh] left-[5%] top-[90vh]">
+            <div style={{transform: translateY, opacity: translateY === notificationInitialTranslation ? 0 : 1, transition: "opacity 0.3s ease, transform 0.4s ease", display: message.trim() === "" ? "none" : "flex"}} className="flex-col justify-start items-center md:items-end">
+                <span style={{color: color}} className="w-full h-auto max-h-1/2 py-4 md:w-auto md:px-8 font-jbm flex flex-row justify-center items-center border bg-background border-accent rounded-lg">
+                    <p>{message}</p>
+                </span>
+            </div>
+        </aside>
     )
 }
 

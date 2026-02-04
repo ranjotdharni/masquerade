@@ -218,6 +218,11 @@ export default function CreateSurveyPage() {
                     if ((response as GenericError).error) {
                         message = response.message as string || DEFAULT_ERROR_MESSAGE
                         color = "var(--color-error)"
+                        
+                        notify({
+                            message: message,
+                            color: color
+                        })
                     }
                     else {
                         notify({
