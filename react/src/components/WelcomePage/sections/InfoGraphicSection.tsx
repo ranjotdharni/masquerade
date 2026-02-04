@@ -1,4 +1,4 @@
-import { APP_NAME, IMG_LANDING_DATA_VISUALIZATION, IMG_LANDING_TARGET_AUDIENCE, IMG_LANDING_USER_PRIVACY, PAGE_LOGIN, PAGE_WELCOME } from "../../../lib/constants"
+import { APP_NAME, IMG_LANDING_DATA_VISUALIZATION, IMG_LANDING_TARGET_AUDIENCE, IMG_LANDING_USER_PRIVACY, PAGE_LOGIN, PAGE_USAGE } from "../../../lib/constants"
 
 type InfoGraphicType = { 
     src: string, 
@@ -51,7 +51,7 @@ export default function InfoGraphicSection() {
         <section className="w-full mt-16">
             <header className="w-full flex flex-col items-center justify-center">
                 <h3 className="text-[2rem] font-roboto-bold text-primary text-center">Keep Up With Your Audience Through {APP_NAME}</h3>
-                <a href={`${PAGE_WELCOME}`} className="mt-4 text-[1.3rem] font-roboto-bold text-text underline hover:cursor-pointer">How it works</a>
+                <a href={`${PAGE_USAGE}`} className="mt-4 text-[1.3rem] font-roboto-bold text-text underline hover:cursor-pointer">How it works</a>
             </header>
 
             <ul className="w-full flex flex-col items-center space-y-12 md:space-y-40 pt-16 md:pt-18">

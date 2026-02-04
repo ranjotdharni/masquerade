@@ -6,6 +6,8 @@ export const DEFAULT_ERROR_MESSAGE: string = 'Uknown Error Occurred'
 
 export const PAGE_WELCOME: string = '/'
 export const PAGE_LOGIN: string = 'login'
+export const PAGE_ABOUT: string = 'about'
+export const PAGE_USAGE: string = 'usage'
 export const PAGE_HOME: string = 'home' // child routes (nested in app layout) should not have leading slashes
 export const PAGE_SURVEY_CREATE: string = 'survey/create'
 export const PAGE_SURVEY_FIND: string = 'survey/find'
@@ -30,6 +32,10 @@ export const API_SURVEY_SUBMIT: string = '/api/survey/submit/'
 export const API_INVITE_SEND: string = '/api/invite/send/'
 export const API_INVITE_RECEIVED: string = '/api/invite/received/'
 export const API_INVITE_DECLINE: string = '/api/invite/decline/'
+
+export const EXTERNAL_GITHUB_SOURCE: string = 'https://github.com/ranjotdharni/masquerade'
+export const EXTERNAL_GITHUB_ISSUES: string = 'https://github.com/ranjotdharni/masquerade/issues'
+export const EXTERNAL_GITHUB_PULL_REQUEST: string = 'https://github.com/ranjotdharni/masquerade/pulls'
 
 export const ICON_LOGO: string = 'https://img.icons8.com/color/100/venetian-mask.png'
 export const ICON_LOGO_STICKER: string = 'https://img.icons8.com/stickers/100/venetian-mask.png'

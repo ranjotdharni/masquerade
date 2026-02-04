@@ -1,5 +1,5 @@
 import { ChevronLeft, CircleQuestionMark, HomeIcon, ListChecks, LogOut, MessageCircleWarning, Minimize, NotebookText, PencilRuler, Settings, TextSearch, type LucideIcon } from "lucide-react"
-import { API_LOGOUT, ICON_LOGO, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW } from "../../../lib/constants"
+import { API_LOGOUT, EXTERNAL_GITHUB_ISSUES, ICON_LOGO, PAGE_ABOUT, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW, PAGE_USAGE } from "../../../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../../../lib/utility/internal"
 import type { GenericError } from "../../../lib/types/internal"
 import { useState, type MouseEvent } from "react"
@@ -122,7 +122,7 @@ const NAVBAR_STATES = {
 
 type NavbarStateType = typeof NAVBAR_STATES[keyof typeof NAVBAR_STATES]
 
-function LinkItem({ text, href, open, Icon, close, hoverContent } : { text: string, href: string, open: boolean, Icon: LucideIcon, close: () => void, hoverContent: string }) {
+function LinkItem({ text, href, open, Icon, close, hoverContent, external } : { text: string, href: string, open: boolean, Icon: LucideIcon, close: () => void, hoverContent: string, external?: boolean }) {
     
     let tailwind = `
         w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
@@ -131,7 +131,7 @@ function LinkItem({ text, href, open, Icon, close, hoverContent } : { text: stri
 
     return (
         <div className="w-full">
-            <a onClick={() => { close() }} href={href} data-tooltip={open ? "" : hoverContent} className={tailwind}>
+            <a onClick={() => { close() }} href={href} data-tooltip={open ? "" : hoverContent} className={tailwind} target={external ? "_blank" : "_self"}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
             </a>
@@ -210,9 +210,9 @@ export default function NavBar() {
                 </section>
 
                 <section  className="w-full h-[20%] flex flex-col justify-evenly overflow-hidden">
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Usage' text="Usage" Icon={NotebookText} href={`/${PAGE_HOME}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='About' text="About" Icon={CircleQuestionMark} href={`/${PAGE_HOME}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Report' text="Report" Icon={MessageCircleWarning} href={`/${PAGE_HOME}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Usage' text="Usage" Icon={NotebookText} href={`/${PAGE_USAGE}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='About' text="About" Icon={CircleQuestionMark} href={`/${PAGE_ABOUT}`} />
+                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Report' text="Report" Icon={MessageCircleWarning} href={EXTERNAL_GITHUB_ISSUES} external />
                 </section>
 
                 <footer className="w-full h-[15%] flex flex-col justify-evenly overflow-hidden">

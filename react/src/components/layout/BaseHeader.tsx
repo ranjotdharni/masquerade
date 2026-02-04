@@ -1,5 +1,5 @@
 import { CircleQuestionMark, DoorOpen, KeyRound, NotebookText, type LucideIcon } from "lucide-react"
-import { APP_NAME, ICON_LOGO, PAGE_LOGIN, PAGE_WELCOME } from "../../lib/constants"
+import { APP_NAME, ICON_LOGO, PAGE_ABOUT, PAGE_LOGIN, PAGE_USAGE, PAGE_WELCOME } from "../../lib/constants"
 
 type NavigationItemType = {
     href: string
@@ -20,12 +20,12 @@ const NAVIGATION_ITEMS: NavigationItemType[] = [
     },
     {
         text: "Usage",
-        href: `/${PAGE_WELCOME}`,
+        href: `/${PAGE_USAGE}`,
         Icon: NotebookText,
     },
     {
         text: "About",
-        href: `/${PAGE_WELCOME}`,
+        href: `/${PAGE_ABOUT}`,
         Icon: CircleQuestionMark,
     },
 ]

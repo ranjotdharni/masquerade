@@ -4,6 +4,7 @@ import InfoGraphicSection from "../components/WelcomePage/sections/InfoGraphicSe
 import StatisticsSection from "../components/WelcomePage/sections/StatisticsSection"
 import { HowItWorksSection } from "../components/WelcomePage/sections/HowItWorksSection"
 import FAQSection from "../components/WelcomePage/sections/FAQSection"
+import EndFooter from "../components/WelcomePage/sections/EndFooter"
 
 export default function WelcomePage() {
     return (
@@ -14,8 +15,7 @@ export default function WelcomePage() {
             <StatisticsSection />
             <HowItWorksSection />
             <FAQSection />
-
-            <div className="w-full h-[5vh]"></div>
+            <EndFooter />
         </>
     )
 }

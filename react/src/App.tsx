@@ -1,6 +1,6 @@
 import "./App.css"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { PAGE_HOME, PAGE_LOGIN, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_SUBMITTED, PAGE_SURVEY_TAKE, PAGE_SURVEY_PREVIEW, PAGE_WELCOME, PAGE_SURVEY_VIEW, PAGE_SURVEY_STATISTICS } from "./lib/constants"
+import { PAGE_HOME, PAGE_LOGIN, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_SUBMITTED, PAGE_SURVEY_TAKE, PAGE_SURVEY_PREVIEW, PAGE_WELCOME, PAGE_SURVEY_VIEW, PAGE_SURVEY_STATISTICS, PAGE_ABOUT, PAGE_USAGE } from "./lib/constants"
 import WelcomePage from "./pages/WelcomePage"
 import HomePage from "./pages/HomePage"
 import AppLayout from "./pages/AppLayout"
@@ -16,6 +16,8 @@ import PreviewSurveyPage from "./pages/PreviewSurveyPage"
 import MySurveysPage from "./pages/MySurveysPage"
 import ViewSurveyPage from "./pages/ViewSurveyPage"
 import StatisticsPage from "./pages/StatisticsPage"
+import AboutPage from "./pages/AboutPage"
+import UsagePage from "./pages/UsagePage"
 
 const routes = createBrowserRouter([
   {
@@ -24,6 +26,8 @@ const routes = createBrowserRouter([
     errorElement: <ErrorView />,
     children: [
       { index: true, element: <WelcomePage /> },
+      { path: PAGE_ABOUT, element: <AboutPage /> },
+      { path: PAGE_USAGE, element: <UsagePage /> },
       { path: PAGE_LOGIN, element: <LoginPage /> },
     ]
   },
