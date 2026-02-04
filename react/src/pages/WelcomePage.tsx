@@ -3,6 +3,7 @@ import IconicInfoSection from "../components/WelcomePage/sections/IconicInfoSect
 import InfoGraphicSection from "../components/WelcomePage/sections/InfoGraphicSection"
 import StatisticsSection from "../components/WelcomePage/sections/StatisticsSection"
 import { HowItWorksSection } from "../components/WelcomePage/sections/HowItWorksSection"
+import FAQSection from "../components/WelcomePage/sections/FAQSection"
 
 export default function WelcomePage() {
     return (
@@ -12,6 +13,7 @@ export default function WelcomePage() {
             <InfoGraphicSection />
             <StatisticsSection />
             <HowItWorksSection />
+            <FAQSection />
 
             <div className="w-full h-[5vh]"></div>
         </>

@@ -38,8 +38,8 @@ export function HowItWorksSection() {
             src: IMG_LANDING_EASY_TO_USE,
             title: "No installation required, completely hassle-free",
             bullets: [
-                "Bypass platform compatibility issues entirely",
-                "Access our services when and wherever",
+                "Bypass platform compatibility issues entirely in the browser",
+                "Use your Google or GitHub account to sign in",
                 "Responsive design for mobile, on-the-go use",
             ]
         },
