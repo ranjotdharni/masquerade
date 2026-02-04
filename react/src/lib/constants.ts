@@ -48,6 +48,9 @@ export const IMG_LANDING_BACKGROUND: string = 'https://images.pexels.com/photos/
 export const IMG_LANDING_TARGET_AUDIENCE: string = 'https://images.unsplash.com/photo-1599592187465-6dc742367282?q=80&w=1470&auto=format&fit=crop'
 export const IMG_LANDING_USER_PRIVACY: string = 'https://images.unsplash.com/photo-1461685265823-f8d5d0b08b9b?q=80&w=1470&auto=format&fit=crop'
 export const IMG_LANDING_DATA_VISUALIZATION: string = 'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?q=80&w=1474&auto=format&fit=crop'
+export const IMG_LANDING_SIGN_UP: string = 'https://images.pexels.com/photos/5429120/pexels-photo-5429120.jpeg'
+export const IMG_LANDING_EASY_TO_USE: string = 'https://images.pexels.com/photos/5922546/pexels-photo-5922546.jpeg'
+export const IMG_LANDING_MEANINGFUL_DATA: string = 'https://images.pexels.com/photos/5990975/pexels-photo-5990975.jpeg'
 
 export const HTTP_401_UNAUTHORIZED: number = 401
 export const HTTP_403_FORBIDDEN: number = 403
