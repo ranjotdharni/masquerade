@@ -1,4 +1,4 @@
-import { ChevronLeft, CircleQuestionMark, HomeIcon, ListChecks, LogOut, MessageCircleWarning, Minimize, NotebookText, PencilRuler, Settings, TextSearch, type LucideIcon } from "lucide-react"
+import { ChevronLeft, CircleQuestionMark, HomeIcon, ListChecks, LogOut, MessageCircleWarning, Minimize, NotebookText, PencilRuler, SunMoon, TextSearch, type LucideIcon } from "lucide-react"
 import { API_LOGOUT, EXTERNAL_GITHUB_ISSUES, ICON_LOGO, PAGE_ABOUT, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW, PAGE_USAGE } from "../../../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../../../lib/utility/internal"
 import type { GenericError } from "../../../lib/types/internal"
@@ -206,7 +206,7 @@ export default function NavBar() {
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Create' text="Create" Icon={PencilRuler} href={`/${PAGE_SURVEY_CREATE}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Browse' text="Browse" Icon={TextSearch} href={`/${PAGE_SURVEY_FIND}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='My Surveys' text="My Surveys" Icon={ListChecks} href={`/${PAGE_SURVEY_VIEW}`} />
-                    <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Settings' text="Settings" Icon={Settings} href={`/${PAGE_HOME}`} />
+                    <ActionItem open={barState === OPEN_STATE} hoverContent='Theme' text="Toggle Theme" Icon={SunMoon} action={() => {}} />
                 </section>
 
                 <section  className="w-full h-[20%] flex flex-col justify-evenly overflow-hidden">
