@@ -1,5 +1,5 @@
-import { ChevronRight, ListChecks, Settings, TextSearch, type LucideIcon } from "lucide-react"
-import { PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW } from "../../lib/constants"
+import { ChevronRight, CircleQuestionMark, ListChecks, NotebookText, TextSearch, type LucideIcon } from "lucide-react"
+import { PAGE_ABOUT, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW, PAGE_USAGE } from "../../lib/constants"
 
 export default function QuickLinkSection() {
     const quickLinks = [
@@ -14,10 +14,15 @@ export default function QuickLinkSection() {
             Icon: ListChecks,
         },
         {
-            name: "Settings",
-            href: ``,
-            Icon: Settings,
-        }
+            name: "Usage",
+            href: `/${PAGE_USAGE}`,
+            Icon: NotebookText,
+        },
+        {
+            name: "About",
+            href: `/${PAGE_ABOUT}`,
+            Icon: CircleQuestionMark,
+        },
     ]
 
     function QuickLink({ name, href, Icon } : { name: string, href: string, Icon: LucideIcon }) {

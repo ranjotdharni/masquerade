@@ -57,6 +57,7 @@ export const IMG_LANDING_DATA_VISUALIZATION: string = 'https://images.unsplash.c
 export const IMG_LANDING_SIGN_UP: string = 'https://images.pexels.com/photos/5429120/pexels-photo-5429120.jpeg'
 export const IMG_LANDING_EASY_TO_USE: string = 'https://images.pexels.com/photos/5922546/pexels-photo-5922546.jpeg'
 export const IMG_LANDING_MEANINGFUL_DATA: string = 'https://images.pexels.com/photos/5990975/pexels-photo-5990975.jpeg'
+export const IMG_LANDING_STATISTICS_DASHBOARD: string = 'https://res.cloudinary.com/ddxyscqzm/image/upload/v1770281273/statisticsScreenshot1_uvop9a.png'
 
 export const HTTP_401_UNAUTHORIZED: number = 401
 export const HTTP_403_FORBIDDEN: number = 403
