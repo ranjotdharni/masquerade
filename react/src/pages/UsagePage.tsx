@@ -1,3 +1,4 @@
+import BaseFooter from "../components/layout/BaseFooter"
 import UniformSection from "../components/UsagePage/UniformSection"
 import USAGE from "../components/UsagePage/usage.json"
 import type { UniformSectionType } from "../lib/types/client"
@@ -14,6 +15,7 @@ export default function UsagePage() {
                     return <UniformSection key={`USAGE_PAGE_SECTION_1x${index}`} title={section.title} content={section.content} reverseTitle={index % 2 === 0} />
                 })
             }
+            <BaseFooter />
         </>
     )
 }

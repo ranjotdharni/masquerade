@@ -6,22 +6,24 @@ const imgTailwind: string = "mb-6 border-2 border-accent rounded-xl shadow"
 const textTailwind: string = "w-full font-jbm text-text"
 
 function SingleImageArticle({ src, text } : SingleImageUniformArticleType) {
+    const imgWidthTailwind: string = "w-full md:w-[55%] " // ensure spacing at the end
+
     return (
         <article className={containerTailwind}>
-            <img src={src} style={{width: "55%"}} className={imgTailwind} />
+            <img src={src} className={imgWidthTailwind + imgTailwind} />
             <p className={textTailwind}>{text}</p>
         </article>
     )
 }
 
 function DualImageArticle({ src, text } : DualImageUniformArticleType) {
-    const imgWidth: string = "45%"
+    const imgWidthTailwind: string = "w-full md:w-[45%] " // ensure spacing at the end
 
     return (
         <article className={containerTailwind}>
-            <span className="flex flex-row justify-evenly items-center w-full">
-                <img style={{width: imgWidth}} className={imgTailwind} src={src[0]} />
-                <img style={{width: imgWidth}} className={imgTailwind} src={src[1]} />
+            <span className="flex flex-col md:flex-row justify-evenly items-center w-full">
+                <img className={imgWidthTailwind + imgTailwind} src={src[0]} />
+                <img className={imgWidthTailwind + imgTailwind} src={src[1]} />
             </span>
             <p className={textTailwind}>{text}</p>
         </article>

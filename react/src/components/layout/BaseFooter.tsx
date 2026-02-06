@@ -1,4 +1,4 @@
-import { APP_NAME, EXTERNAL_GITHUB_ISSUES, EXTERNAL_GITHUB_PULL_REQUEST, EXTERNAL_GITHUB_SOURCE, ICON_LOGO_STICKER, PAGE_ABOUT, PAGE_LOGIN, PAGE_USAGE } from "../../../lib/constants"
+import { APP_NAME, EXTERNAL_GITHUB_ISSUES, EXTERNAL_GITHUB_PULL_REQUEST, EXTERNAL_GITHUB_SOURCE, ICON_LOGO_STICKER, PAGE_ABOUT, PAGE_LOGIN, PAGE_USAGE } from "../../lib/constants"
 
 type LinkSectionType = {
     title: string
@@ -25,7 +25,7 @@ function LinkSection({ title, links } : LinkSectionType) {
     )
 }
 
-export default function EndFooter() {
+export default function BaseFooter() {
     const linkSections: LinkSectionType[] = [
         {
             title: "Product",
