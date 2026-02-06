@@ -3,7 +3,7 @@ import type { DualImageUniformArticleType, SingleImageUniformArticleType, Unifor
 
 const containerTailwind: string = "w-full px-4 flex flex-col items-center mb-12"
 const imgTailwind: string = "mb-6 border-2 border-accent rounded-xl shadow"
-const textTailwind: string = "w-full font-jbm text-text"
+const textTailwind: string = "w-full font-jbm text-secondary"
 
 function SingleImageArticle({ src, text } : SingleImageUniformArticleType) {
     const imgWidthTailwind: string = "w-full md:w-[55%] " // ensure spacing at the end

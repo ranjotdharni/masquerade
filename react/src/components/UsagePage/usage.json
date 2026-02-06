@@ -56,7 +56,7 @@
             {
                 "type": 0,
                 "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323297/MySurveysPageScreenshot1_nmsfap.png",
-                "text": "Once you successfully create a survey, you'll be automatically navigated to the 'My Surveys' page where you can see all your created surveys. Notice that our newly created survey populates the list as well."
+                "text": "Once you successfully create a survey, you'll be automatically navigated to the My Surveys Page where you can see all your created surveys. Notice that our newly created survey populates the list as well."
             }
         ]
     },
@@ -70,6 +70,89 @@
                     "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323579/browsePageScreenshot1_oyxrph.png"
                 ],
                 "text": "To see available surveys, click the 'Browse' button in the Navigation Bar; this will navigate you to the survey catalog. Click the 'Participate' button on a survey of your choice to begin taking the survey. Note that private surveys (indicated by the red lock symbol) require an invite to participate."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323774/takePageMultipleChoice_v011b9.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323832/takePageCheckList_dm72mx.png"
+                ],
+                "text": "You won't be able to submit a survey until all required questions are answered. Use the arrows in the top-right corner of the page to move between questions."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324009/takePageRanking_dnzqzx.png",
+                "text": "Ranking questions differ notably from other question types. Firstly, the default ranking assignment (from top to bottom) is 1, 2, 3, 4. Since this technically does count as a valid placement of answers for the Ranking question, making this question optional has no effect."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324085/takePageRankingSelect_l59du8.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324150/takePageRankingSwap_zzhamt.png"
+                ],
+                "text": "To modify the ranking, first click on any one of the numbers to the left of each answer for the question; this will highlight the selected rank. Then, select a different rank you'd like to swap the previously highlighted rank with."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324198/takePageRankingSwapped_rtdkyn.png",
+                "text": "Notice the updated ranking pictured above."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324286/takePageRating_vjh6by.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324332/takePageRatingSelected_owfqnw.png"
+                ],
+                "text": "Lastly, Rating questions can be answered simply by selecting the star that corresponds with the rating you'd like to give. The left-most star corresponds to a rating of 1 and the right-most star corresponds to a rating of 5."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770324620/submittedPage_doskrt.png",
+                "text": "Once all required questions have been answered, the 'Submit' button in the bottom-right corner will highlight, indicating that the survey is ready for submission. Once you are finished with your responses, click the 'Submit' button to submit the completed survey. Upon successful survey submission, you'll be navigated to the Submitted Page pictured above."
+            }
+        ]
+    },
+    {
+        "title": "Invites",
+        "content": [
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770325206/mySurveysPageScreenshot2_lgr6pg.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770325292/viewPage_sxhgk1.png"
+                ],
+                "text": "Private surveys require invites for individual participants. From the My Surveys Page, click 'View' on a survey of your choice. You'll be navigated to a page where you can review (not modify) the selected survey."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770325445/viewPageInvite_kccufy.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770325507/viewPageInviteSend_vtb1ze.png"
+                ],
+                "text": "Click the 'Invite' button near the top-left of the page to invite another user to participate in the displayed survey. Enter the target user's email address in the email field, then click the 'Send' button to send the invite."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770325668/homePageInvite_pdak4b.png",
+                "text": "The recipient of the invite will find it in their Invite List located in their Home Page as pictured above."
+            }
+        ]
+    },
+    {
+        "title": "Viewing Statistics",
+        "content": [
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770326434/viewPageStats_lwasjs.png",
+                "text": "From the same View Page where we could send invites (see previous section), we can also click the 'Statistics' button near the top-right of the page to navigate to the Statistics Dashboard."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770326685/statsPageRating_ub6qzu.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770326698/statsPageRanking_b5ckll.png"
+                ],
+                "text": "The Statistics Dashboard will populate with the latest submission data for a particular survey. Data is represented per question; use the arrows in the top-right of the page to move between questions. Each colored segment you see in the dashboard in each of the different charts displayed can be hovered over (or tapped on for mobile users) to view more specific details of the visual in question."
             }
         ]
     }
