@@ -1,0 +1,76 @@
+[
+    {
+        "title": "Create an Account",
+        "content": [
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770321662/loginPageScreenshot1_hptlfv.png",
+                "text": "To start, create an account or use an existing Google or GitHub account to sign in."
+            }
+        ]
+    },
+    {
+        "title": "Create a Survey",
+        "content": [
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322025/homePageScreenshot1_m4pvce.png",
+                "text": "When you log in, you'll be greeted by the Home Page. Click the 'Create Survey' button in the upper-right corner of the page to create your first survey (Note: You can also create a new survey using the corresponding link in the Navigation Bar. The Navigation Bar can be opened by clicking the icon in upper-left corner of the page)."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322135/createPageScreenshot1_bsaicb.png",
+                "text": "Pictured above is a fresh, unpopulated survey. So far, the only detail we've assigned to the survey is its name ('My First Survey'). Before we proceed, notice in the very top-right corner of the Create Survey Page, there's a label stating 'Invite Only' with a toggle button immediately to its right. Toggling this option on will make your survey private (evidently, this means only those you invite to participate in the survey may access it); for the sake of simplicity, we'll leave this option alone for this demonstration. To add a new question to the survey, click the 'Add Question' button in the upper-right corner of the page. There are currently 4 types of questions we can add to a survey (we'll cover each one in this section and introduce more details as we go). Newly added questions default to a Multiple Choice type; let's try adding one now."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322338/createPageFirstQuestion_qdj74x.png",
+                "text": "Pictured above is a fresh, unpopulated Multiple Choice question. A Multiple Choice question may have multiple answers, but only one answer may be selected when a participant is answering the question. Every question type requires some text to be input in the actual 'Question' field itself."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322418/createPageFirstAnswer_jsr9kb.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322515/createPageMultipleChoiceComplete_fta4gi.png"
+                ],
+                "text": "Click the 'Add Answer' button at the bottom-right of the question panel to add a new answer to the question. Enter an answer choice into the answer field and click the check mark next to the input to assign the answer to the question. Notice that even once an answer is assigned, you can click the 'x' mark next to it to delete it. Let's add another question to this survey."
+            },
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322725/createPageChecklistEmpty_csmigv.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322736/createPageChecklistComplete_iflyfc.png"
+                ],
+                "text": "We can click the 'Change Type' button in the top-right corner of the question panel to change to a different type of question. Pictured above, we see a Check List type; a Check List question may have multiple answers and a participant will be able to select multiple answers when answering the question."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770322974/createPageRankingComplete_gfn2tx.png",
+                "text": "Pictured above is a fully populated Ranking question. A participant answering a Ranking question will have to compare each possible answer against one another, then assign a ranking to each one. We've left the specification of higher number vs. lower number priority up to you (this might make more sense later when we cover how to answer this type of question)."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323136/createPageRatingComplete_xxfdsn.png",
+                "text": "Lastly, we have the Rating question. A Rating question does not require any answer choices be manually input when creating a survey. Instead, participants will be able to give the question a rating between 1 and 5 (inclusive) when responding to this type of question. Notice the 'Optional' toggle button at the bottom of this question panel (and every other question). If we toggle this on for any question, then participants won't have to answer those particular questions before submitting a survey. Once you've added all the questions you'd like to see in your survey, click the 'Create' button at the top-right corner of the page to create your new survey."
+            },
+            {
+                "type": 0,
+                "src": "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323297/MySurveysPageScreenshot1_nmsfap.png",
+                "text": "Once you successfully create a survey, you'll be automatically navigated to the 'My Surveys' page where you can see all your created surveys. Notice that our newly created survey populates the list as well."
+            }
+        ]
+    },
+    {
+        "title": "Participating in a Survey",
+        "content": [
+            {
+                "type": 1,
+                "src": [
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323483/homePageBrowseLink_vgmt7p.png",
+                    "https://res.cloudinary.com/ddxyscqzm/image/upload/v1770323579/browsePageScreenshot1_oyxrph.png"
+                ],
+                "text": "To see available surveys, click the 'Browse' button in the Navigation Bar; this will navigate you to the survey catalog."
+            }
+        ]
+    }
+]

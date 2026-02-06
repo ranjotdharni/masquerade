@@ -1,9 +1,9 @@
 import type { LucideIcon } from "lucide-react"
-import type { QUESTION_TYPE_ID_MAP } from "../constants"
+import type { DUAL_IMAGE_UNIFORM_ARTICLE_ID, QUESTION_TYPE_ID_MAP, SINGLE_IMAGE_UNIFORM_ARTICLE_ID } from "../constants"
 import type { MultipleChoiceQuestion, ObjectId, RankingQuestion, RatingQuestion, SingleChoiceQuestion } from "./api"
 
 export type QuestionIdType = typeof QUESTION_TYPE_ID_MAP[keyof typeof QUESTION_TYPE_ID_MAP]
-export type UniformArticleIDType = 0 | 1
+export type UniformArticleIDType = typeof SINGLE_IMAGE_UNIFORM_ARTICLE_ID | typeof DUAL_IMAGE_UNIFORM_ARTICLE_ID
 
 export type ChoiceAnswerType = {
     id: string
@@ -55,13 +55,23 @@ export type QuestionClassification = {
     Icon: LucideIcon
 }
 
-export type UniformArticle = {
-    type: UniformArticleIDType
-    src: string | readonly [string, string]
+export type SingleImageUniformArticleType = {
+    type: typeof SINGLE_IMAGE_UNIFORM_ARTICLE_ID
+    src: string
     text: string
 }
 
-export type UniformSection = {
+export type DualImageUniformArticleType = {
+    type: typeof DUAL_IMAGE_UNIFORM_ARTICLE_ID
+    src: readonly [string, string]
+    text: string
+}
+
+export type UniformArticleType =
+    | SingleImageUniformArticleType
+    | DualImageUniformArticleType
+
+export type UniformSectionType = {
     title: string
-    content: UniformArticle[]
+    content: UniformArticleType[]
 }

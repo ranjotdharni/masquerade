@@ -116,8 +116,8 @@ export const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification>
     },
 }
 
-export const SINGLE_IMAGE_UNIFORM_ARTICLE_ID: UniformArticleIDType = 0
-export const DUAL_IMAGE_UNIFORM_ARTICLE_ID: UniformArticleIDType = 1
+export const SINGLE_IMAGE_UNIFORM_ARTICLE_ID: 0 = 0 as const
+export const DUAL_IMAGE_UNIFORM_ARTICLE_ID: 1 = 1 as const
 
 export const DIFF_COLOR_LIST: string[] = [ 
   "#be2f13",
