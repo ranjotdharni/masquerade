@@ -1,5 +1,5 @@
 import { Check, CircleDot, HandCoins, Star } from "lucide-react"
-import type { QuestionClassification, QuestionIdType, UniformArticleIDType } from "./types/client"
+import type { QuestionClassification, QuestionIdType } from "./types/client"
 
 export const APP_NAME: string = 'Masquerades'
 export const DEFAULT_ERROR_MESSAGE: string = 'Uknown Error Occurred'
