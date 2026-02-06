@@ -3,6 +3,7 @@ import type { QUESTION_TYPE_ID_MAP } from "../constants"
 import type { MultipleChoiceQuestion, ObjectId, RankingQuestion, RatingQuestion, SingleChoiceQuestion } from "./api"
 
 export type QuestionIdType = typeof QUESTION_TYPE_ID_MAP[keyof typeof QUESTION_TYPE_ID_MAP]
+export type UniformArticleIDType = 0 | 1
 
 export type ChoiceAnswerType = {
     id: string
@@ -52,4 +53,15 @@ export type RatingAnswerSlug = RatingQuestion & {
 export type QuestionClassification = {
     title: string
     Icon: LucideIcon
+}
+
+export type UniformArticle = {
+    type: UniformArticleIDType
+    src: string | readonly [string, string]
+    text: string
+}
+
+export type UniformSection = {
+    title: string
+    content: UniformArticle[]
 }

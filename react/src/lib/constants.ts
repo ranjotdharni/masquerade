@@ -1,5 +1,5 @@
 import { Check, CircleDot, HandCoins, Star } from "lucide-react"
-import type { QuestionClassification, QuestionIdType } from "./types/client"
+import type { QuestionClassification, QuestionIdType, UniformArticleIDType } from "./types/client"
 
 export const APP_NAME: string = 'Masquerades'
 export const DEFAULT_ERROR_MESSAGE: string = 'Uknown Error Occurred'
@@ -94,8 +94,8 @@ export const QUESTION_TYPE_ID_MAP = {
     RATING_TYPE: 4,
 } as const
 
-export const MAX_ANSWERS_PER_QUESTION: number = 4
-export const MAX_QUESTIONS_PER_SURVEY: number = 10
+export const MAX_ANSWERS_PER_QUESTION = 4
+export const MAX_QUESTIONS_PER_SURVEY = 10
 
 export const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification> = {
     [QUESTION_TYPE_ID_MAP.SINGLE_CHOICE_TYPE]: {
@@ -115,6 +115,9 @@ export const SURVEY_TYPE_TO_ICON: Record<QuestionIdType, QuestionClassification>
         Icon: Star,
     },
 }
+
+export const SINGLE_IMAGE_UNIFORM_ARTICLE_ID: UniformArticleIDType = 0
+export const DUAL_IMAGE_UNIFORM_ARTICLE_ID: UniformArticleIDType = 1
 
 export const DIFF_COLOR_LIST: string[] = [ 
   "#be2f13",
