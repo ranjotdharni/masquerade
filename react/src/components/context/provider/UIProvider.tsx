@@ -31,12 +31,19 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
     }, [message, hideTextTimer.completed, clearTextTimer.completed])
 
     return (
-        <aside style={{overflowY: message.trim() === "" ? "hidden" : "clip"}} className="fixed inset-x-0 bottom-0 w-[90%] h-[10vh] left-[5%]">
-            <div style={{transform: translateY, opacity: translateY === notificationInitialTranslation ? 0 : 1, transition: "opacity 0.3s ease, transform 0.4s ease", display: message.trim() === "" ? "none" : "flex"}} className="flex-col justify-start items-center md:items-end">
-                <span style={{color: color}} className="z-30 w-full h-auto max-h-1/2 py-4 md:w-auto md:px-8 font-jbm flex flex-row justify-center items-center border bg-background border-accent dark:bg-accent rounded-lg">
-                    <p>{message}</p>
-                </span>
-            </div>
+        <aside style={{overflowY: message.trim() === "" ? "hidden" : "clip"}} className="absolute w-[90%] h-[10vh] top-[90vh] left-[5%] flex flex-row justify-center md:justify-end items-center">
+            <p 
+                style={{
+                    color: color, 
+                    transform: translateY, 
+                    opacity: translateY === notificationInitialTranslation ? 0 : 1, 
+                    transition: "opacity 0.3s ease, transform 0.4s ease", 
+                    display: message.trim() === "" ? "none" : "flex",
+                }} 
+                className="relative z-30 py-4 md:px-8 font-jbm border bg-background border-accent dark:bg-accent rounded-lg"
+            >
+                {message}
+            </p>
         </aside>
     )
 }

@@ -44,7 +44,7 @@ export default function ViewSurveyPage() {
             {
                 content ?
                 <PageCoordinator content={content} /> :
-                <FullScreenLoader loaderText={`Searching for ID: ${id}`} width="25%" aspectRatio={"9 / 16"} />
+                <FullScreenLoader loaderText="Retrieving Survey Details..." width="25%" aspectRatio={"9 / 16"} />
             }
         </AppContent>
     )
