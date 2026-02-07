@@ -20,11 +20,11 @@ export default function CreateSurveyHeader({ name, changeName, addQuestion, setI
             <div className="h-full md:h-auto md:px-2 md:gap-2 flex flex-row items-center font-jbm text-xs text-inactive">
                 <div className="md:px-2 h-full flex flex-row justify-start items-center space-x-2 md:space-x-6">
                     <div className="flex flex-row space-x-1">
-                        <button onClick={addQuestion} className="md:py-0 md:px-2 aspect-square md:aspect-auto h-5 md:h-auto flex flex-row items-center rounded bg-text text-xs text-background hover:cursor-pointer hover:text-primary">
+                        <button onClick={addQuestion} className="md:py-0 md:px-2 aspect-square md:aspect-auto h-5 md:h-auto flex flex-row items-center rounded bg-text text-xs text-background hover:cursor-pointer hover:text-primary dark:hover:text-secondary">
                             <Plus className="flex h-full w-full md:aspect-square md:w-auto md:px-0 md:py-1" />
                             <p className="hidden md:flex font-lato">Add Question</p>
                         </button>
-                        <button onClick={submit} className="md:py-0 md:px-2 aspect-square md:aspect-auto h-5 md:h-auto flex flex-row items-center rounded bg-text text-xs text-background hover:cursor-pointer hover:text-primary">
+                        <button onClick={submit} className="md:py-0 md:px-2 aspect-square md:aspect-auto h-5 md:h-auto flex flex-row items-center rounded bg-text text-xs text-background hover:cursor-pointer hover:text-primary dark:hover:text-secondary">
                             <Check className="flex h-full w-full md:aspect-square md:w-auto md:px-0 md:py-1" />
                             <p className="hidden md:flex font-lato">Create</p>
                         </button>

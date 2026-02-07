@@ -109,9 +109,9 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
                     </button>
                 </div>
 
-                <div className="my-12 border-b text-center border-primary">
+                <div className="my-12 border-b text-center border-primary dark:border-text">
                     <div
-                        className="leading-none px-2 inline-block text-sm text-accent tracking-wide font-medium bg-white transform translate-y-1/2">
+                        className="leading-none px-2 inline-block text-sm text-accent tracking-wide font-medium bg-white dark:bg-primary transform translate-y-1/2">
                         Or
                     </div>
                 </div>
@@ -120,16 +120,16 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
                     <input
                         value={email}
                         onChange={ e => { setEmail(e.target.value) } }
-                        className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white"
+                        className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent dark:text-primary focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white"
                         type="email" placeholder="Email" />
                     <input
                         value={password}
                         onChange={ e => { setPassword(e.target.value) } }
-                        className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white mt-5"
+                        className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm text-accent dark:text-primary focus:text-text focus:outline-none focus:border focus:border-accent focus:bg-white mt-5"
                         type="password" placeholder="Password" />
                     <button
                         type="submit"
-                        className="mt-5 tracking-wide font-semibold bg-text text-accent w-full py-4 rounded-lg hover:text-white hover:bg-primary hover:cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                        className="mt-5 tracking-wide font-semibold bg-text text-accent w-full py-4 rounded-lg hover:text-white hover:bg-primary dark:hover:bg-secondary hover:cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                         
                         <span className="ml-3 font-jbm">
                             Sign In

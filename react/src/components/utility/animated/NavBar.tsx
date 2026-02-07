@@ -196,7 +196,7 @@ export default function NavBar() {
                     <div className={`${barState === OPEN_STATE ? 'w-4/5' : 'w-full'} h-full flex flex-row justify-start`}>
                         <img onClick={() => { setBarState(OPEN_STATE) }} src={ICON_LOGO} className={`${barState === OPEN_STATE ? 'h-full' : 'w-full max-w-[2.8vw]'} aspect-square hover:cursor-pointer`} />
                     </div>
-                    <button onClick={minimalClose} className={`${barState === OPEN_STATE ? 'w-1/5' : 'hidden w-0'} flex flex-row justify-end items-center text-error hover:text-background hover:cursor-pointer`}>
+                    <button onClick={minimalClose} className={`${barState === OPEN_STATE ? 'w-1/5' : 'hidden w-0'} flex flex-row justify-end items-center text-error dark:text-background hover:text-background dark:hover:text-error hover:cursor-pointer`}>
                         <ChevronLeft />
                     </button>
                 </header>

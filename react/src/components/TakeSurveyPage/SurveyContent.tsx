@@ -20,7 +20,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
                 {
                     (answers as SingleAnswerSlug).answers?.map((answer, index) => {
                         return (
-                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text dark:text-primary md:text-lg space-x-2">
                                 <input type="radio" checked={answers.slug !== undefined && answer._id.$oid === answers.slug} value={answer.answer} name={answer._id.$oid} onClick={(e) => {editAnswer(e.currentTarget.name)}} />
                                 <p>{answer.answer}</p>
                             </li>
@@ -37,7 +37,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
                 {
                     (answers as MultipleAnswerSlug).answers?.map((answer, index) => {
                         return (
-                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text dark:text-primary md:text-lg space-x-2">
                                 <input type="checkbox" checked={(answers as MultipleAnswerSlug).slug !== undefined ? (answers as MultipleAnswerSlug).slug!.findIndex(a => a === answer._id.$oid) !== -1 : false} value={answer.answer}  name={answer._id.$oid} onClick={(e) => {editAnswer(e.currentTarget.name)}} />
                                 <p>{answer.answer}</p>
                             </li>
@@ -75,8 +75,8 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
                 {
                     (answers as MultipleAnswerSlug).answers?.map((answer, index) => {
                         return (
-                            <li key={answer._id.$oid} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
-                                <button onClick={swap(answer._id.$oid)} style={highlight === answer._id.$oid ? {background: "var(--color-primary)", color: "var(--color-text)"} : {}} className="h-full px-2 text-primary border-4 border-primary hover:bg-primary hover:text-background hover:cursor-pointer">{(answers as RankingAnswerSlug).slug[index].rank}</button>
+                            <li key={answer._id.$oid} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text dark:text-primary md:text-lg space-x-2">
+                                <button onClick={swap(answer._id.$oid)} style={highlight === answer._id.$oid ? {background: "var(--color-primary)", color: "var(--color-text)"} : {}} className="h-full px-2 text-primary dark:text-inactive border-4 border-primary dark:border-inactive hover:bg-primary dark:hover:bg-inactive hover:text-background dark:hover:text-secondary hover:cursor-pointer">{(answers as RankingAnswerSlug).slug[index].rank}</button>
                                 <p>{answer.answer}</p>
                             </li>
                         )
@@ -103,7 +103,7 @@ function AnswerPane({ type, answers, editAnswer } : { type: QuestionIdType, answ
                 {
                     [0,0,0,0,0].map((_, index) => {
                         return (
-                            <li key={`RPA_0${index}`} className="w-16 h-full flex flex-col justify-center items-center font-jbm text-text md:text-lg">
+                            <li key={`RPA_0${index}`} className="w-16 h-full flex flex-col justify-center items-center font-jbm text-text dark:text-primary md:text-lg">
                                 <button onClick={modifyRating(index + 1 as 1 | 2 | 3 | 4 | 5)} className="w-full aspect-square hover:cursor-pointer">
                                     <Star className="w-full h-full" style={{color: (answers as RatingAnswerSlug).slug < index + 1 ? "var(--color-text)" : "var(--color-primary)", fill: (answers as RatingAnswerSlug).slug < index + 1 ? undefined : "var(--color-primary)"}} />
                                 </button>
@@ -126,30 +126,30 @@ function SurveyQuestion({ question, editAnswer } : { question: SingleAnswerSlug 
     let QuestionClassification: QuestionClassification = SURVEY_TYPE_TO_ICON[question.type]
 
     return (
-        <div style={{flexShrink: 0}} className="w-4/5 md:w-1/3 h-[80vh] md:h-[90%] mb-6 rounded-lg shadow-xl border-2 border-primary flex flex-col items-center">
-            <span className="w-full h-[8%] p-2 bg-primary flex flex-row justify-between items-center">
-                <span className="h-full flex flex-row justify-center items-center font-jbm text-text space-x-2">
-                    <QuestionClassification.Icon className="text-background" />
-                    <p>{QuestionClassification.title}</p>
-                </span>
+        <article style={{flexShrink: 0}} className="w-4/5 md:w-1/3 h-[80vh] md:h-[90%] mb-6 rounded-lg shadow-xl border-2 border-primary dark:bg-accent flex flex-col items-center">
+            <header className="w-full h-[8%] p-2 bg-primary flex flex-row justify-between items-center">
+                <div className="h-full flex flex-row justify-center items-center font-jbm text-text space-x-2">
+                    <QuestionClassification.Icon className="text-background dark:text-secondary" />
+                    <h2>{QuestionClassification.title}</h2>
+                </div>
 
-                <p className="font-lato-italic text-inactive">
+                <aside className="font-lato-italic text-inactive">
                     {question.optional ? "Optional" : "Required"}
-                </p>
-            </span>
+                </aside>
+            </header>
 
             <span className="px-4 h-42 flex flex-col justify-center items-center text-left">
-                <p className="font-jbm-bold md:text-lg text-text px-2 bg-accent rounded">
+                <p className="font-jbm-bold text-text dark:text-background p-2 bg-accent dark:bg-inactive rounded">
                     {question.question}
                 </p>
             </span>
 
-            <span className="w-[98%] border border-inactive opacity-[0.1]"></span>
+            <span className="w-[98%] border border-inactive dark:border-primary opacity-[0.1]"></span>
 
             <section className="w-full flex-1 p-4">
                 <AnswerPane type={question.type} answers={question} editAnswer={editAnswer} />
             </section>
-        </div>
+        </article>
     )
 }
 

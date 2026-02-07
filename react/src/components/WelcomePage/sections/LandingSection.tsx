@@ -10,7 +10,7 @@ export default function LandingSection() {
             <header style={{zIndex: 1}} className="relative flex flex-col justify-start items-center w-full">
                 <h2 className="text-[2rem] font-lato-bold text-text mt-10">Get feedback the right way.</h2>
                 <h1 className="text-[3.25rem] text-center font-roboto-bold text-text mt-6 max-w-200">
-                    You need <span className="text-primary">data.</span> Your users need <span className="text-primary">privacy.</span> Now you can <span className="text-primary">have both.</span>
+                    You need <span className="text-primary dark:text-secondary">data.</span> Your users need <span className="text-primary dark:text-secondary">privacy.</span> Now you can <span className="text-primary dark:text-secondary">have both.</span>
                 </h1>
                 <p className="text-[1.25rem] font-jbm text-text mt-10 text-center max-w-120">
                     Online survey platform that keeps 
@@ -20,7 +20,7 @@ export default function LandingSection() {
                 </p>
             </header>
 
-            <a href={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary rounded-[100px] text-secondary font-roboto-bold text-2xl px-9 py-3 transition-transform hover:cursor-pointer hover:scale-105">Get Started For Free</a>
+            <a href={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary rounded-[100px] text-secondary dark:text-text font-roboto-bold text-2xl px-9 py-3 transition-transform hover:cursor-pointer hover:scale-105">Get Started For Free</a>
             
             <figure className="md:w-full flex flex-col items-center space-y-6">
                 <div style={{zIndex: 1}} className="bg-text shadow-xl rounded-xl max-w-250 w-[90vw] md:w-[55%] mt-16 pt-26 flex flex-row justify-center items-end">

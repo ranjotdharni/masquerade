@@ -42,10 +42,10 @@ function AnswerCreator({ onAdd, onCancel } : { onAdd: (answer: string) => void, 
     return (
         <li key="ANSWER_CREATOR_PSEUDO_KEY" className="w-full p-2 flex flex-row justify-evenly items-center">
             <input value={value} onChange={e => {setValue(e.target.value)}} placeholder="Enter Answer..." className="h-8 w-4/5 px-1 outline-none border-b border-inactive text-inactive font-jbm focus:border-text focus:text-text" />
-            <button onClick={onCancel} className="w-[7.5%] py-1 flex flex-row justify-center items-center rounded text-secondary bg-error hover:cursor-pointer hover:text-background">
+            <button onClick={onCancel} className="w-[7.5%] py-1 flex flex-row justify-center items-center rounded text-secondary dark:text-inactive bg-error hover:cursor-pointer hover:text-background">
                 <X />
             </button>
-            <button onClick={add} className="w-[7.5%] py-1 flex flex-row justify-center items-center rounded text-text bg-primary hover:cursor-pointer hover:text-background">
+            <button onClick={add} className="w-[7.5%] py-1 flex flex-row justify-center items-center rounded text-text dark:text-accent bg-primary dark:bg-inactive hover:cursor-pointer hover:text-background dark:hover:text-secondary">
                 <Check />
             </button>
         </li>
@@ -90,20 +90,20 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
     }
 
     return (
-        <div style={{flexShrink: 0}} className="w-4/5 md:w-[30%] h-[80vh] md:h-4/5 mb-6 rounded-lg shadow-xl border-2 border-primary flex flex-col items-center">
-            <header className="w-full h-[10%] px-4 space-x-4 bg-primary flex flex-row justify-end items-center">
-                <span className="flex-1 font-jbm text-text">
+        <div style={{flexShrink: 0}} className="w-4/5 md:w-[30%] h-[80vh] md:h-4/5 mb-6 rounded-lg shadow-xl border-2 border-primary dark:border-inactive bg-background dark:bg-primary flex flex-col items-center">
+            <header className="w-full h-[10%] px-4 space-x-4 bg-primary dark:bg-inactive flex flex-row justify-end items-center">
+                <span className="flex-1 font-jbm text-text dark:text-primary">
                     <p>{contentItemNames.get(slug.type)}</p>
                 </span>
-                <button onClick={editType} className="font-lato-bold p-2 rounded text-sm text-background bg-secondary hover:cursor-pointer hover:bg-text">Change Type</button>
-                <button onClick={() => { removeQuestion(slug.id) }} className="hover:cursor-pointer text-secondary hover:text-error">
+                <button onClick={editType} className="font-lato-bold p-2 rounded text-sm text-background dark:text-accent bg-secondary dark:bg-primary hover:cursor-pointer hover:bg-text dark:hover:bg-primary dark:hover:text-secondary">Change Type</button>
+                <button onClick={() => { removeQuestion(slug.id) }} className="hover:cursor-pointer text-secondary dark:text-primary hover:text-error">
                     <X />
                 </button>
             </header>
 
-            <section className="w-[98%] h-[20%] p-2 border-b border-primary flex flex-col items-center">
+            <section className="w-[98%] h-[20%] p-2 border-b border-primary dark:border-background flex flex-col items-center">
                 <span className="w-[98%] h-1/3 font-jbm-bold text-text flex text-lg">Question</span>
-                <textarea onChange={modifyQuestion} placeholder="Enter Question..." className="w-[98%] h-2/3 bg-accent rounded resize-none outline-none p-1 font-jbm text-inactive focus:text-text"></textarea>
+                <textarea onChange={modifyQuestion} placeholder="Enter Question..." className="w-[98%] h-2/3 bg-accent dark:bg-inactive rounded resize-none outline-none p-1 font-jbm text-inactive dark:text-primary focus:text-text dark:focus:text-secondary"></textarea>
             </section>
 
             <ol className="p-2 pt-8 w-full flex-1 flex flex-col justify-start items-start space-y-4">
@@ -117,7 +117,7 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
                                     <BulletPoint width="10px" checklist={slug.type === QUESTION_TYPE_ID_MAP.MULTIPLE_CHOICE_TYPE} />
                                     <p className="font-jbm text-text text-sm ml-2">{answer.answer}</p>
                                 </div>
-                                <button onClick={() => { removeAnswer(slug.id, answer.id) }} className="h-[20px] aspect-square flex flex-row justify-center items-center text-secondary hover:cursor-pointer hover:text-error">
+                                <button onClick={() => { removeAnswer(slug.id, answer.id) }} className="h-[20px] aspect-square flex flex-row justify-center items-center text-secondary dark:text-inactive hover:cursor-pointer hover:text-error">
                                     <X className="w-full h-full" />
                                 </button>
                             </li>
@@ -128,13 +128,13 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
                 { adding ? <AnswerCreator onAdd={add} onCancel={() => {setAdding(false)}} /> : <></> }
             </ol>
 
-            <footer className="w-full h-[10%] px-4 space-x-4 bg-primary flex flex-row justify-end items-center">
-                <div className="flex flex-row items-center space-x-2">
+            <footer className="w-full h-[10%] px-4 space-x-4 bg-primary dark:bg-inactive flex flex-row justify-end items-center">
+                <div className="flex flex-row items-center space-x-2 dark:bg-primary dark:p-2 dark:rounded">
                     <p className="text-xs font-jbm text-text">Optional</p>
                     <ToggleButton className="w-12" onActivated={() => {setOptional(slug.id, true)}} onDeactivated={() => {setOptional(slug.id, false)}} />
                 </div>
 
-                <button onClick={displayAnswerCreator} className="py-1 md:p-2 rounded flex flex-row space-x-1 !px-2 font-lato text-background bg-secondary hover:cursor-pointer hover:bg-text">
+                <button onClick={displayAnswerCreator} className="py-1 md:p-2 rounded flex flex-row space-x-1 !px-2 font-lato text-background bg-secondary hover:cursor-pointer hover:bg-text dark:text-accent dark:bg-primary dark:hover:bg-primary dark:hover:text-secondary">
                     <Plus />
                     <p>Add Answer</p>
                 </button>

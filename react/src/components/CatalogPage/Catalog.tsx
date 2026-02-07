@@ -13,7 +13,7 @@ type CardContent = {
 function CatalogCard({ cardContent } : CardContent) {
     return (
         <li className="h-[45vh] flex flex-col justify-center items-center">
-            <div className="flex flex-col border-text border-2 rounded-lg w-3/4 h-3/4 overflow-hidden">
+            <div className="flex flex-col bg-background border-text dark:bg-primary border-2 rounded-lg w-3/4 h-3/4 overflow-hidden">
                 <h2 className="w-full flex flex-row justify-start bg-text text-background text-xl font-jbm p-2">
                     <span>{cardContent["name"]}</span>
                 </h2>
@@ -23,7 +23,7 @@ function CatalogCard({ cardContent } : CardContent) {
                 </h3>
 
                 <div className="px-3 text-sm flex flex-1 flex-row justify-end items-end font-lato">
-                    <a href={`/${PAGE_SURVEY_PREVIEW}/${cardContent["_id"]["$oid"]}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text">
+                    <a href={`/${PAGE_SURVEY_PREVIEW}/${cardContent["_id"]["$oid"]}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text dark:hover:text-secondary">
                         <p className="font-jbm-italic">View</p>
                         <ChevronRight />
                     </a>
@@ -35,7 +35,7 @@ function CatalogCard({ cardContent } : CardContent) {
                         <Lock className="text-error" strokeWidth={2.5} /> :
                         <LockOpen className="text-inactive" opacity={0.25} strokeWidth={2.5} />
                     }
-                    <a href={`/${PAGE_SURVEY_TAKE}/${cardContent["_id"]["$oid"]}`} className="font-lato appButton">Participate</a>
+                    <a href={`/${PAGE_SURVEY_TAKE}/${cardContent["_id"]["$oid"]}`} className="font-lato appButton dark:bg-text! dark:text-primary! dark:hover:text-secondary!">Participate</a>
                 </div>
             </div>
         </li>

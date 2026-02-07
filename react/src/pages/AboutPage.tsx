@@ -17,7 +17,7 @@ export default function AboutPage() {
                 </div>
             </div>
 
-            <header className="relative max-w-400 mx-auto font-jbm-bold text-text text-[2.75rem] mt-6 md:mt-0">
+            <header className="relative max-w-400 mx-auto font-jbm-bold text-text dark:text-secondary text-[2.75rem] mt-6 md:mt-0">
                 <span className="px-8 border-2 rounded bg-accent shadow">About</span>
             </header>
 

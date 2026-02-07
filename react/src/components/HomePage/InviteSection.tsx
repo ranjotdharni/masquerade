@@ -128,7 +128,7 @@ export default function InviteSection() {
     return (
         <div className="w-full h-[85vh] md:w-1/2 md:h-full md:pr-4 flex flex-col items-center md:items-end">
             <h2 className="w-full md:w-4/5 h-[7.5%] px-4 rounded-t-xl flex flex-row justify-end items-center bg-text font-jbm text-lg text-background">Invites</h2>
-            <ul style={{overflowY: isLoading || invites.length === 0 ? undefined : "scroll"}} className="w-full md:w-4/5 h-[90%] bg-background border-2 border-text p-4 space-y-4 md:shadow-xl">
+            <ul style={{overflowY: isLoading || invites.length === 0 ? undefined : "scroll"}} className="w-full md:w-4/5 h-[90%] bg-background dark:bg-primary border-2 border-text dark:border-text p-4 space-y-4 md:shadow-xl">
                 {
                     isLoading 
                     ?

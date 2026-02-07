@@ -156,7 +156,7 @@ function SurveyContainer({ content } : { content: Survey }) {
             <SurveyContent survey={survey} index={index} editAnswer={editAnswer} />
             <footer className="w-full h-[5vh] flex flex-row justify-end items-end">
                 <p className="text-sm mr-2 font-jbm-italic text-inactive">*{remaining} Remaining</p>
-                <button onClick={submit} className="border-2 border-text text-text rounded px-2 font-jbm hover:bg-text hover:text-background hover:cursor-pointer transition" style={remaining === 0 ? undefined : {background: "none", borderColor: "var(--color-accent)", color: "var(--color-accent)"}}>Submit</button>
+                <button onClick={submit} className="z-10 border-2 border-text text-text rounded px-2 font-jbm hover:bg-text hover:text-background hover:cursor-pointer transition" style={remaining === 0 ? undefined : {background: "none", borderColor: "var(--color-accent)", color: "var(--color-accent)"}}>Submit</button>
             </footer>
         </section>
     )

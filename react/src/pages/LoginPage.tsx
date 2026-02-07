@@ -105,7 +105,7 @@ export default function LoginPage() {
 
     return (
         <section className="w-full h-[85vh] bg-background flex justify-center">
-            <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+            <div className="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-primary shadow sm:rounded-lg flex justify-center flex-1">
                 <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
                     <div className="h-12">
                         <img src={ICON_LOGO_STICKER} className="h-full mx-auto" />
@@ -123,8 +123,8 @@ export default function LoginPage() {
                         signUp ? <SignUpForm setError={setError} setLoader={setLoader} /> : <SignInForm setError={setError} setLoader={setLoader} /> 
                     }
 
-                    <p className="mt-6 mx-auto text-xs text-gray-600 text-center">
-                        { signUp ? "Already have an account?" : "Don't have an account?" } <button disabled={loader} onClick={() => { setError(""); setSignUp(prev => !prev) }} className="hover:underline hover:cursor-pointer text-primary">Sign { signUp ? "In" : "Up" }.</button>
+                    <p className="mt-6 mx-auto text-xs text-gray-600 dark:text-text text-center">
+                        { signUp ? "Already have an account?" : "Don't have an account?" } <button disabled={loader} onClick={() => { setError(""); setSignUp(prev => !prev) }} className="hover:underline hover:cursor-pointer text-primary dark:text-accent dark:hover:text-secondary">Sign { signUp ? "In" : "Up" }.</button>
                     </p>
 
                     { error.trim() !== "" ? <p className="mt-2 mx-auto text-xs text-error text-center">{error}</p> : <></> }

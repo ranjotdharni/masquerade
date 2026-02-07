@@ -72,8 +72,26 @@
  --font-lato-bold: Lato Bold;
 }
 
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-text: #ac9e8d;
+    --color-background: #0a2325;
+    --color-primary: #3e3c27;
+    --color-secondary: #1e7b59;
+    --color-accent: #ededed;
+    --color-error: #96063b;
+    --color-success: #68c151;
+    --color-inactive: #948181;
+
+    --color-secondary-light: #1e7b5920;
+    --color-inactive-light: #94818120;
+    --color-background-light: #0a23253a;
+  }
+}
+
 body {
   overflow: auto;
+  background-color: var(--color-background);
 }
 
 .appNavigation {
@@ -107,6 +125,12 @@ body {
   &:hover {
     cursor: pointer;
     color: var(--color-background);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:hover {
+      color: var(--color-secondary);
+    }
   }
 }
 
