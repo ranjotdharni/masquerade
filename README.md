@@ -36,13 +36,13 @@ Masquerades was built on the following **technologies:**
 - [![NGINX][nginxImg]][nginxLink]
 - [![Let's Encrypt][letsencryptImg]][letsencryptLink]
 
-This project features an isolated back- and front-end. **Django REST Framework** makes up the majority of the server; the UI is a **React** app which employs **TypeScript.** The UI is a static 
+This project features an isolated back- and front-end. **Django REST Framework** makes up the majority of the server; the UI is a **React** app written in **TypeScript.** The UI is a static 
 website deployed to the **Netlify** CDN; it consumes the API which is hosted on an **Oracle Cloud Infrastructure** compute instance. The instance runs a **Docker** container sitting behind an 
 **NGINX** proxy that uses **Let's Encrypt** to maintain SSL encryption on HTTP requests.
 
 # Storage Limitations
 
-Masquerades is a side project that is currently has a limited number of resources to operate on (subject to change). As a result of these limitation (money, time, manpower, etc.), the service 
+Masquerades is a side project that currently has a limited number of resources to operate on (subject to change). As a result of these limitations (money, time, developers, etc.), the service 
 imposes a number of limits on data storage in its current state. One of the most noticeable effects of these limitations is the maximum length of text that can be stored. Below is a reference 
 for the maximum lengths of different text items that users need to assign in Masquerades.
 
