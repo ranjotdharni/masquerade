@@ -209,3 +209,6 @@ __marimo__/
 
 # sample data
 */sampledata/local/*
+
+# local editor settings
+/.vscode
