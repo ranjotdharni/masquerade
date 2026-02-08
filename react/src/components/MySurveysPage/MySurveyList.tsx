@@ -6,9 +6,9 @@ import { NAV_CSS } from "../utility/animated/NavBar"
 function SurveyWidget({ survey } : { survey: SurveyMetadata }) {
 
     return (
-        <li className="w-full md:relative md:w-[99%] md:left-[1%] h-30 px-2 pt-1 pb-3 mt-2 flex flex-col justify-between rounded border border-accent">
+        <li className="w-full md:relative md:w-[99%] md:left-[1%] h-30 px-2 pt-1 pb-3 mt-2 flex flex-col justify-between rounded border bg-background border-accent dark:border-primary dark:bg-primary">
             <div className="w-full flex flex-row justify-between">
-                <h3 className="font-lato-italic text-lg md:text-[1.5rem] text-primary">{survey.name}</h3> 
+                <h3 className="font-lato-italic text-lg md:text-[1.5rem] text-primary dark:text-secondary">{survey.name}</h3> 
                 <p className="text-text flex flex-row items-center after:content-['Questions'] after:text-xs after:ml-1">{survey.numberOfQuestions}</p>
             </div>
 
@@ -20,11 +20,11 @@ function SurveyWidget({ survey } : { survey: SurveyMetadata }) {
                 }
                 
                 <div className="flex flex-row">
-                    <a href={`/${PAGE_SURVEY_VIEW}/${survey._id.$oid}`} className="flex flex-row items-center text-inactive scale-75 hover:cursor-pointer hover:text-text">
+                    <a href={`/${PAGE_SURVEY_VIEW}/${survey._id.$oid}`} className="flex flex-row items-center text-inactive scale-75 hover:cursor-pointer hover:text-text dark:hover:text-secondary">
                         <p className="font-jbm-italic">View</p>
                         <ChevronRight />
                     </a>
-                    <a href={`/${PAGE_SURVEY_TAKE}/${survey._id.$oid}`} className="font-lato appButton">Participate</a>
+                    <a href={`/${PAGE_SURVEY_TAKE}/${survey._id.$oid}`} className="font-lato appButton dark:bg-inactive! dark:text-primary! dark:hover:text-secondary!">Participate</a>
                 </div>
             </div>
         </li>

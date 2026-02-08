@@ -8,12 +8,12 @@ export default function AboutPage() {
         <section className="relative w-full md:h-[60vh] flex flex-col justify-center items-center">
             <div className="hidden w-full h-full absolute p-6 z-0 top-[10vh] left-0 md:flex flex-col justify-between items-center">
                 <div className={iconContainerTailwind}>
-                    <img src={ICON_LOGO} className={iconTailwind} />
-                    <img src={ICON_LOGO_STICKER} className={iconTailwind} />
+                    <img src={ICON_LOGO} className={iconTailwind + " -rotate-15"} />
+                    <img src={ICON_LOGO_STICKER} className={iconTailwind + " rotate-15"} />
                 </div>
                 <div className={iconContainerTailwind}>
-                    <img src={ICON_LOGO_STICKER} className={iconTailwind} />
-                    <img src={ICON_LOGO} className={iconTailwind} />
+                    <img src={ICON_LOGO_STICKER} className={iconTailwind + " rotate-15"} />
+                    <img src={ICON_LOGO} className={iconTailwind + " -rotate-15"} />
                 </div>
             </div>
 

@@ -39,7 +39,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: BaseAns
 
     function BulletPoint({ width, height, checklist } : { width?: string, height?: string, checklist?: boolean }) {
         return (
-            <div style={{aspectRatio: 1, width: width || height, height: width || height}} className={`${checklist ? "" : "rounded-[1000px]"} border-1 border-inactive`}></div>
+            <div style={{aspectRatio: 1, width: width || height, height: width || height}} className={`${checklist ? "" : "rounded-[1000px]"} border-1 border-inactive dark:border-primary`}></div>
         )
     }
     
@@ -49,7 +49,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: BaseAns
                 {
                     (answers as SingleChoiceAnswer[]).map((answer, index) => {
                         return (
-                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text dark:text-primary md:text-lg space-x-2">
                                 <BulletPoint width="7px" />
                                 <p className="text-sm">{answer.answer}</p>
                             </li>
@@ -66,7 +66,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: BaseAns
                 {
                     (answers as MultipleChoiceAnswer[]).map((answer, index) => {
                         return (
-                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
+                            <li key={`QAPK__0${index}`} className="w-full px-2 h-12 flex flex-row items-center font-jbm text-text dark:text-primary md:text-lg space-x-2">
                                 <BulletPoint width="7px" checklist />
                                 <p className="text-sm">{answer.answer}</p>
                             </li>
@@ -84,8 +84,8 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: BaseAns
                 {
                     (answers as RankingAnswer[]).map((answer, index) => {
                         return (
-                            <li key={answer._id.$oid} className="w-full px-2 h-10 flex flex-row items-center font-jbm text-text md:text-lg space-x-2">
-                                <div className="h-full flex flex-col justify-center items-center px-2 text-secondary-light border-2 border-secondary-light">{index + 1}</div>
+                            <li key={answer._id.$oid} className="w-full px-2 h-10 flex flex-row items-center font-jbm text-text dark:text-primary md:text-lg space-x-2">
+                                <div className="h-full flex flex-col justify-center items-center px-2 text-secondary-light dark:text-primary border-2 border-secondary-light dark:border-primary">{index + 1}</div>
                                 <p className="text-sm">{answer.answer}</p>
                             </li>
                         )
@@ -98,7 +98,7 @@ function AnswerPane({ type, answers } : { type: QuestionIdType, answers: BaseAns
     function RatingPane() {
         return (
             <div className="w-full h-full flex flex-row justify-evenly items-center">
-                <span className="w-full h-full flex flex-col justify-center items-center text-center font-jbm text-inactive">Rating will be given by survey participants.</span>
+                <span className="w-full h-full flex flex-col justify-center items-center text-center font-jbm text-inactive dark:text-primary">Rating will be given by survey participants.</span>
             </div>
         )
     }
@@ -120,30 +120,30 @@ function SurveyQuestion({ question } : { question: Question }) {
     }
 
     return (
-        <div style={{flexShrink: 0}} className="w-4/5 md:w-[30%] h-full rounded-lg shadow-xl border-2 border-primary flex flex-col items-center bg-background">
-            <span className="w-full h-[8%] p-2 bg-primary flex flex-row justify-between items-center">
-                <span className="h-full flex flex-row justify-center items-center font-jbm text-text space-x-2">
-                    <QuestionClassification.Icon className="text-background" />
-                    <p>{QuestionClassification.title}</p>
-                </span>
+        <article style={{flexShrink: 0}} className="w-4/5 md:w-[30%] h-full rounded-lg shadow-xl border-2 border-primary flex flex-col items-center bg-background dark:bg-inactive">
+            <header className="w-full h-[8%] p-2 bg-primary flex flex-row justify-between items-center">
+                <div className="h-full flex flex-row justify-center items-center font-jbm text-text space-x-2">
+                    <QuestionClassification.Icon className="text-background dark:text-secondary" />
+                    <h3>{QuestionClassification.title}</h3>
+                </div>
 
                 <p className="font-lato-italic text-inactive">
                     {question.optional ? "Optional" : "Required"}
                 </p>
-            </span>
+            </header>
 
-            <span className="px-4 h-42 flex flex-col justify-center items-center text-left">
-                <p className="font-jbm-bold text-text px-2 bg-accent rounded">
+            <div className="px-4 h-42 flex flex-col justify-center items-center text-left">
+                <p className="font-jbm-bold text-text p-2 bg-accent dark:bg-primary rounded">
                     {question.question}
                 </p>
-            </span>
+            </div>
 
-            <span className="w-[98%] border border-inactive opacity-[0.1]"></span>
+            <span className="w-[98%] border border-inactive dark:border-primary opacity-[0.1]"></span>
 
             <section className="w-full flex-1 p-4">
                 <AnswerPane type={question.type} answers={question.answers} />
             </section>
-        </div>
+        </article>
     )
 }
 

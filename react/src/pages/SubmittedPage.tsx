@@ -12,7 +12,7 @@ export default function SubmittedPage() {
         setTimeout(() => {
             notify({
                 message: "Thank you for your submission!",
-                color: "var(--color-text)",
+                color: "var(--color-success)",
             })
         }, 300)
     }, [])

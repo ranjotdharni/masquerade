@@ -39,7 +39,7 @@ function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, n
     }
 
     return (
-        <li className="w-full h-50 bg-background flex flex-col justify-center items-center">
+        <li className="w-full h-50 bg-background flex flex-col justify-center items-center rounded-lg">
             <div className="flex flex-col border-text border-2 rounded-lg w-full h-full overflow-hidden">
                 <span className="w-full flex flex-row justify-start bg-text text-background text-sm font-jbm p-2">
                     <h2>{metadata.name}</h2>
@@ -50,14 +50,14 @@ function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, n
                 </span>
 
                 <span className="px-3 text-xs flex flex-1 flex-row justify-end items-end font-lato">
-                    <a href={`/${PAGE_SURVEY_PREVIEW}/${metadata._id.$oid}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text">
+                    <a href={`/${PAGE_SURVEY_PREVIEW}/${metadata._id.$oid}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text dark:hover:text-secondary">
                         <p className="font-jbm-italic">View</p>
                         <ChevronRight />
                     </a>
                 </span>
 
                 <div className="p-4 flex flex-row justify-between items-center">
-                    <button onClick={onDecline} className="flex flex-row items-center font-jbm text-xs pr-2 py-[2px] space-x-2 hover:cursor-pointer text-error border-2 hover:text-background hover:bg-error border-error p-[1px] rounded">
+                    <button onClick={onDecline} className="flex flex-row items-center font-jbm text-xs pr-2 py-[2px] space-x-2 hover:cursor-pointer text-error border-2 hover:text-background dark:hover:text-accent hover:bg-error border-error p-[1px] rounded">
                         <Trash2 className="scale-75" />
                         <p>Decline</p>
                     </button>
@@ -87,7 +87,7 @@ export default function InviteSection() {
     }
 
     function simpleNotify(message: string, error: boolean) {
-        notify({ message: message, color: error ? "var(--color-error)" : "var(--color-text)" })
+        notify({ message: message, color: error ? "var(--color-error)" : "var(--color-success)" })
     }
 
     function remove(id: string) {
@@ -114,7 +114,6 @@ export default function InviteSection() {
                     })
                 }
                 else {
-                    console.log(result)
                     setInvites((result as { success: true, content: InviteResult[] }).content.map(i => i.metadata))
                 }
             })

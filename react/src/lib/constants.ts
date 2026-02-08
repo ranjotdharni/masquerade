@@ -121,14 +121,14 @@ export const DUAL_IMAGE_UNIFORM_ARTICLE_ID: 1 = 1 as const
 
 export const DIFF_COLOR_LIST: string[] = [ 
   "#be2f13",
-  "#56554f",
+  "#9C755F",
   "#7352c1",
   "#359985",
   "#F28E2B",
   "#D37295",
   "#4E79A7",
   "#59A14F",
-  "#9C755F",
+  "#66544a",
   "#B07AA1",
   "#EDC948",
   "#2F6F62",

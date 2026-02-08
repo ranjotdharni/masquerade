@@ -57,7 +57,8 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
         yaxis: {
             labels: {
                 style: {
-                    fontFamily: "var(--font-jbm-bold)"
+                    fontFamily: "var(--font-jbm-bold)",
+                    colors: "var(--color-text)",
                 }
             }
         },
@@ -238,6 +239,7 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
                 track: {
                     strokeWidth: '67%',
                     margin: 0,
+                    background: "transparent",
                 },
                 dataLabels: {
                     show: true,
@@ -261,7 +263,7 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
         },
         fill: {
             type: 'gradient',
-            colors: ["var(--color-primary)"],
+            colors: ["var(--color-secondary)"],
             gradient: {
                 shade: 'dark',
                 type: 'horizontal',
@@ -286,7 +288,7 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
 
             <div className="w-full md:h-[90%] mt-4 md:mt-0 flex flex-col items-center md:flex-row">
                 <section className="w-[90%] md:w-1/2 h-full flex flex-col justify-evenly items-center">
-                    <div className="w-full md:h-[40%] rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly">
+                    <div className="w-full md:h-[40%] rounded-xl shadow-lg border border-background-light bg-background dark:bg-primary flex flex-col justify-evenly">
                         <header className="w-full md:h-[15%] flex flex-row justify-end items-center py-2 md:py-0 px-8 border-b border-inactive-light">
                             <h3 className="font-jbm-bold text-text text-lg md:px-4">Answer Key</h3>
                         </header>
@@ -304,26 +306,26 @@ export default function MultipleChoiceStatView({ question, surveySubmissions } :
                         </ul>
                     </div>
 
-                    <figure className="w-full h-[40vh] md:h-[40%] mt-6 md:mt-0 rounded-xl shadow-lg border border-background-light flex flex-col justify-evenly px-2 pt-1 pb-2">
+                    <figure className="w-full h-[40vh] md:h-[40%] mt-6 md:mt-0 rounded-xl shadow-lg border border-background-light bg-background dark:bg-primary flex flex-col justify-evenly px-2 pt-1 pb-2">
                         <ReactApexChart width="100%" height="100%" series={columnChart.series} type="bar" options={columnChart} />
                     </figure>
                 </section>
 
                 <section className="w-full md:w-1/2 h-full flex flex-col justify-evenly items-center pb-8 md:pb-0">
                         <div className="w-full md:h-[40%] flex flex-col md:flex-row justify-evenly items-center">
-                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light bg-background dark:bg-primary p-2">
                                 <ReactApexChart width="100%" height="100%" series={donutChart.series} type="donut" options={donutChart} />
                             </figure>
-                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light bg-background dark:bg-primary p-2">
                                 <ReactApexChart width="100%" height="100%" series={radialChart.series} type="radialBar" options={radialChart} />
                             </figure>
                         </div>
                         <div className="w-full md:h-[40%] flex flex-col md:flex-row justify-evenly items-center">
-                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light bg-background dark:bg-primary p-2">
                                 <ReactApexChart width="100%" height="90%" series={pieChart.series} type="pie" options={pieChart} />
                                 <figcaption className="h-[10%] w-full flex flex-row justify-center items-center text-xs font-jbm-bold text-secondary">Pie Visualization</figcaption>
                             </figure>
-                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light p-2">
+                            <figure className="w-[90%] md:w-[40%] h-[40vh] md:h-full mt-6 md:mt-0 rounded-lg shadow-md border border-background-light bg-background dark:bg-primary p-2">
                                 <ReactApexChart width="100%" height="100%" series={answerRateChart.series} type="radialBar" options={answerRateChart} />
                             </figure>
                         </div>

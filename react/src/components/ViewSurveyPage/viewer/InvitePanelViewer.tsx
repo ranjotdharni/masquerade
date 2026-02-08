@@ -71,7 +71,7 @@ export default function InvitePanelViewer({ surveyId, inviteOnly } : { surveyId:
                 setRecipient("")
                 notify({
                     message: message,
-                    color: "var(--color-text)"
+                    color: "var(--color-success)"
                 })
             }
         })
@@ -83,7 +83,7 @@ export default function InvitePanelViewer({ surveyId, inviteOnly } : { surveyId:
         <section className="h-full w-full flex flex-col justify-center items-center">
             <header className="w-full h-[10%] p-4 flex flex-row justify-between items-center">
                 <h2 className={`text-lg font-jbm-bold text-text px-4 border border-text ${NAV_CSS.md_ml}`}>Send an Invite</h2>
-                <InfoModal classname={`infoModalInvitePrivacy w-6 before:p-2 before:w-[50vw] before:-left-[51vw] before:-left-0 md:before:w-[15vw] md:before:-left-[1250%] aspect-square hover:cursor-pointer`} />
+                <InfoModal classname={`infoModalInvitePrivacy w-6 before:p-2 before:w-[50vw] before:-left-0 md:before:w-[15vw] md:before:-left-[1250%] aspect-square hover:cursor-pointer`} />
             </header>
 
             <div className="w-full h-[90%] flex flex-col md:flex-row justify-center items-end md:items-center space-y-2 md:space-y-0 space-x-2 pr-[2.5vw] md:pr-0">
