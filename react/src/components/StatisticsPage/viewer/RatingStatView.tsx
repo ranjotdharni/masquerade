@@ -264,18 +264,7 @@ export default function RatingStatView({ question, surveySubmissions } : RatingS
             }
         },
         fill: {
-            type: 'gradient',
-            colors: ["var(--color-secondary)"],
-            gradient: {
-                shade: 'dark',
-                type: 'horizontal',
-                shadeIntensity: 0.5,
-                gradientToColors: ['var(--color-text)'],
-                inverseColors: true,
-                opacityFrom: 1,
-                opacityTo: 1,
-                stops: [0, 100]
-            }
+            colors: ["var(--color-text)"],
         },
         stroke: {
             lineCap: 'round',

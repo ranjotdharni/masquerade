@@ -18,6 +18,7 @@ import ViewSurveyPage from "./pages/ViewSurveyPage"
 import StatisticsPage from "./pages/StatisticsPage"
 import AboutPage from "./pages/AboutPage"
 import UsagePage from "./pages/UsagePage"
+import { UIProvider } from "./components/context/provider/UIProvider"
 
 const routes = createBrowserRouter([
   {
@@ -57,6 +58,8 @@ const routes = createBrowserRouter([
 export default function App() {
 
   return (
-    <RouterProvider router={routes} />
+    <UIProvider notify={() => {}} confirm={() => {}}>
+      <RouterProvider router={routes} />
+    </UIProvider>
   )
 }

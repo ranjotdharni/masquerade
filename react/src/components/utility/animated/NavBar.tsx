@@ -4,6 +4,7 @@ import { authenticatedRequest, clientSignOut } from "../../../lib/utility/intern
 import type { GenericError } from "../../../lib/types/internal"
 import { useState, type MouseEvent } from "react"
 import "../../../css/animated.css"
+import { toggleTheme } from "../../../lib/utility/client"
 
 type NavCSSType = {
     spaceX: string
@@ -206,7 +207,7 @@ export default function NavBar() {
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Create' text="Create" Icon={PencilRuler} href={`/${PAGE_SURVEY_CREATE}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='Browse' text="Browse" Icon={TextSearch} href={`/${PAGE_SURVEY_FIND}`} />
                     <LinkItem close={minimalClose} open={barState === OPEN_STATE} hoverContent='My Surveys' text="My Surveys" Icon={ListChecks} href={`/${PAGE_SURVEY_VIEW}`} />
-                    <ActionItem open={barState === OPEN_STATE} hoverContent='Theme' text="Toggle Theme" Icon={SunMoon} action={() => {}} />
+                    <ActionItem open={barState === OPEN_STATE} hoverContent='Change Theme' text="Change Theme" Icon={SunMoon} action={toggleTheme} />
                 </section>
 
                 <section  className="w-full h-[20%] flex flex-col justify-evenly overflow-hidden">

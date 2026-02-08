@@ -45,6 +45,8 @@
   src: url("./assets/fonts/lato/Lato-Bold.ttf") format("truetype");
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
  --color-text: #124f54;
  --color-background: #ededed;
@@ -72,25 +74,8 @@
  --font-lato-bold: Lato Bold;
 }
 
-@media (prefers-color-scheme: light) {
-  @theme {
-    --color-text: #124f54;
-    --color-background: #ededed;
-    --color-primary: #6ad7af;
-    --color-secondary: #102937;
-    --color-accent: #e2dad0;
-    --color-error: #96063b;
-    --color-success: #68c151;
-    --color-inactive: #4a4a4a;
-
-    --color-secondary-light: #10293720;
-    --color-inactive-light: #4a4a4a20;
-    --color-background-light: #d4d4d43a;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  @theme {
+@layer theme {
+  .dark {
     --color-text: #ac9e8d;
     --color-background: #0a2325;
     --color-primary: #3e3c27;

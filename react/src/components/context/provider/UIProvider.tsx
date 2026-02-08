@@ -3,6 +3,7 @@ import type { ConfirmProps, NotificationProps, UIContextValue } from "../../../l
 import { UIContext } from "../UIContext"
 import useTimeout from "../../../lib/hooks/useTimeout"
 import FullScreenLoader from "../../utility/FullScreenLoader"
+import { LOCAL_STORAGE_THEME_NAME } from "../../../lib/constants"
 
 const UI_NOTIFICATION_MILLISECONDS: number = 8000
 const notificationInitialTranslation: string = "translateY(120%)"
@@ -40,7 +41,7 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
                     transition: "opacity 0.3s ease, transform 0.4s ease", 
                     display: message.trim() === "" ? "none" : "flex",
                 }} 
-                className="relative z-30 py-4 md:px-8 font-jbm border bg-background border-accent dark:bg-accent rounded-lg"
+                className="relative w-full md:w-auto z-30 py-4 md:px-8 font-jbm flex flex-row items-center justify-center border bg-background border-accent dark:bg-accent rounded-lg"
             >
                 {message}
             </p>
@@ -105,6 +106,19 @@ export const UIProvider: React.FunctionComponent<UIContextValue & { children: Re
     function resetConfirmation() {
         setConfirmation(undefined)
     }
+
+    useEffect(() => {
+        function setInitialTheme() {
+            const theme = localStorage.getItem(LOCAL_STORAGE_THEME_NAME)
+            var html = document.documentElement
+        
+            if (theme) {
+                html.classList.add("dark")
+            }
+        }
+
+        setInitialTheme()
+    }, [])
 
     return (
         <UIContext.Provider

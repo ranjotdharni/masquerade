@@ -1,4 +1,4 @@
-import { PASSWORD_MIN_LENGTH } from "../constants"
+import { DARK_THEME_NAME, LOCAL_STORAGE_THEME_NAME, PASSWORD_MIN_LENGTH } from "../constants"
 import type { GenericError } from "../types/internal"
 
 export function isValidEmail(email: string): GenericError | undefined {
@@ -43,4 +43,20 @@ export function isValidPassword(password: string, confirm: string): GenericError
 export function generateClientId(): string {
     const CLIENT_ID_LENGTH: number = 8
     return `${Math.floor(Math.random() * Math.pow(10, CLIENT_ID_LENGTH))}`
+}
+
+// Below: If theme variable exists in local storage, it means dark theme is supposed to be set since there are only 2 values for theme (light is default): light, dark
+
+export function toggleTheme() {
+    const theme = localStorage.getItem(LOCAL_STORAGE_THEME_NAME)
+    var html = document.documentElement
+
+    if (theme) {
+        localStorage.removeItem(LOCAL_STORAGE_THEME_NAME)
+        html.classList.remove("dark")
+    }
+    else {
+        localStorage.setItem(LOCAL_STORAGE_THEME_NAME, DARK_THEME_NAME)
+        html.classList.add("dark")
+    }
 }

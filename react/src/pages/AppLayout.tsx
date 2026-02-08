@@ -3,13 +3,12 @@ import AppFooter from "../components/layout/AppFooter"
 import { useEffect, useState } from "react"
 import { API_CONFIRM_AUTH } from "../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../lib/utility/internal"
-import { UIProvider } from "../components/context/provider/UIProvider"
 import NavBar from "../components/utility/animated/NavBar"
 import FullScreenLoader from "../components/utility/FullScreenLoader"
 
 function App() {
     return (
-        <UIProvider notify={() => {}} confirm={() => {}}>
+        <>
             <NavBar />
 
             <main>
@@ -17,7 +16,7 @@ function App() {
             </main>
 
             <AppFooter />
-        </UIProvider>
+        </>
     )
 }
 

@@ -133,3 +133,6 @@ export const DIFF_COLOR_LIST: string[] = [
   "#EDC948",
   "#2F6F62",
 ]
+
+export const LOCAL_STORAGE_THEME_NAME: string = "theme"
+export const DARK_THEME_NAME: string = "dark"
