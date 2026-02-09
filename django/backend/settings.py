@@ -34,7 +34,7 @@ PRODUCTION_ENVIRONMENT_NAME = os.getenv("PRODUCTION_ENVIRONMENT_NAME")
 
 BACKEND_URL = os.getenv("BACKEND_URL")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
-FRONT_END_URL_REGEX = os.getenv("FRONT_END_URL_REGEX")
+# FRONT_END_URL_REGEX = os.getenv("FRONT_END_URL_REGEX")
 # HOST_DOMAIN = os.getenv("HOST_DOMAIN")
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
@@ -134,14 +134,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-#CORS_ALLOWED_ORIGINS = [
-#    FRONTEND_URL,
-#]
-
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^(?!(/?api/auth/google/init/?$|/?api/auth/github/init/?$|/?api/auth/basic/signup/?$|/?api/auth/basic/signin/?$|/?api/auth/google/login/callback/?$|/?api/auth/github/login/callback/?$)).*",
-    FRONT_END_URL_REGEX,
+CORS_ALLOWED_ORIGINS = [
+    FRONTEND_URL,
 ]
+
+CORS_URLS_REGEX = r"^/api/(?!auth/).*"
 
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_DOMAIN = None
