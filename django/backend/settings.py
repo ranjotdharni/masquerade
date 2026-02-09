@@ -134,13 +134,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-CORS_ALLOWED_ORIGINS = [
+#CORS_URLS_REGEX = r"^/api/(?!auth/).*"
+
+ALLOWED_HOSTS = [
     "*"
 ]
 
-#CORS_URLS_REGEX = r"^/api/(?!auth/).*"
-
-#CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_DOMAIN = None
