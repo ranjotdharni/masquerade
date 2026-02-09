@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
-import os
 
 import certifi
 from pymongo.mongo_client import MongoClient
@@ -57,7 +57,7 @@ DUPLICATE_USER_CODE = 409
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
 
-ALLOWED_HOSTS = [HOST_DOMAIN]
+ALLOWED_HOSTS = HOST_DOMAIN.split(" ")
 
 SITE_ID = 1
 ACCESS_TOKEN_LIFETIME = 5 # minutes

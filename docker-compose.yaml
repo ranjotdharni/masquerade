@@ -1,0 +1,20 @@
+version: '1.0'
+
+services:
+  api:
+    build: 
+      context: ./django
+    command: gunicorn backend.wsgi --bind 0.0.0.0:8000 --workers 3
+    volumes:
+      - ./django/:/usr/src/django
+    expose:
+      - 8000
+    env_file:
+      - ./.env
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:443
+    depends_on:
+      - api
