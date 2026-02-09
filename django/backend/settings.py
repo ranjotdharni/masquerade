@@ -135,10 +135,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
-    FRONTEND_URL,
-    "0.0.0.0",
-    "localhost",
-    "127.0.0.1"
+    "*"
 ]
 
 #CORS_URLS_REGEX = r"^/api/(?!auth/).*"
