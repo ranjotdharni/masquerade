@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 from apiauth.views import GoogleTokenExchange, GithubTokenExchange
-from survey.views import Test
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +29,4 @@ urlpatterns = [
     path('api/auth/', include('apiauth.urls')),
     path('api/survey/', include('survey.urls')),
     path('api/invite/', include('invite.urls')),
-    path('test/', Test.as_view(), name="test"),
 ]

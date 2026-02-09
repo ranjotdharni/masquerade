@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from bson.json_util import dumps, loads
+from bson.json_util import dumps
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
@@ -21,14 +21,7 @@ from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
 from apiauth.utils import extract_user_from_request
-#start edit
-class Test(APIView):
-    permission_classes = [AllowAny]
 
-    def get(self, request):
-        response = Response({ "success": True, "message": "requst processed successfully" }, status.HTTP_200_OK)
-        return response
-#end edit
 @method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
