@@ -34,7 +34,8 @@ PRODUCTION_ENVIRONMENT_NAME = os.getenv("PRODUCTION_ENVIRONMENT_NAME")
 
 BACKEND_URL = os.getenv("BACKEND_URL")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
-HOST_DOMAIN = os.getenv("HOST_DOMAIN")
+FRONT_END_URL_REGEX = os.getenv("FRONT_END_URL_REGEX")
+# HOST_DOMAIN = os.getenv("HOST_DOMAIN")
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
@@ -57,7 +58,7 @@ DUPLICATE_USER_CODE = 409
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
 
-ALLOWED_HOSTS = [HOST_DOMAIN]
+# ALLOWED_HOSTS = [HOST_DOMAIN]
 
 SITE_ID = 1
 ACCESS_TOKEN_LIFETIME = 5 # minutes
@@ -133,8 +134,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-CORS_ALLOWED_ORIGINS = [
-    FRONTEND_URL,
+#CORS_ALLOWED_ORIGINS = [
+#    FRONTEND_URL,
+#]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^(?!(/?api/auth/google/init/?$|/?api/auth/github/init/?$|/?api/auth/basic/signup/?$|/?api/auth/basic/signin/?$|/?api/auth/google/login/callback/?$|/?api/auth/github/login/callback/?$)).*",
+    FRONT_END_URL_REGEX,
 ]
 
 CORS_ALLOW_CREDENTIALS = True
