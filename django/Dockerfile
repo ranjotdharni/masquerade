@@ -24,7 +24,7 @@ ENV APP_HOME=/home/django/api
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
-RUN apt-get update && apt-get install -y --no-install-recommends netcat
+# RUN apt-get update && apt-get install -y --no-install-recommends netcat
 COPY --from=builder /usr/src/django/wheels /wheels
 COPY --from=builder /usr/src/django/requirements.txt .
 RUN pip install --upgrade pip
