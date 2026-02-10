@@ -94,6 +94,7 @@ class BasicSignIn(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        print("got here")
         email = request.data.get("email")
         password = request.data.get("password")
 
@@ -118,6 +119,8 @@ class BasicSignIn(APIView):
         
         response = generate_basic_response(request, user)
 
+        print("success")
+        print(response.__str__())
         return response
 
 @method_decorator(csrf_exempt, name='dispatch')
