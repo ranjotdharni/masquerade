@@ -58,7 +58,7 @@ DUPLICATE_USER_CODE = 409
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
 
-ALLOWED_HOSTS = [HOST_DOMAIN]
+ALLOWED_HOSTS = [HOST_DOMAIN, "0.0.0.0", "127.0.0.1", "localhost"]
 
 SITE_ID = 1
 ACCESS_TOKEN_LIFETIME = 5 # minutes
@@ -136,6 +136,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 CORS_ALLOWED_ORIGINS = [
     FRONTEND_URL,
+    "http://0.0.0.0",
+    "http://127.0.0.1",
+    "http://localhost",
+    "https://0.0.0.0",
+    "https://127.0.0.1",
+    "https://localhost",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
