@@ -212,7 +212,3 @@ __marimo__/
 
 # local editor settings
 /.vscode
-
-# Production-Only Files
-nginx/
-docker-compose.yaml
