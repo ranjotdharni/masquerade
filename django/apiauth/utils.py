@@ -145,7 +145,7 @@ def generate_basic_response(request: HttpRequest, user: User) -> HttpResponseRed
             f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned",
         ]
 
-        response.headers["Set-Cookie"] = cookies
+        response.headers["Set-Cookie"] = f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned"
 
         return response
     except Exception as e:
