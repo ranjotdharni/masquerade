@@ -123,9 +123,9 @@ export default function LoginPage() {
                         signUp ? <SignUpForm setError={setError} setLoader={setLoader} /> : <SignInForm setError={setError} setLoader={setLoader} /> 
                     }
 
-                    <p className="mt-6 mx-auto text-xs text-gray-600 dark:text-text text-center">
+                    <aside className="z-10 relative mt-6 mx-auto text-xs text-gray-600 dark:text-text text-center">
                         { signUp ? "Already have an account?" : "Don't have an account?" } <button disabled={loader} onClick={() => { setError(""); setSignUp(prev => !prev) }} className="hover:underline hover:cursor-pointer text-primary dark:text-accent dark:hover:text-secondary">Sign { signUp ? "In" : "Up" }.</button>
-                    </p>
+                    </aside>
 
                     { error.trim() !== "" ? <p className="mt-2 mx-auto text-xs text-error text-center">{error}</p> : <></> }
                 </div>

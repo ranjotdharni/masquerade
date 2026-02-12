@@ -1,5 +1,5 @@
 import "../../../css/utility.css"
-import { IMG_LANDING_BACKGROUND, IMG_LANDING_STATISTICS_DASHBOARD, PAGE_LOGIN } from "../../../lib/constants"
+import { IMG_LANDING_BACKGROUND, IMG_LANDING_STATISTICS_DASHBOARD,  PAGE_LOGIN } from "../../../lib/constants"
 
 export default function LandingSection() {
 
