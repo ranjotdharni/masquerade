@@ -141,8 +141,8 @@ def generate_basic_response(request: HttpRequest, user: User) -> HttpResponseRed
 #        )
 
         cookies = [
-            f"{settings.CSRF_COOKIE_NAME}={csrf_token}; Path=/; Secure; SameSite=None; Partitioned",
-            f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned",
+#            f"{settings.CSRF_COOKIE_NAME}={csrf_token}; Path=/; Secure; SameSite=None; Partitioned",
+            f"__Host-{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned",
         ]
 
         response.headers["set-cookie"] = ('Set-Cookie', cookies)
