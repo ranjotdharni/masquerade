@@ -1,3 +1,4 @@
+import type { GenericError } from "./internal"
 
 export type NotificationProps = {
     message: string,
@@ -13,4 +14,9 @@ export type ConfirmProps = {
 export type UIContextValue = {
     notify: (config: NotificationProps) => void,
     confirm: (config: ConfirmProps) => void,
+}
+
+export type AuthContextValue = {
+    accessToken: string | undefined
+    refreshTokens: () => Promise<string | undefined | GenericError>
 }

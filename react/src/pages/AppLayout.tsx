@@ -4,21 +4,6 @@ import { useEffect, useState } from "react"
 import { API_CONFIRM_AUTH } from "../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../lib/utility/internal"
 import NavBar from "../components/utility/animated/NavBar"
-import FullScreenLoader from "../components/utility/FullScreenLoader"
-
-function App() {
-    return (
-        <>
-            <NavBar />
-
-            <main>
-                <Outlet />
-            </main>
-
-            <AppFooter />
-        </>
-    )
-}
 
 export default function AppLayout() {
     const [pageIsLoading, setPageIsLoading] = useState<boolean>(true)
@@ -43,8 +28,14 @@ export default function AppLayout() {
     }, [])
     
     return (
-        pageIsLoading ? 
-        <FullScreenLoader /> :
-        <App />
+        <>
+            <NavBar />
+
+            <main>
+                <Outlet />
+            </main>
+
+            <AppFooter />
+        </>
     )
 }
