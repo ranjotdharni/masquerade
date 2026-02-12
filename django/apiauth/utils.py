@@ -125,21 +125,29 @@ def generate_basic_response(request: HttpRequest, user: User) -> HttpResponseRed
 
         response = Response({ "success": "true", "message": "You are logged in.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
 
-        response.set_cookie(
-            key=settings.CSRF_COOKIE_NAME,
-            value=csrf_token,
-            httponly=False,
-            secure=True,
-            samesite="None"
-        )
-        response.set_cookie(
-            key=settings.REFRESH_COOKIE_NAME,
-            value=refresh_token,
-            httponly=True,
-            secure=True,
-            samesite="None"
-        )
+#        response.set_cookie(
+#            key=settings.CSRF_COOKIE_NAME,
+#            value=csrf_token,
+#            httponly=False,
+#            secure=True,
+#            samesite="None"
+#        )
+#        response.set_cookie(
+#            key=settings.REFRESH_COOKIE_NAME,
+#            value=refresh_token,
+#            httponly=True,
+#            secure=True,
+#            samesite="None",
+#        )
+
+        cookies = [
+            f"{settings.CSRF_COOKIE_NAME}={csrf_token}; Path=/; Secure; SameSite=None; Partitioned",
+            f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned",
+        ]
+
+        response.headers["Set-Cookie"] = f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned"
 
         return response
-    except Exception:
+    except Exception as e:
+        print(e)
         raise

@@ -6,7 +6,7 @@ from urllib.parse import quote
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -89,6 +89,7 @@ class SignOut(APIView):
 
         return response  
 
+@method_decorator(csrf_exempt, name='dispatch')
 class BasicSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -119,6 +120,7 @@ class BasicSignIn(APIView):
 
         return response
 
+@method_decorator(csrf_exempt, name='dispatch')
 class BasicSignUp(APIView):
       permission_classes = [AllowAny]
 
@@ -158,6 +160,7 @@ class BasicSignUp(APIView):
             response = Response({ "error": "true", "message": f"500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
             return response
 
+@method_decorator(csrf_exempt, name='dispatch')
 class GoogleSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -176,7 +179,8 @@ class GoogleSignIn(APIView):
         )
 
         return redirect(google_oauth_url)
-    
+
+@method_decorator(csrf_exempt, name='dispatch') 
 class GoogleTokenExchange(APIView):
     permission_classes = [AllowAny]
 
@@ -255,7 +259,8 @@ class GoogleTokenExchange(APIView):
             response = redirect(redirect_url)
 
         return response
-    
+
+@method_decorator(csrf_exempt, name='dispatch') 
 class GithubSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -270,7 +275,8 @@ class GithubSignIn(APIView):
         )
 
         return redirect(github_oauth_url)
-    
+
+@method_decorator(csrf_exempt, name='dispatch')   
 class GithubTokenExchange(APIView):
     permission_classes = [AllowAny]
 

@@ -11,9 +11,9 @@ from invite.models import Invite
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from bson.json_util import dumps, loads
+from bson.json_util import dumps
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 

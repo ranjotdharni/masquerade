@@ -1,6 +1,6 @@
 import { useState, type MouseEvent } from "react"
-import { API_BASIC_SIGNIN, API_GITHUB_LOGIN, API_GOOGLE_LOGIN, PAGE_HOME } from "../../lib/constants"
-import { useNavigate } from "react-router-dom"
+import { API_BASIC_SIGNIN, API_GITHUB_LOGIN, API_GOOGLE_LOGIN/*, PAGE_HOME*/ } from "../../lib/constants"
+// import { useNavigate } from "react-router-dom"
 
 type SignInFormProps = {
     setError: (error: string) => void
@@ -8,7 +8,7 @@ type SignInFormProps = {
 }
 
 export default function SignInForm({ setError, setLoader } : SignInFormProps) {
-    let navigate = useNavigate()
+    // let navigate = useNavigate()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -36,13 +36,21 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
             return result
         })
 
+        console.log("Response First", JSON.stringify(response))
+        console.log("Response Object First", JSON.stringify(response))
+
         if (response.error) {
+            console.log("error response")
             setError(response.message)
         }
         else {
+            console.log("success response")
             localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, response[import.meta.env.VITE_ACCESS_TOKEN_NAME])
-            navigate(`/${PAGE_HOME}`)
+            // navigate(`/${PAGE_HOME}`)
         }
+
+        console.log("Response Second", JSON.stringify(response))
+        console.log("Response Object Second", JSON.stringify(response))
 
         setLoader(false)
     }
