@@ -108,7 +108,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware',
@@ -134,7 +133,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-# This is a test
+
 CORS_ALLOW_ALL_ORIGINS = True
 #CORS_ALLOWED_ORIGINS = [
 #    FRONTEND_URL,
@@ -246,15 +245,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 '''
 
 # Authentication/Authorization
-
-# CSRF_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_NAME = os.getenv("CSRF_COOKIE_NAME")
-CSRF_TRUSTED_ORIGINS = [
-    FRONTEND_URL,
-]
 
 REFRESH_TOKEN_NAME = os.getenv("REFRESH_TOKEN_NAME")
 ACCESS_TOKEN_NAME = os.getenv("ACCESS_TOKEN_NAME")

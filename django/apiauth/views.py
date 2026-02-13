@@ -6,8 +6,6 @@ from urllib.parse import quote
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
@@ -26,7 +24,6 @@ from .models import SocialAccount
 
 # Create your views here.
 
-@method_decorator(csrf_protect, name="dispatch")
 class ConfirmAuth(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -34,7 +31,6 @@ class ConfirmAuth(APIView):
         response = Response({ "success": "true", "message": "User is logged in." }, status.HTTP_200_OK)
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class RefreshTokens(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -64,7 +60,6 @@ class RefreshTokens(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SignOut(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -83,7 +78,6 @@ class SignOut(APIView):
 
         return response  
 
-@method_decorator(csrf_exempt, name='dispatch')
 class BasicSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -114,7 +108,6 @@ class BasicSignIn(APIView):
 
         return response
 
-@method_decorator(csrf_exempt, name='dispatch')
 class BasicSignUp(APIView):
       permission_classes = [AllowAny]
 
@@ -154,7 +147,6 @@ class BasicSignUp(APIView):
             response = Response({ "error": "true", "message": f"500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
             return response
 
-@method_decorator(csrf_exempt, name='dispatch')
 class GoogleSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -174,7 +166,6 @@ class GoogleSignIn(APIView):
 
         return redirect(google_oauth_url)
 
-@method_decorator(csrf_exempt, name='dispatch') 
 class GoogleTokenExchange(APIView):
     permission_classes = [AllowAny]
 
@@ -254,7 +245,6 @@ class GoogleTokenExchange(APIView):
 
         return response
 
-@method_decorator(csrf_exempt, name='dispatch') 
 class GithubSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -269,8 +259,7 @@ class GithubSignIn(APIView):
         )
 
         return redirect(github_oauth_url)
-
-@method_decorator(csrf_exempt, name='dispatch')   
+ 
 class GithubTokenExchange(APIView):
     permission_classes = [AllowAny]
 

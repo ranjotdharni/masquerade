@@ -1,9 +1,6 @@
 import json
 
 # Create your views here.
-
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 from django.conf import settings
 
 from backend.helpers import GenericError
@@ -23,7 +20,6 @@ from .utils import validate_survey_creation_slug, create_mongo_survey_object, cr
 from backend.utils.modules import isGenericError
 from apiauth.utils import extract_user_from_request
 
-@method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -50,8 +46,7 @@ class CreateSurvey(APIView):
             response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
-    
-@method_decorator(csrf_protect, name="dispatch")
+
 class DeleteSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -107,7 +102,6 @@ class DeleteSurvey(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SurveyCatalog(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -186,7 +180,6 @@ class SurveyCatalog(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SurveyDetail(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -231,7 +224,6 @@ class SurveyDetail(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SubmitSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
