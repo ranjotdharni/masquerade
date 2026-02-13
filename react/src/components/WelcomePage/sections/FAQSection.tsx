@@ -16,7 +16,7 @@ function FAQ({ question, answer } : FAQType) {
     }
 
     return (
-        <li className="w-4/5 max-w-275 border-b border-b-2 border-text text-text px-2 py-4">
+        <li className="w-4/5 max-w-275 border-b-2 border-text text-text px-2 py-4">
             <header className="flex flex-row justify-between items-center">
                 <h4 className="text-[1.25rem] font-jbm-italic">{question}</h4>
                 <button onClick={toggle} className="hover:cursor-pointer hover:text-primary scale-105">

@@ -4,6 +4,7 @@ import uuid
 from urllib.parse import quote
 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth import authenticate
@@ -18,7 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token, generate_provider_response, generate_basic_response, extract_refresh_token_from_request
+from .utils import decode_google_jwt, decode_github_token_response, extract_user_from_request, get_user_from_access_token, generate_provider_response, generate_basic_response, extract_refresh_token_from_request
 from backend.utils.modules import isGenericError
 from .models import SocialAccount
 
@@ -67,14 +68,15 @@ class SignOut(APIView):
         response = JsonResponse({ "message": "Logged Out" }, status=status.HTTP_200_OK)
 
         try:
-            refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+            user = extract_user_from_request(request)
+
+            if isGenericError(user):
+                return Response(user, status=status.HTTP_400_BAD_REQUEST)
+
+            OutstandingToken.objects.filter(user=user).delete()
         except Exception as e:
-            return JsonResponse({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_400_BAD_REQUEST)
-        
-        response.delete_cookie(settings.CSRF_COOKIE_NAME)
-        response.delete_cookie(settings.REFRESH_COOKIE_NAME)
+            print(e)
+            return JsonResponse({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response  
 

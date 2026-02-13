@@ -5,6 +5,7 @@ import { useContext, useEffect, useState, type MouseEvent } from "react"
 import Loader from "../utility/Loader"
 import { authenticatedRequest } from "../../lib/utility/internal"
 import { UIContext } from "../context/UIContext"
+import { AuthContext } from "../context/AuthContext"
 
 type InviteResult = {
     survey: string
@@ -13,9 +14,10 @@ type InviteResult = {
 
 function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, notify: (message: string, error: boolean) => void, remove: (id: string) => void }) {
     const { confirm } = useContext(UIContext)
+    const authentication = useContext(AuthContext)
 
     async function decline() {
-        await authenticatedRequest(API_INVITE_DECLINE, "POST", { id: metadata._id.$oid }).then(result => {
+        await authenticatedRequest(authentication, API_INVITE_DECLINE, "POST", { id: metadata._id.$oid }).then(result => {
             let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
             if (result.error) {
@@ -70,6 +72,7 @@ function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, n
 
 export default function InviteSection() {
     const { notify } = useContext(UIContext)
+    const authentication = useContext(AuthContext)
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [invites, setInvites] = useState<SurveyMetadata[]>([])
@@ -104,7 +107,7 @@ export default function InviteSection() {
         async function getInvites() {
             setIsLoading(true)
 
-            await authenticatedRequest(API_INVITE_RECEIVED, "GET").then(result => {
+            await authenticatedRequest(authentication, API_INVITE_RECEIVED, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
                 if (result.error) {

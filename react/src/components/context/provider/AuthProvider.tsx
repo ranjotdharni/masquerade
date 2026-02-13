@@ -9,6 +9,8 @@ import type { GenericError } from "../../../lib/types/internal"
 export const AuthProvider: React.FunctionComponent<AuthContextValue & { children: React.ReactNode }> = ({
     children
 }) => {
+
+    const [initialAuthCheckComplete, setInitialAuthCheckComplete] = useState<boolean>(false)
     const [accessToken, setAccessToken] = useState<string | undefined>()
 
     async function refreshTokens() {
@@ -35,8 +37,8 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
         return refreshedAccessToken
     }
 
-    async function confirmAuthWithServer(): Promise<boolean> {
-        const authResult = await authenticatedRequest({accessToken: accessToken, refreshTokens: refreshTokens}, API_CONFIRM_AUTH, "POST")
+    async function confirmAuthWithServer(token: string): Promise<boolean> {
+        const authResult = await authenticatedRequest({accessToken: token, refreshTokens: refreshTokens}, API_CONFIRM_AUTH, "POST")
 
         if (authResult.error)
             return false
@@ -54,24 +56,27 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
         if (existingAccessToken && existingRefreshToken) {
             setAccessToken(existingAccessToken)
             localStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
-            
-            const authIsValid = await confirmAuthWithServer()
+
+            const authIsValid = await confirmAuthWithServer(existingAccessToken)
 
             if (!authIsValid)
                 clientSignOut()
+            else
+                setInitialAuthCheckComplete(true)
         }
         else if (existingRefreshToken) {
             // refresh access token
             const refreshResponse = await refreshTokens()
-
             if ((refreshResponse as GenericError).error) {
                 clientSignOut()
             }
             else {
-                const authIsValid = await confirmAuthWithServer()
+                const authIsValid = await confirmAuthWithServer(refreshResponse as string)
 
                 if (!authIsValid)
                     clientSignOut()
+                else
+                    setInitialAuthCheckComplete(true)
             }
         }
         else {
@@ -80,10 +85,14 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
     }
 
     useEffect(() => {
-        if (import.meta.env.VITE_CONFIRM_AUTH === "true")
-            performAuthCheck()
-        else
-            setAccessToken("")
+        if (import.meta.env.VITE_CONFIRM_AUTH !== "true") {
+            setInitialAuthCheckComplete(true)
+            setAccessToken("CONFIRM_AUTH_NOT_SET")
+            return
+        }
+
+        console.log("happened")
+        performAuthCheck()
     }, [])
 
     return (
@@ -95,8 +104,8 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
         >
             <>
                 {
-                    accessToken === undefined ? 
-                    <FullScreenLoader loaderText="Authenticating..." /> :
+                    !accessToken || !initialAuthCheckComplete ? 
+                    <FullScreenLoader loaderText="Signing you in..." /> :
                     children
                 }
             </>

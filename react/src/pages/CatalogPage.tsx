@@ -6,14 +6,16 @@ import { API_SURVEY_CATALOG, DEFAULT_ERROR_MESSAGE } from "../lib/constants"
 import Catalog from "../components/CatalogPage/Catalog"
 import { UIContext } from "../components/context/UIContext"
 import type { SurveyMetadata } from "../lib/types/api"
+import { AuthContext } from "../components/context/AuthContext"
 
 export default function CatalogPage() {
+    const authentication = useContext(AuthContext)
     const { notify } = useContext(UIContext)
     const [content, setContent] = useState<SurveyMetadata[] | undefined>()
 
     useEffect(() => {
         async function getCatalog() {
-            await authenticatedRequest(API_SURVEY_CATALOG, "GET").then(result => {
+            await authenticatedRequest(authentication, API_SURVEY_CATALOG, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
                 
                 if (result.error) {

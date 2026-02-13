@@ -5,6 +5,7 @@ import { NAV_CSS } from "../../utility/animated/NavBar"
 import { API_INVITE_SEND, DEFAULT_ERROR_MESSAGE } from "../../../lib/constants"
 import { UIContext } from "../../context/UIContext"
 import { authenticatedRequest } from "../../../lib/utility/internal"
+import { AuthContext } from "../../context/AuthContext"
 
 function Content({ recipient, editRecipient, send } : { recipient: string, editRecipient: (recipient: string) => void, send: (event: MouseEvent<HTMLButtonElement>) => void }) {
     return (
@@ -16,6 +17,7 @@ function Content({ recipient, editRecipient, send } : { recipient: string, editR
 }
 
 export default function InvitePanelViewer({ surveyId, inviteOnly } : { surveyId: string, inviteOnly: boolean }) {
+    const authentication = useContext(AuthContext)
     const { notify } = useContext(UIContext)
 
     const [isSending, setIsSending] = useState<boolean>(false)
@@ -58,7 +60,7 @@ export default function InvitePanelViewer({ surveyId, inviteOnly } : { surveyId:
 
         setIsSending(true)
 
-        await authenticatedRequest(API_INVITE_SEND, "POST", { id: surveyId, recipient: validatedRecipient }).then(result => {
+        await authenticatedRequest(authentication, API_INVITE_SEND, "POST", { id: surveyId, recipient: validatedRecipient }).then(result => {
             let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
             if (result.error) {

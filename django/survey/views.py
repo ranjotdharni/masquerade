@@ -213,7 +213,7 @@ class SurveyDetail(APIView):
                     if survey["creator"] != user.username:
                         return Response({"error": True, "message": "You don't have permission to see details of this survey(s)."}, status.HTTP_400_BAD_REQUEST)
                     
-                response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+                response = Response({ "success": True, "user": str(user.username), "content": content }, status.HTTP_200_OK)
             else:
                 response = Response({ "error": True, "message": "No viewable survey found." }, status.HTTP_200_OK)
         except (InvalidId, TypeError) as e:

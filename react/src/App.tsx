@@ -58,8 +58,9 @@ const routes = createBrowserRouter([
 export default function App() {
 
   return (
-    <UIProvider notify={() => {}} confirm={() => {}}>
-      <RouterProvider router={routes} />
-    </UIProvider>
+    
+      <UIProvider notify={() => {}} confirm={() => {}}>
+        <RouterProvider router={routes} />
+      </UIProvider>
   )
 }

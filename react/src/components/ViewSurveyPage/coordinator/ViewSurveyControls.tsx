@@ -5,6 +5,7 @@ import { API_SURVEY_DELETE, APP_NAME, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_STATIST
 import { UIContext } from "../../context/UIContext"
 import { authenticatedRequest } from "../../../lib/utility/internal"
 import { useNavigate } from "react-router-dom"
+import { AuthContext } from "../../context/AuthContext"
 
 type ViewSurveyControlsProps = {
     surveyId: string
@@ -41,6 +42,7 @@ function ModeSelect({ active, metadata, changeMode } : ModeSelectProps) {
 
 export default function ViewSurveyControls({ surveyId, mode, setMode, modeMetadata } : ViewSurveyControlsProps) {
     let navigate = useNavigate()
+    const authentication = useContext(AuthContext)
     const { confirm, notify } = useContext(UIContext)
 
     function changeMode(mode: ModeId) {
@@ -51,7 +53,7 @@ export default function ViewSurveyControls({ surveyId, mode, setMode, modeMetada
     }
 
     async function deleteSurvey() {
-        await authenticatedRequest(API_SURVEY_DELETE, "DELETE", { id: surveyId }).then(result => {
+        await authenticatedRequest(authentication, API_SURVEY_DELETE, "DELETE", { id: surveyId }).then(result => {
             let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
             if (result.error) {
@@ -83,7 +85,7 @@ export default function ViewSurveyControls({ surveyId, mode, setMode, modeMetada
 
     return (
         <section className={`w-full h-[15%] p-4 ${NAV_CSS.pl} border-b border-primary flex flex-row justify-between items-end`}>
-            <div className="-ml-4 md:-ml-0 md:ml-2 space-x-2 flex flex-row">
+            <div className="-ml-4 md:ml-2 space-x-2 flex flex-row">
                 {
                     modeMetadata.map(metadata => {
                         return <ModeSelect key={`MODE_META_1x${metadata.id}`} active={mode === metadata.id} metadata={metadata} changeMode={changeMode(metadata.id)} />

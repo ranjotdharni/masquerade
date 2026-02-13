@@ -9,6 +9,7 @@ import type { GenericError } from "../lib/types/internal"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import { useNavigate } from "react-router-dom"
+import { AuthContext } from "../components/context/AuthContext"
 
 function newSingleChoiceQuestion(): ChoiceQuestionType {
     return {
@@ -75,6 +76,7 @@ function cycleQuestionType(type: QuestionIdType): QuestionIdType {
 
 export default function CreateSurveyPage() {
     const navigation = useNavigate()
+    const authentication = useContext(AuthContext)
     const { notify, confirm } = useContext(UIContext)
 
     const [name, setName] = useState<string>("")
@@ -211,7 +213,7 @@ export default function CreateSurveyPage() {
                 }
 
                 // Validate survey draft on server and either reject or create
-                await authenticatedRequest(API_SURVEY_CREATE, "POST", slug).then(response => {
+                await authenticatedRequest(authentication, API_SURVEY_CREATE, "POST", slug).then(response => {
                     let message: string = response.message as string || "Survey Created"
                     let color: string = "var(--color-text)"
 
