@@ -20,6 +20,7 @@ from bson.errors import InvalidId
 from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
+from backend.utils.modules import isGenericError
 from apiauth.utils import extract_user_from_request
 
 @method_decorator(csrf_protect, name="dispatch")
@@ -65,7 +66,7 @@ class DeleteSurvey(APIView):
 
             user = extract_user_from_request(request)
 
-            if isinstance(user, dict) and user["error"]:
+            if isGenericError(user):
                 return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
             
             if (requestHasDetails):
@@ -170,7 +171,7 @@ class SurveyCatalog(APIView):
             if surveyRequiresInvite:
                 user = extract_user_from_request(request)
 
-                if isinstance(user, dict) and user["error"]:
+                if isGenericError(user):
                     return Response(GenericError(user["message"] or "Cannot identify you. Please log in."), status.HTTP_401_UNAUTHORIZED)
                 
                 userDoesNotHaveInvite = not Invite.objects.filter(survey=surveyId, recipient=user.username).exists()
@@ -199,7 +200,7 @@ class SurveyDetail(APIView):
 
             user = extract_user_from_request(request)
 
-            if isinstance(user, dict) and user["error"]:
+            if isGenericError(user):
                 return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
             
             if (requestHasParams):
@@ -262,7 +263,7 @@ class SubmitSurvey(APIView):
             if surveyRequiresInvite:
                 user = extract_user_from_request(request)
 
-                if isinstance(user, dict) and user["error"]:
+                if isGenericError(user):
                     return Response(GenericError(user["message"] or "Cannot identify you. Please log in."), status.HTTP_401_UNAUTHORIZED)
                 
                 userDoesNotHaveInvite = not Invite.objects.filter(survey=surveyId, recipient=user.username).exists()

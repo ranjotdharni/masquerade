@@ -55,6 +55,7 @@ export default function SignUpForm({ setError, setLoader } : SignUpFormProps) {
             }
             else {
                 localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, response[import.meta.env.VITE_ACCESS_TOKEN_NAME])
+                localStorage.setItem(import.meta.env.VITE_REFRESH_TOKEN_NAME, response[import.meta.env.VITE_REFRESH_TOKEN_NAME])
                 navigate(`/${PAGE_HOME}`)
             }
         }

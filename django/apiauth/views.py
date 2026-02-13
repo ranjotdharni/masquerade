@@ -20,7 +20,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token, generate_provider_response, generate_basic_response
+from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token, generate_provider_response, generate_basic_response, extract_refresh_token_from_request
+from backend.utils.modules import isGenericError
 from .models import SocialAccount
 
 # Create your views here.
@@ -38,12 +39,13 @@ class RefreshTokens(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
 
-    def post(self, request):
+    def put(self, request):
         response = None
 
-        refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
-        if not refresh_token:
-            response = Response({ "error": "true", "message": "Refresh token missing." }, status=status.HTTP_401_UNAUTHORIZED)
+        refresh_token = extract_refresh_token_from_request(request)
+
+        if isGenericError(refresh_token):
+            response = Response(refresh_token, status=status.HTTP_401_UNAUTHORIZED)
             return response
         
         try:
@@ -56,17 +58,9 @@ class RefreshTokens(APIView):
             new_refresh_token = RefreshToken.for_user(user)
             refresh = str(new_refresh_token)
 
-            response = Response({ f"{settings.ACCESS_TOKEN_NAME}": new_access_token }, status=status.HTTP_200_OK)
-
-            response.set_cookie(
-                key=settings.REFRESH_COOKIE_NAME,
-                value=str(refresh),
-                httponly=True,
-                secure=True,
-                samesite="None"
-            )
-        except Exception as e:
-            response = Response({ "error": "true", "message": "Refresh token invalid." }, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({ settings.ACCESS_TOKEN_NAME: new_access_token, settings.REFRESH_TOKEN_NAME: str(refresh) }, status=status.HTTP_200_OK)
+        except Exception:
+            response = Response({ "error": "true", "message": "Invalid Tokens Detected." }, status=status.HTTP_401_UNAUTHORIZED)
 
         return response
 
@@ -116,7 +110,7 @@ class BasicSignIn(APIView):
         if user is None:
             return Response({ "error": "true", "message": "Incorrect email or password." }, status=status.HTTP_401_UNAUTHORIZED)
         
-        response = generate_basic_response(request, user)
+        response = generate_basic_response(user)
 
         return response
 
@@ -144,7 +138,7 @@ class BasicSignUp(APIView):
                 uid=str(uuid.uuid4())
             )
 
-            response = generate_basic_response(request, user)
+            response = generate_basic_response(user)
 
             return response
         except IntegrityError as e:

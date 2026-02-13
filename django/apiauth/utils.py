@@ -43,6 +43,20 @@ def extract_user_from_request(request):
 
     return get_user_from_access_token(segments[1])
 
+def extract_refresh_token_from_request(request):
+    error = GenericError(message="Failed to extract refresh token from request.")
+    header = request.META['HTTP_AUTHORIZATION']
+
+    if not header:
+        return error
+    
+    segments = str(header).split()
+
+    if len(segments) != 2:
+        return error
+
+    return segments[1]
+
 def decode_google_jwt(id_token):
     certs_response = requests.get(GOOGLE_CERTS_URL)
     certs = certs_response.json()
@@ -115,37 +129,13 @@ def generate_provider_response(request: HttpRequest, user: User) -> HttpResponse
     except Exception:
         raise
 
-def generate_basic_response(request: HttpRequest, user: User) -> HttpResponseRedirect:
+def generate_basic_response(user: User) -> Response:
     try:
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        csrf_token = get_token(request=request)
-
-        response = Response({ "success": "true", "message": "You are logged in.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
-
-#        response.set_cookie(
-#            key=settings.CSRF_COOKIE_NAME,
-#            value=csrf_token,
-#            httponly=False,
-#            secure=True,
-#            samesite="None"
-#        )
-#        response.set_cookie(
-#            key=settings.REFRESH_COOKIE_NAME,
-#            value=refresh_token,
-#            httponly=True,
-#            secure=True,
-#            samesite="None",
-#        )
-
-        cookies = [
-            f"{settings.CSRF_COOKIE_NAME}={csrf_token}; Path=/; Secure; SameSite=None; Partitioned",
-            f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned",
-        ]
-
-        response.headers["Set-Cookie"] = f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned"
+        response = Response({ settings.ACCESS_TOKEN_NAME: access_token, settings.REFRESH_TOKEN_NAME: refresh_token }, status=status.HTTP_200_OK)
 
         return response
     except Exception as e:

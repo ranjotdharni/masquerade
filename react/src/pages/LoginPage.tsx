@@ -1,4 +1,4 @@
-import { API_CONFIRM_AUTH, AUTH_ID_LIST, DEFAULT_ERROR_MESSAGE, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
+import { AUTH_ID_LIST, DEFAULT_ERROR_MESSAGE, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME } from "../lib/constants"
 import LoginPageImage from "../assets/svg/loginPageImage.svg"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import SignInForm from "../components/LoginPage/SignInForm"
@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 import SignUpForm from "../components/LoginPage/SignUpForm"
 import useNotify from "../lib/hooks/useNotify"
 import Loader from "../components/utility/Loader"
-import { getCookie } from "../lib/utility/internal"
 
 export default function LoginPage() {
     let navigate = useNavigate()
@@ -71,32 +70,12 @@ export default function LoginPage() {
     }, [])
 
     useEffect(() => {
-        // send user immediately to home page if they're already authenticated
+        // send user immediately to home page if they're already authenticated, further auth checking will be enacted by Auth Context
         async function performAuthCheck() {
-            const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
-            const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
-                
-            if (csrfCookie !== null && accessToken !== null) {
-                try {
-                    await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_CONFIRM_AUTH}`, {
-                        method: "POST",
-                        credentials: "include",
-                        headers: {
-                            "Authorization": `Bearer ${accessToken}`,
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": csrfCookie
-                        },
-                    }).then(middle => {
-                        return RESERVED_AUTH_STATUSES.findIndex(item => item.status === middle.status)
-                    }).then(result => {
-                        if (result === -1)
-                            navigate(`/${PAGE_HOME}`)
-                    })
-                }
-                catch (error) {
-                    console.log(error)
-                }
-            }
+            const existingRefreshToken: string | null = localStorage.getItem(import.meta.env.VITE_REFRESH_TOKEN_NAME)
+
+            if (existingRefreshToken)
+                navigate(`/${PAGE_HOME}`)
         }
 
         if (import.meta.env.VITE_CONFIRM_AUTH === "true")
