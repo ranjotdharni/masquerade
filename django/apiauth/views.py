@@ -19,7 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt, decode_github_token_response, extract_user_from_request, get_user_from_access_token, generate_provider_response, generate_basic_response, extract_refresh_token_from_request
+from .utils import decode_google_jwt, decode_github_token_response, extract_user_from_request, get_user_from_access_token, generate_jwt_response, extract_refresh_token_from_request
 from backend.utils.modules import isGenericError
 from .models import SocialAccount
 
@@ -106,7 +106,7 @@ class BasicSignIn(APIView):
         if user is None:
             return Response({ "error": "true", "message": "Incorrect email or password." }, status=status.HTTP_401_UNAUTHORIZED)
         
-        response = generate_basic_response(user)
+        response = generate_jwt_response(user)
 
         return response
 
@@ -133,10 +133,10 @@ class BasicSignUp(APIView):
                 uid=str(uuid.uuid4())
             )
 
-            response = generate_basic_response(user)
+            response = generate_jwt_response(user)
 
             return response
-        except IntegrityError as e:
+        except IntegrityError:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
 
@@ -145,7 +145,7 @@ class BasicSignUp(APIView):
 
             response = Response({ "error": "true", "message": f"Sign in with {provider_name}." }, status=status.HTTP_403_FORBIDDEN)
             return response
-        except Exception as e:
+        except Exception:
             response = Response({ "error": "true", "message": f"500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
             return response
 
@@ -224,7 +224,7 @@ class GoogleTokenExchange(APIView):
                         uid=uid
                     )
 
-                response = generate_provider_response(request, user)
+                response = generate_jwt_response(user)
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
@@ -308,7 +308,7 @@ class GithubTokenExchange(APIView):
                         uid=uid
                     )
 
-                response = generate_provider_response(request, user)
+                response = generate_jwt_response(user)
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
