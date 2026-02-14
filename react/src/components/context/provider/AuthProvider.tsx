@@ -38,7 +38,7 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
     }
 
     async function confirmAuthWithServer(token: string): Promise<boolean> {
-        const authResult = await authenticatedRequest({accessToken: token, refreshTokens: refreshTokens}, API_CONFIRM_AUTH, "POST")
+        const authResult = await authenticatedRequest({accessToken: token, refreshTokens: refreshTokens}, API_CONFIRM_AUTH, "POST", undefined, false)
 
         if (authResult.error)
             return false
@@ -59,7 +59,7 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
 
             const authIsValid = await confirmAuthWithServer(existingAccessToken)
 
-            if (!authIsValid)
+            if (!authIsValid) 
                 clientSignOut()
             else
                 setInitialAuthCheckComplete(true)
@@ -91,7 +91,6 @@ export const AuthProvider: React.FunctionComponent<AuthContextValue & { children
             return
         }
 
-        console.log("happened")
         performAuthCheck()
     }, [])
 
