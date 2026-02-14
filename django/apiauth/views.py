@@ -1,7 +1,6 @@
+import json
 import requests
 import uuid
-
-from urllib.parse import quote
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
@@ -146,46 +145,30 @@ class BasicSignUp(APIView):
             response = Response({ "error": "true", "message": f"Sign in with {provider_name}." }, status=status.HTTP_403_FORBIDDEN)
             return response
         except Exception:
-            response = Response({ "error": "true", "message": f"500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
+            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
             return response
-
-class GoogleSignIn(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        server_callback_uri = quote(f"{settings.BACKEND_URL}/api/auth/google/login/callback/", safe="")
-
-        google_oauth_url = (
-            f"https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount"
-            f"?client_id={settings.GOOGLE_CLIENT_ID}"
-            f"&redirect_uri={server_callback_uri}"
-            f"&scope=email"
-            f"&response_type=code"
-            f"&service=lso"
-            f"&o2v=2"
-            f"&flowName=GeneralOAuthFlow"
-        )
-
-        return redirect(google_oauth_url)
 
 class GoogleTokenExchange(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
-        response = None 
+    def post(self, request):
+        response = Response({ "error": True, "message": "500 Internal Server Error" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         social_account = None
         user = None
-        redirect_url = ""
 
         try:
-            code = request.GET.get("code")
+            raw = request.body
+            data = json.loads(raw)
+
+            if "code" not in data or "scope" not in data:
+                return Response({ "error": True, "message": f"Request missing 'code' and/or 'scope' field(s)." }, status=status.HTTP_400_BAD_REQUEST)
 
             google_token_url = "https://oauth2.googleapis.com/token"
             data = {
-                "code": code,
+                "code": data["code"],
                 "client_id": settings.GOOGLE_CLIENT_ID,
                 "client_secret": settings.GOOGLE_CLIENT_SECRET,
-                "redirect_uri": f"{settings.BACKEND_URL}/api/auth/google/login/callback/",  # must match what you registered with Google
+                "redirect_uri": f"{settings.FRONTEND_URL}/login",  # must match what you registered with Google
                 "grant_type": "authorization_code",
             }
 
@@ -195,18 +178,13 @@ class GoogleTokenExchange(APIView):
             id_token = token_json.get("id_token")
 
             decryption_result = decode_google_jwt(id_token=id_token)
-
-            if ("error" in decryption_result):
-                print(decryption_result.message)
-                redirect_url = (
-                    f"{settings.FRONTEND_URL}/login?"
-                    f"error=500_INTERNAL_SERVER_ERROR"
-                )
+            
+            if (isGenericError(decryption_result)):
+                response = Response(decryption_result, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 # log user in here
                 email = decryption_result["email"]
                 uid = decryption_result["sub"]
-
                 try:
                     social_account = SocialAccount.objects.get(provider=settings.GOOGLE_AUTH_ID, uid=uid)
                     user = social_account.user
@@ -228,40 +206,14 @@ class GoogleTokenExchange(APIView):
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
-
             provider = social_account.provider
 
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error={settings.DUPLICATE_USER_CODE}"
-                f"&provider={provider}"
-            )
-            response = redirect(redirect_url)
+            response = Response({ "error": True, "message": f"Login with {settings.AUTH_ID_LIST[provider]}" }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error=500_INTERNAL_SERVER_ERROR"
-            )
-            response = redirect(redirect_url)
 
         return response
 
-class GithubSignIn(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        server_callback_uri = quote(f"{settings.BACKEND_URL}/api/auth/github/login/callback/", safe="")
-
-        github_oauth_url = (
-            f"https://github.com/login/oauth/authorize"
-            f"?client_id={settings.GITHUB_CLIENT_ID}"
-            f"&amp;redirect_uri={server_callback_uri}"
-            f"&amp;scope=user"
-        )
-
-        return redirect(github_oauth_url)
- 
 class GithubTokenExchange(APIView):
     permission_classes = [AllowAny]
 

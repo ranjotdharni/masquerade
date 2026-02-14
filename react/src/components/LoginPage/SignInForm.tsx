@@ -1,6 +1,18 @@
-import { useState, type MouseEvent } from "react"
-import { API_BASIC_SIGNIN, API_GITHUB_LOGIN, API_GOOGLE_LOGIN, PAGE_HOME } from "../../lib/constants"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState, type MouseEvent } from "react"
+import { API_BASIC_SIGNIN, API_GITHUB_LOGIN, API_GOOGLE_LOGIN, AUTH_ID_LIST, GITHUB_AUTH_ID, GOOGLE_AUTH_ID, PAGE_HOME } from "../../lib/constants"
+import { useLocation, useNavigate } from "react-router-dom"
+
+const STATE_KEY_NAME: string = "state"
+const PROVIDER_KEY_NAME: string = "provider"
+
+const GOOGLE_CODE_NAME: string = "code"
+const GOOGLE_SCOPE_NAME: string = "scope"
+const GOOGLE_ERROR_NAME: string = "error"
+
+type GoogleCredentials = {
+    [GOOGLE_CODE_NAME]: string
+    [GOOGLE_SCOPE_NAME]: string
+}
 
 type SignInFormProps = {
     setError: (error: string) => void
@@ -9,9 +21,15 @@ type SignInFormProps = {
 
 export default function SignInForm({ setError, setLoader } : SignInFormProps) {
     let navigate = useNavigate()
+    let location = useLocation()
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+
+    function clearStaleCredentials() {
+        sessionStorage.removeItem(STATE_KEY_NAME)
+        sessionStorage.removeItem(PROVIDER_KEY_NAME)
+    }
 
     async function basicSignIn(event: MouseEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -36,6 +54,8 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
             return result
         })
 
+        clearStaleCredentials()
+
         if (response.error) {
             setError(response.message)
         }
@@ -50,9 +70,91 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
 
     async function signInWithGoogle(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
+        setLoader(true)
+
+        const state = crypto.randomUUID()
+
+        sessionStorage.setItem(STATE_KEY_NAME, state)
+        sessionStorage.setItem(PROVIDER_KEY_NAME, AUTH_ID_LIST[GOOGLE_AUTH_ID])
+
+        const params = new URLSearchParams({
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+            redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
+            response_type: "code",
+            scope: "openid email profile",
+        })
+
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`
+
+        setLoader(false)
+    }
+
+    function initGoogleTokenExchange(): GoogleCredentials | false {
+        const stateExists = sessionStorage.getItem(STATE_KEY_NAME) !== null
+
+        const rawParamString = location.search
+
+        if (!rawParamString)
+            return false
 
         setLoader(true)
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`
+
+        const params = new URLSearchParams(rawParamString.substring(1))
+
+        if (params.get(GOOGLE_ERROR_NAME)) {
+            setLoader(false)
+            setError("Access denied by Google")
+            return false
+        }
+
+        const code = params.get(GOOGLE_CODE_NAME)
+        const scope = params.get(GOOGLE_SCOPE_NAME)
+
+        const readyForTokenExchange = (
+            stateExists && 
+            code !== null && 
+            scope !== null 
+        )
+
+        if (readyForTokenExchange) {
+            setLoader(false)
+            return {
+                [GOOGLE_CODE_NAME]: code,
+                [GOOGLE_SCOPE_NAME]: scope,
+            }
+        }
+
+        setLoader(false)
+        return false
+    }
+
+    async function exchangeGoogleTokenWithServer(credentials: GoogleCredentials) {
+        setLoader(true)
+
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GOOGLE_LOGIN}`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials)
+        }).then(middle => {
+            return middle.json()
+        }).then(result => {
+            return result
+        })
+
+        clearStaleCredentials()
+
+        if (response.error) {
+            setError(response.message)
+        }
+        else {
+            localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, response[import.meta.env.VITE_ACCESS_TOKEN_NAME])
+            localStorage.setItem(import.meta.env.VITE_REFRESH_TOKEN_NAME, response[import.meta.env.VITE_REFRESH_TOKEN_NAME])
+            navigate(`/${PAGE_HOME}`)
+        }
+
         setLoader(false)
     }
 
@@ -63,6 +165,28 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
         window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`
         setLoader(false)
     }
+
+    useEffect(() => {
+        async function signInIfReady() {
+            const provider = sessionStorage.getItem(PROVIDER_KEY_NAME)
+
+            if (!provider)
+                return
+
+            if (provider === AUTH_ID_LIST[GOOGLE_AUTH_ID]) {
+                const credentials = initGoogleTokenExchange()
+
+                if (credentials)
+                    await exchangeGoogleTokenWithServer(credentials)
+            }
+
+            if (provider === AUTH_ID_LIST[GITHUB_AUTH_ID]) {
+                // check and attempt github sign in
+            }
+        }
+
+        signInIfReady()
+    }, [])
 
     return (
         <div className="mt-12 flex flex-col items-center">

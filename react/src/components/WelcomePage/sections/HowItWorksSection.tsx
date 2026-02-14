@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { APP_NAME, IMG_LANDING_EASY_TO_USE, IMG_LANDING_MEANINGFUL_DATA, IMG_LANDING_SIGN_UP, PAGE_LOGIN } from "../../../lib/constants"
 
 type WorkingDetailsType = {
@@ -66,7 +67,7 @@ export function HowItWorksSection() {
                 }
             </ul>
 
-            <a href={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary rounded-[100px] text-background font-roboto-bold text-[1.3rem] px-10 py-3 transition-transform hover:cursor-pointer hover:scale-105">Start For Free Now</a>
+            <Link to={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary rounded-[100px] text-background font-roboto-bold text-[1.3rem] px-10 py-3 transition-transform hover:cursor-pointer hover:scale-105">Start For Free Now</Link>
         </section>
     )
 }

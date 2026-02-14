@@ -17,14 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from apiauth.views import GoogleTokenExchange, GithubTokenExchange
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('api/auth/google/login/callback/', GoogleTokenExchange.as_view(), name="google_token_exchange"),
-    path('api/auth/github/login/callback/', GithubTokenExchange.as_view(), name="github_token_exchange"),
     path('api/auth/', include('allauth.urls')),
     path('api/auth/', include('apiauth.urls')),
     path('api/survey/', include('survey.urls')),
