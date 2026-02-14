@@ -4,7 +4,7 @@ import { type ModeId, type ModeMetadata } from "../PageCoordinator"
 import { API_SURVEY_DELETE, APP_NAME, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_STATISTICS, PAGE_SURVEY_VIEW } from "../../../lib/constants"
 import { UIContext } from "../../context/UIContext"
 import { authenticatedRequest } from "../../../lib/utility/internal"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext"
 
 type ViewSurveyControlsProps = {
@@ -93,7 +93,7 @@ export default function ViewSurveyControls({ surveyId, mode, setMode, modeMetada
                 }
             </div>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
-                <a href={`/${PAGE_SURVEY_STATISTICS}/${surveyId}`} className="appButton w-26 px-0! py-0! flex justify-center">Statistics</a>
+                <Link to={`/${PAGE_SURVEY_STATISTICS}/${surveyId}`} className="appButton w-26 px-0! py-0! flex justify-center">Statistics</Link>
                 <button onClick={onDelete} className="w-26 py-0 bg-error text-accent rounded hover:text-background hover:cursor-pointer">Delete</button>
             </div>
         </section>

@@ -49,10 +49,10 @@ function SurveyContainer({ content } : { content: Survey }) {
 
     function updateRemaining() {
         // always check required
-        // single answer, check if slug is defined
-        // multiple answer, check if slug exists and if it is not empty
-        // ranking answer, check that slug is not 0
-        // rating answer is always fine
+        // check if slug is defined for all except ranking
+        // check for the specific completion condition for each type
+        // after collecting all items that don't meet above conditions into respective arrays,
+        // sum of all those arrays' lengths is the number of remaining, required, unanswered questions
 
         let remnants1 = content.questions.filter(q => !q.optional && (q.type !== QUESTION_TYPE_ID_MAP.RANKING_TYPE))
         let remnants2 = JSON.parse(JSON.stringify(remnants1)) as Question[]

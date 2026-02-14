@@ -1,4 +1,4 @@
-import { useNavigate, useRouteError } from "react-router-dom"
+import { Link, useNavigate, useRouteError } from "react-router-dom"
 import AppContent from "../layout/AppContent"
 import AppFooter from "../layout/AppFooter"
 import BaseHeader from "../layout/BaseHeader"
@@ -21,7 +21,7 @@ function ErrorContent({ error } : { error: any }) {
             </p>
             
             <div className="flex flex-row space-x-4">
-                <a href={`/${PAGE_HOME}`} className="appButton font-lato">Home</a>
+                <Link to={`/${PAGE_HOME}`} className="appButton font-lato">Home</Link>
                 <button onClick={() => {navigate(-1)}} className="appButton font-lato">Go Back</button>
             </div>
         </article>

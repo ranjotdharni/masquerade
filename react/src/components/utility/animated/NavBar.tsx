@@ -7,6 +7,7 @@ import "../../../css/animated.css"
 import { toggleTheme } from "../../../lib/utility/client"
 import { AuthContext } from "../../context/AuthContext"
 import { UIContext } from "../../context/UIContext"
+import { Link } from "react-router-dom"
 
 type NavCSSType = {
     spaceX: string
@@ -134,10 +135,10 @@ function LinkItem({ text, href, open, Icon, close, hoverContent, external } : { 
 
     return (
         <div className="w-full">
-            <a onClick={() => { close() }} href={href} data-tooltip={open ? "" : hoverContent} className={tailwind} target={external ? "_blank" : "_self"}>
+            <Link onClick={() => { close() }} to={href} data-tooltip={open ? "" : hoverContent} className={tailwind} target={external ? "_blank" : "_self"}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
-            </a>
+            </Link>
         </div>
     )
 }
@@ -152,7 +153,7 @@ function ActionItem({ text, action, open, Icon, hoverContent } : { text: string,
         <div className="w-full">
             <button onClick={e => { e.preventDefault(); action() }} data-tooltip={open ? "" : hoverContent} className={tailwind}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
-                <p className={`${open ? '' : 'hidden'}`}>{text}</p>
+                <span className={`${open ? '' : 'hidden'}`}>{text}</span>
             </button>
         </div>
     )

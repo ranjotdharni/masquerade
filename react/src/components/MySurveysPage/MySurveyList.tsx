@@ -2,6 +2,7 @@ import { LockOpen, Lock, ChevronRight, Plus } from "lucide-react"
 import type { SurveyMetadata } from "../../lib/types/api"
 import { PAGE_SURVEY_CREATE, PAGE_SURVEY_TAKE, PAGE_SURVEY_VIEW } from "../../lib/constants"
 import { NAV_CSS } from "../utility/animated/NavBar"
+import { Link } from "react-router-dom"
 
 function SurveyWidget({ survey } : { survey: SurveyMetadata }) {
 
@@ -20,11 +21,11 @@ function SurveyWidget({ survey } : { survey: SurveyMetadata }) {
                 }
                 
                 <div className="flex flex-row">
-                    <a href={`/${PAGE_SURVEY_VIEW}/${survey._id.$oid}`} className="flex flex-row items-center text-inactive scale-75 hover:cursor-pointer hover:text-text dark:hover:text-secondary">
+                    <Link to={`/${PAGE_SURVEY_VIEW}/${survey._id.$oid}`} className="flex flex-row items-center text-inactive scale-75 hover:cursor-pointer hover:text-text dark:hover:text-secondary">
                         <p className="font-jbm-italic">View</p>
                         <ChevronRight />
-                    </a>
-                    <a href={`/${PAGE_SURVEY_TAKE}/${survey._id.$oid}`} className="font-lato appButton dark:bg-inactive! dark:text-primary! dark:hover:text-secondary!">Participate</a>
+                    </Link>
+                    <Link to={`/${PAGE_SURVEY_TAKE}/${survey._id.$oid}`} className="font-lato appButton dark:bg-inactive! dark:text-primary! dark:hover:text-secondary!">Participate</Link>
                 </div>
             </div>
         </li>
@@ -38,7 +39,9 @@ export default function MySurveyList({ surveys } : { surveys: SurveyMetadata[] }
         <ul style={baseStyle} className={`h-full border-t border-text overflow-y-scroll overflow-x-hidden px-4 pb-4 ${NAV_CSS.md_pl}`}>
             {
                 surveys.length === 0 ?
-                <a href={`/${PAGE_SURVEY_CREATE}`} className="appButton font-jbm flex flex-row"><Plus className="mr-2" /> Create</a> : 
+                <li>
+                    <Link to={`/${PAGE_SURVEY_CREATE}`} className="appButton font-jbm flex flex-row"><Plus className="mr-2" /> Create</Link>
+                </li> : 
                 surveys.map(s => {
                     return <SurveyWidget key={s._id.$oid} survey={s} />
                 })

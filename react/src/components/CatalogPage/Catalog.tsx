@@ -1,6 +1,7 @@
 import { ChevronRight, Lock, LockOpen } from "lucide-react"
 import { PAGE_SURVEY_PREVIEW, PAGE_SURVEY_TAKE } from "../../lib/constants"
 import type { SurveyMetadata } from "../../lib/types/api"
+import { Link } from "react-router-dom"
 
 type CatalogContent = {
     catalogContent: SurveyMetadata[]
@@ -23,10 +24,10 @@ function CatalogCard({ cardContent } : CardContent) {
                 </h3>
 
                 <div className="px-3 text-sm flex flex-1 flex-row justify-end items-end font-lato">
-                    <a href={`/${PAGE_SURVEY_PREVIEW}/${cardContent["_id"]["$oid"]}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text dark:hover:text-secondary">
+                    <Link to={`/${PAGE_SURVEY_PREVIEW}/${cardContent["_id"]["$oid"]}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text dark:hover:text-secondary">
                         <p className="font-jbm-italic">View</p>
                         <ChevronRight />
-                    </a>
+                    </Link>
                 </div>
 
                 <div className="p-4 flex flex-row justify-between items-center">
@@ -35,7 +36,7 @@ function CatalogCard({ cardContent } : CardContent) {
                         <Lock className="text-error" strokeWidth={2.5} /> :
                         <LockOpen className="text-inactive" opacity={0.25} strokeWidth={2.5} />
                     }
-                    <a href={`/${PAGE_SURVEY_TAKE}/${cardContent["_id"]["$oid"]}`} className="font-lato appButton dark:bg-text! dark:text-primary! dark:hover:text-secondary!">Participate</a>
+                    <Link to={`/${PAGE_SURVEY_TAKE}/${cardContent["_id"]["$oid"]}`} className="font-lato appButton dark:bg-text! dark:text-primary! dark:hover:text-secondary!">Participate</Link>
                 </div>
             </div>
         </li>

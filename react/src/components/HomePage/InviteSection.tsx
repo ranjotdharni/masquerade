@@ -6,6 +6,7 @@ import Loader from "../utility/Loader"
 import { authenticatedRequest } from "../../lib/utility/internal"
 import { UIContext } from "../context/UIContext"
 import { AuthContext } from "../context/AuthContext"
+import { Link } from "react-router-dom"
 
 type InviteResult = {
     survey: string
@@ -52,10 +53,10 @@ function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, n
                 </span>
 
                 <span className="px-3 text-xs flex flex-1 flex-row justify-end items-end font-lato">
-                    <a href={`/${PAGE_SURVEY_PREVIEW}/${metadata._id.$oid}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text dark:hover:text-secondary">
+                    <Link to={`/${PAGE_SURVEY_PREVIEW}/${metadata._id.$oid}`} className="flex flex-row items-center text-inactive hover:cursor-pointer hover:text-text dark:hover:text-secondary">
                         <p className="font-jbm-italic">View</p>
                         <ChevronRight />
-                    </a>
+                    </Link>
                 </span>
 
                 <div className="p-4 flex flex-row justify-between items-center">
@@ -63,7 +64,7 @@ function InviteCard({ metadata, notify, remove } : { metadata: SurveyMetadata, n
                         <Trash2 className="scale-75" />
                         <p>Decline</p>
                     </button>
-                    <a href={`/${PAGE_SURVEY_TAKE}/${metadata._id.$oid}`} className="font-lato appButton">Participate</a>
+                    <Link to={`/${PAGE_SURVEY_TAKE}/${metadata._id.$oid}`} className="font-lato appButton">Participate</Link>
                 </div>
             </div>
         </li>
