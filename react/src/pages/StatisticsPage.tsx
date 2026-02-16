@@ -7,9 +7,11 @@ import { useNavigate, useParams } from "react-router-dom"
 import { UIContext } from "../components/context/UIContext"
 import { API_SURVEY_DETAIL, DEFAULT_ERROR_MESSAGE, PAGE_SURVEY_VIEW } from "../lib/constants"
 import { authenticatedRequest } from "../lib/utility/internal"
+import { AuthContext } from "../components/context/AuthContext"
 
 export default function StatisticsPage() {
     const navigate = useNavigate()
+    const authentication = useContext(AuthContext)
     const { notify } = useContext(UIContext)
     const { id } = useParams()
 
@@ -20,7 +22,7 @@ export default function StatisticsPage() {
 
     useEffect(() => {
         async function getSurvey() {
-            await authenticatedRequest(`${API_SURVEY_DETAIL}?id=${id}`, "GET").then(result => {
+            await authenticatedRequest(authentication, `${API_SURVEY_DETAIL}?id=${id}`, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
                 let validResult = (result as any)?.content as (Survey[] | undefined)
 

@@ -7,9 +7,11 @@ import { useContext, useEffect, useState } from "react"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import PageCoordinator from "../components/ViewSurveyPage/PageCoordinator"
+import { AuthContext } from "../components/context/AuthContext"
 
 export default function ViewSurveyPage() {
     const navigate = useNavigate()
+    const authentication = useContext(AuthContext)
     const { notify } = useContext(UIContext)
     const { id } = useParams()
 
@@ -20,7 +22,7 @@ export default function ViewSurveyPage() {
 
     useEffect(() => {
         async function getSurvey() {
-            await authenticatedRequest(`${API_SURVEY_DETAIL}?id=${id}`, "GET").then(result => {
+            await authenticatedRequest(authentication, `${API_SURVEY_DETAIL}?id=${id}`, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
                 let validResult = (result as any)?.content as (Survey[] | undefined)
 

@@ -1,11 +1,13 @@
+import { Link } from "react-router-dom"
 import { APP_NAME, EXTERNAL_GITHUB_ISSUES, EXTERNAL_GITHUB_PULL_REQUEST, EXTERNAL_GITHUB_SOURCE, ICON_LOGO_STICKER, PAGE_ABOUT, PAGE_LOGIN, PAGE_USAGE } from "../../lib/constants"
 
 type LinkSectionType = {
     title: string
+    external: boolean
     links: { text: string, href: string }[]
 }
 
-function LinkSection({ title, links } : LinkSectionType) {
+function LinkSection({ title, external, links } : LinkSectionType) {
 
     return (
         <div className="flex flex-col items-start space-y-4">
@@ -15,7 +17,11 @@ function LinkSection({ title, links } : LinkSectionType) {
                     links.map((link, index) => {
                         return (
                             <li key={`WELCOME_PAGE_END_LINK_2x${index}`}>
-                                <a href={link.href} className="w-full h-full text-background font-jbm hover:underline">{link.text}</a>
+                                {
+                                    external ? 
+                                    <a href={link.href} target="_blank" className="w-full h-full text-background font-jbm hover:underline">{link.text}</a> : 
+                                    <Link to={link.href} className="w-full h-full text-background font-jbm hover:underline">{link.text}</Link>
+                                }
                             </li>
                         )
                     })
@@ -29,6 +35,7 @@ export default function BaseFooter() {
     const linkSections: LinkSectionType[] = [
         {
             title: "Product",
+            external: false,
             links: [
                 {
                     text: "Get Started",
@@ -46,6 +53,7 @@ export default function BaseFooter() {
         },
         {
             title: "External",
+            external: true,
             links: [
                 {
                     text: "Source",
@@ -91,12 +99,12 @@ export default function BaseFooter() {
                             <img src={ICON_LOGO_STICKER} className="h-10 aspect-square" />
                             <p className="text-xl text-background font-jbm-bold">{APP_NAME}</p>
                         </h4>
-                        <a href={`/${PAGE_LOGIN}`} className="min-w-full font-roboto text-background flex flex-row justify-center py-2 border border-background rounded-[100px]">Get Started</a>
+                        <Link to={`/${PAGE_LOGIN}`} className="min-w-full font-roboto text-background flex flex-row justify-center py-2 border border-background rounded-[100px]">Get Started</Link>
                     </header>
                     <ul className="w-full md:w-auto flex flex-row justify-between md:justify-center items-center mt-6 md:mt-0 md:space-x-16">
                         {
                             linkSections.map((linkSection, index) => {
-                                return <LinkSection key={`WELCOME_PAGE_END_LINK_1x${index}`} title={linkSection.title} links={linkSection.links} />
+                                return <LinkSection key={`WELCOME_PAGE_END_LINK_1x${index}`} title={linkSection.title} external={linkSection.external} links={linkSection.links} />
                             })
                         }
                     </ul>

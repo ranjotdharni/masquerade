@@ -3,6 +3,7 @@ import AppContent from "../components/layout/AppContent"
 import { useContext, useEffect, useState } from "react"
 import { UIContext } from "../components/context/UIContext"
 import { PAGE_HOME } from "../lib/constants"
+import { Link } from "react-router-dom"
 
 export default function SubmittedPage() {
     const { notify } = useContext(UIContext)
@@ -33,7 +34,7 @@ export default function SubmittedPage() {
             <span className="popIn" style={{animationDuration: "0.5s"}}>
                 <CheckCircle2 className="scale-[5] text-text" />
             </span>
-            <a href={`/${PAGE_HOME}`} className="appButton">Home</a>
+            <Link to={`/${PAGE_HOME}`} className="appButton">Home</Link>
         </AppContent>
     )
 }

@@ -2,9 +2,12 @@ import { ChevronLeft, CircleQuestionMark, HomeIcon, ListChecks, LogOut, MessageC
 import { API_LOGOUT, EXTERNAL_GITHUB_ISSUES, ICON_LOGO, PAGE_ABOUT, PAGE_HOME, PAGE_SURVEY_CREATE, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW, PAGE_USAGE } from "../../../lib/constants"
 import { authenticatedRequest, clientSignOut } from "../../../lib/utility/internal"
 import type { GenericError } from "../../../lib/types/internal"
-import { useState, type MouseEvent } from "react"
+import { useContext, useState, type MouseEvent } from "react"
 import "../../../css/animated.css"
 import { toggleTheme } from "../../../lib/utility/client"
+import { AuthContext } from "../../context/AuthContext"
+import { UIContext } from "../../context/UIContext"
+import { Link } from "react-router-dom"
 
 type NavCSSType = {
     spaceX: string
@@ -132,10 +135,10 @@ function LinkItem({ text, href, open, Icon, close, hoverContent, external } : { 
 
     return (
         <div className="w-full">
-            <a onClick={() => { close() }} href={href} data-tooltip={open ? "" : hoverContent} className={tailwind} target={external ? "_blank" : "_self"}>
+            <Link onClick={() => { close() }} to={href} data-tooltip={open ? "" : hoverContent} className={tailwind} target={external ? "_blank" : "_self"}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
                 <p className={`${open ? '' : 'hidden'}`}>{text}</p>
-            </a>
+            </Link>
         </div>
     )
 }
@@ -150,13 +153,15 @@ function ActionItem({ text, action, open, Icon, hoverContent } : { text: string,
         <div className="w-full">
             <button onClick={e => { e.preventDefault(); action() }} data-tooltip={open ? "" : hoverContent} className={tailwind}>
                 <Icon className={`${open ? 'h-4 md:h-full' : 'w-full'} aspect-square`} />
-                <p className={`${open ? '' : 'hidden'}`}>{text}</p>
+                <span className={`${open ? '' : 'hidden'}`}>{text}</span>
             </button>
         </div>
     )
 }
 
 export default function NavBar() {
+    const authentication = useContext(AuthContext)
+    const { confirm } = useContext(UIContext)
     const [barState, setBarState] = useState<NavbarStateType>(CLOSED_STATE)
 
     function fullOpen(event: MouseEvent<HTMLButtonElement>) {
@@ -174,16 +179,24 @@ export default function NavBar() {
         setBarState(CLOSED_STATE)
     }
 
-    async function signOut() {
-    
-        const response = await authenticatedRequest(API_LOGOUT, "DELETE")
-    
-        if (response.error) {
-            console.log((response as GenericError).message ? (response as GenericError).message : "500 Internal Server Error")
-            return
+    function onSignOut() {
+        async function signOut() {
+        
+            const response = await authenticatedRequest(authentication, API_LOGOUT, "DELETE")
+        
+            if (response.error) {
+                console.log((response as GenericError).message ? (response as GenericError).message : "500 Internal Server Error")
+                return
+            }
+        
+            clientSignOut()
         }
-    
-        clientSignOut()
+
+        confirm({
+            message: "You won't be able to access this account unless you sign back in. Would you still like to continue?",
+            callback: signOut,
+            loaderText: "Signing you out..."
+        })
     }
 
     return (
@@ -217,7 +230,7 @@ export default function NavBar() {
                 </section>
 
                 <footer className="w-full h-[15%] flex flex-col justify-evenly overflow-hidden">
-                    <ActionItem open={barState === OPEN_STATE}  hoverContent='Sign Out' text="Sign Out" Icon={LogOut} action={async () => { await signOut() }} />
+                    <ActionItem open={barState === OPEN_STATE}  hoverContent='Sign Out' text="Sign Out" Icon={LogOut} action={onSignOut} />
                     <ActionItem open={barState === OPEN_STATE}  hoverContent='Close' text="Close" Icon={Minimize} action={fullClose} />
                 </footer>
             </nav>

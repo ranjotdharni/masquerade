@@ -1,4 +1,5 @@
 import requests
+import json
 import jwt
 
 from backend.helpers import GenericError
@@ -43,6 +44,20 @@ def extract_user_from_request(request):
 
     return get_user_from_access_token(segments[1])
 
+def extract_refresh_token_from_request(request):
+    error = GenericError(message="Failed to extract refresh token from request.")
+    header = request.META['HTTP_AUTHORIZATION']
+
+    if not header:
+        return error
+    
+    segments = str(header).split()
+
+    if len(segments) != 2:
+        return error
+
+    return segments[1]
+
 def decode_google_jwt(id_token):
     certs_response = requests.get(GOOGLE_CERTS_URL)
     certs = certs_response.json()
@@ -61,16 +76,18 @@ def decode_google_jwt(id_token):
         except jwt.exceptions.InvalidTokenError:
             continue
     
-    return GenericError(message="Google-issued tokens are invalid.").to_dict()
+    return GenericError(message="Could not decode Google credentials.").to_dict()
 
 def decode_github_token_response(response):
-    try:
-        token_content = response._content.decode("utf-8")
-        
-        items = token_content.split("&")
-        github_access_token_array = items[0].split("=")
+    default_error = GenericError(message="Could not decode GitHub credentials.")
 
-        github_access_token = github_access_token_array[1]
+    try:
+        token_content = response.json()
+        
+        if "access_token" not in token_content:
+            return default_error
+        
+        github_access_token = token_content["access_token"]
         
         headers = { "Authorization": f"Bearer {github_access_token}" }
         response = requests.get("https://api.github.com/user", headers=headers)
@@ -79,73 +96,15 @@ def decode_github_token_response(response):
         return payload
     except Exception as e:
         print(e)
-        return GenericError(message="Could not decode token.").to_dict()
-    
-def generate_provider_response(request: HttpRequest, user: User) -> HttpResponseRedirect:
+        return default_error
+
+def generate_jwt_response(user: User) -> Response:
     try:
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        csrf_token = get_token(request=request)
-
-        redirect_url = (
-            f"{settings.FRONTEND_URL}/login#"
-            f"{settings.ACCESS_TOKEN_NAME}={access_token}"
-        )
-
-        response = redirect(redirect_url)
-
-        response.set_cookie(
-            key=settings.CSRF_COOKIE_NAME,
-            value=csrf_token,
-            httponly=False,
-            secure=True,
-            samesite="None"
-        )
-        response.set_cookie(
-            key=settings.REFRESH_COOKIE_NAME,
-            value=refresh_token,
-            httponly=True,
-            secure=True,
-            samesite="None"
-        )
-
-        return response
-    except Exception:
-        raise
-
-def generate_basic_response(request: HttpRequest, user: User) -> HttpResponseRedirect:
-    try:
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        refresh_token = str(refresh)
-
-        csrf_token = get_token(request=request)
-
-        response = Response({ "success": "true", "message": "You are logged in.", f"{settings.ACCESS_TOKEN_NAME}": f"{access_token}" }, status=status.HTTP_200_OK)
-
-#        response.set_cookie(
-#            key=settings.CSRF_COOKIE_NAME,
-#            value=csrf_token,
-#            httponly=False,
-#            secure=True,
-#            samesite="None"
-#        )
-#        response.set_cookie(
-#            key=settings.REFRESH_COOKIE_NAME,
-#            value=refresh_token,
-#            httponly=True,
-#            secure=True,
-#            samesite="None",
-#        )
-
-        cookies = [
-            f"{settings.CSRF_COOKIE_NAME}={csrf_token}; Path=/; Secure; SameSite=None; Partitioned",
-            f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned",
-        ]
-
-        response.headers["Set-Cookie"] = f"{settings.REFRESH_COOKIE_NAME}={refresh_token}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned"
+        response = Response({ settings.ACCESS_TOKEN_NAME: access_token, settings.REFRESH_TOKEN_NAME: refresh_token }, status=status.HTTP_200_OK)
 
         return response
     except Exception as e:

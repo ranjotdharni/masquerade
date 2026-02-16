@@ -1,5 +1,6 @@
 import { ChevronRight, CircleQuestionMark, ListChecks, NotebookText, TextSearch, type LucideIcon } from "lucide-react"
 import { PAGE_ABOUT, PAGE_SURVEY_FIND, PAGE_SURVEY_VIEW, PAGE_USAGE } from "../../lib/constants"
+import { Link } from "react-router-dom"
 
 export default function QuickLinkSection() {
     const quickLinks = [
@@ -29,13 +30,13 @@ export default function QuickLinkSection() {
 
         return (
             <li className="group w-full h-30 border border-text bg-primary text-text hover:text-background dark:hover:text-secondary rounded-lg">
-                <a href={href} className="w-full h-full flex flex-row items-center justify-between px-8">
-                    <span className="flex flex-row items-center space-x-6">
+                <Link to={href} className="w-full h-full flex flex-row items-center justify-between px-8">
+                    <div className="flex flex-row items-center space-x-6">
                         <Icon className="h-10 w-10 border-2 p-1 border-text group-hover:border-background dark:group-hover:border-secondary rounded" />
                         <p className="font-jbm text-[1.25rem] underline">{name}</p>
-                    </span>
+                    </div>
                     <ChevronRight />
-                </a>
+                </Link>
             </li>
         )
     }

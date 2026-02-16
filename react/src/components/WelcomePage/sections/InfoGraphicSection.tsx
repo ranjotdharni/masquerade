@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { APP_NAME, IMG_LANDING_DATA_VISUALIZATION, IMG_LANDING_TARGET_AUDIENCE, IMG_LANDING_USER_PRIVACY, PAGE_LOGIN, PAGE_USAGE } from "../../../lib/constants"
 
 type InfoGraphicType = { 
@@ -16,7 +17,7 @@ function InfoGraphic({ src, title, text, buttonText, reverse } : InfoGraphicType
             <div className="flex flex-col justify-evenly items-center md:items-start text-left max-w-130 py-2 space-y-6 md:space-y-0">
                 <h4 className="text-text text-center md:text-left font-roboto-bold text-[1.75rem] md:text-[2.2rem]/10 px-3 md:px-0">{title}</h4>
                 <p className="text-center md:text-left font-jbm text-secondary text-[1.1rem] px-3 md:px-0">{text}</p>
-                <a href={`/${PAGE_LOGIN}`} className="font-roboto-bold text-background px-9 py-3 text-[1.4rem] bg-gradient-to-r from-primary to-text rounded-[100px] hover:cursor-pointer transition-transform hover:cursor-pointer hover:scale-105">{buttonText}</a>
+                <Link to={`/${PAGE_LOGIN}`} className="font-roboto-bold text-background px-9 py-3 text-[1.4rem] bg-gradient-to-r from-primary to-text rounded-[100px] hover:cursor-pointer transition-transform hover:cursor-pointer hover:scale-105">{buttonText}</Link>
             </div>
         </li>
     )
@@ -51,7 +52,7 @@ export default function InfoGraphicSection() {
         <section className="w-full mt-16">
             <header className="w-full flex flex-col items-center justify-center">
                 <h3 className="text-[2rem] font-roboto-bold text-primary text-center">Keep Up With Your Audience Through {APP_NAME}</h3>
-                <a href={`${PAGE_USAGE}`} className="mt-4 text-[1.3rem] font-roboto-bold text-text underline hover:cursor-pointer">How it works</a>
+                <Link to={`${PAGE_USAGE}`} className="mt-4 text-[1.3rem] font-roboto-bold text-text underline hover:cursor-pointer">How it works</Link>
             </header>
 
             <ul className="w-full flex flex-col items-center space-y-12 md:space-y-40 pt-16 md:pt-18">

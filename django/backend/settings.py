@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
+from csp.constants import SELF
 
 import certifi
 from pymongo.mongo_client import MongoClient
@@ -34,7 +35,6 @@ PRODUCTION_ENVIRONMENT_NAME = os.getenv("PRODUCTION_ENVIRONMENT_NAME")
 
 BACKEND_URL = os.getenv("BACKEND_URL")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
-# FRONT_END_URL_REGEX = os.getenv("FRONT_END_URL_REGEX")
 HOST_DOMAIN = os.getenv("HOST_DOMAIN")
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
@@ -56,10 +56,10 @@ AUTH_ID_LIST = {
 DUPLICATE_USER_CODE = 409
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
-DEBUG = True
+DEBUG = ACTIVE_ENVIRONMENT != PRODUCTION_ENVIRONMENT_NAME
+# DEBUG = True
 
-#ALLOWED_HOSTS = [HOST_DOMAIN, "0.0.0.0", "127.0.0.1", "localhost", "0.0.0.0:443", "127.0.0.1:443", "localhost:443", "0.0.0.0:80", "127.0.0.1:80", "localhost:80", "0.0.0.0:1337", "127.0.0.1:1337", "localhost:1337"]
+#ALLOWED_HOSTS = [HOST_DOMAIN]
 ALLOWED_HOSTS = ["*"]
 
 SITE_ID = 1
@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'corsheaders',
+    'csp',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -109,12 +110,12 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -135,43 +136,24 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-# This is a test
+
 CORS_ALLOW_ALL_ORIGINS = True
 #CORS_ALLOWED_ORIGINS = [
 #    FRONTEND_URL,
-#    "http://0.0.0.0",
-#    "http://127.0.0.1",
-#    "http://localhost",
-#    "https://0.0.0.0",
-#    "https://127.0.0.1",
-#    "https://localhost",
-#
-#    "http://0.0.0.0:443",
-#    "http://127.0.0.1:443",
-#    "http://localhost:443",
-#    "https://0.0.0.0:443",
-#    "https://127.0.0.1:443",
-#    "https://localhost:443",
-#
-#    "http://0.0.0.0:80",
-#    "http://127.0.0.1:80",
-#    "http://localhost:80",
-#    "https://0.0.0.0:80",
-#    "https://127.0.0.1:80",
-#    "https://localhost:80",
-#
-#    "http://0.0.0.0:1337",
-#    "http://127.0.0.1:1337",
-#    "http://localhost:1337",
-#    "https://0.0.0.0:1337",
-#    "https://127.0.0.1:1337",
-#    "https://localhost:1337",
 #]
 
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
+
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "frame-src": [SELF],
+        "form-action": [SELF],
+        "script-src": [SELF],
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -275,16 +257,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication/Authorization
 
-# CSRF_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_NAME = os.getenv("CSRF_COOKIE_NAME")
-CSRF_TRUSTED_ORIGINS = [
-    FRONTEND_URL,
-]
-
-REFRESH_COOKIE_NAME = os.getenv("REFRESH_COOKIE_NAME")
+REFRESH_TOKEN_NAME = os.getenv("REFRESH_TOKEN_NAME")
 ACCESS_TOKEN_NAME = os.getenv("ACCESS_TOKEN_NAME")
 
 # Mongo

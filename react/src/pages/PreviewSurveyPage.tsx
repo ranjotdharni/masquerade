@@ -8,8 +8,10 @@ import { authenticatedRequest } from "../lib/utility/internal"
 import type { SurveyMetadata } from "../lib/types/api"
 import PreviewSurveyHeader from "../components/PreviewSurveyPage/PreviewSurveyHeader"
 import PreviewSurveyBody from "../components/PreviewSurveyPage/PreviewSurveyBody"
+import { AuthContext } from "../components/context/AuthContext"
 
 export default function PreviewSurveyPage() {
+    const authentication = useContext(AuthContext)
     const { notify } = useContext(UIContext)
     const navigate = useNavigate()
     const { id } = useParams()
@@ -30,7 +32,7 @@ export default function PreviewSurveyPage() {
 
     useEffect(() => {
         async function getSurvey() {
-            await authenticatedRequest(`${API_SURVEY_CATALOG}?id=${id}`, "GET").then(result => {
+            await authenticatedRequest(authentication, `${API_SURVEY_CATALOG}?id=${id}`, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
                 if (result.error) {

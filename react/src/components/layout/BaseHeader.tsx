@@ -1,6 +1,7 @@
 import { CircleQuestionMark, DoorOpen, KeyRound, NotebookText, SunMoon, type LucideIcon } from "lucide-react"
 import { APP_NAME, ICON_LOGO, PAGE_ABOUT, PAGE_LOGIN, PAGE_USAGE, PAGE_WELCOME } from "../../lib/constants"
 import { toggleTheme } from "../../lib/utility/client"
+import { Link } from "react-router-dom"
 
 type NavigationItemType = {
     href: string
@@ -33,10 +34,10 @@ const NAVIGATION_ITEMS: NavigationItemType[] = [
 
 function NavigationLink({ text, href, Icon } : NavigationItemType) {
     return (
-        <a href={href} className="w-full h-full px-1 space-x-1 md:space-x-2 flex flex-row justify-center items-center hover:text-accent">
+        <Link to={href} className="w-full h-full px-1 space-x-1 md:space-x-2 flex flex-row justify-center items-center hover:text-accent">
             <Icon />
             <span className="whitespace-nowrap">{text}</span>
-        </a>
+        </Link>
     )
 }
 
@@ -44,10 +45,10 @@ export default function BaseHeader() {
     return (
         <header style={{zIndex: 5}} className="sticky top-0 w-full md:max-h-24 md:px-8 py-4 md:pr-20 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-between items-center bg-primary shadow-xl">
             <h1 className="w-full md:w-auto px-4 md:px-0 flex flex-row justify-between md:justify-center items-center space-x-4">
-                <a href={PAGE_WELCOME} className="h-full flex flex-row justify-center items-center space-x-2">
+                <Link to={PAGE_WELCOME} className="h-full flex flex-row justify-center items-center space-x-2">
                     <img className="h-16 aspect-square" src={ICON_LOGO} alt='Logo' />
                     <span className="text-[1.75rem] text-text font-jbm-bold">{APP_NAME}</span>
-                </a>
+                </Link>
                 <button className="text-text hover:text-accent hover:cursor-pointer" onClick={toggleTheme}>
                     <SunMoon />
                 </button>

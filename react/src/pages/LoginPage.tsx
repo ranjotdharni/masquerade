@@ -1,4 +1,4 @@
-import { API_CONFIRM_AUTH, AUTH_ID_LIST, DEFAULT_ERROR_MESSAGE, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME, RESERVED_AUTH_STATUSES } from "../lib/constants"
+import { AUTH_ID_LIST, DEFAULT_ERROR_MESSAGE, DUPLICATE_USER_CODE, ICON_LOGO_STICKER, PAGE_HOME } from "../lib/constants"
 import LoginPageImage from "../assets/svg/loginPageImage.svg"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import SignInForm from "../components/LoginPage/SignInForm"
@@ -6,7 +6,6 @@ import { useEffect, useState } from "react"
 import SignUpForm from "../components/LoginPage/SignUpForm"
 import useNotify from "../lib/hooks/useNotify"
 import Loader from "../components/utility/Loader"
-import { getCookie } from "../lib/utility/internal"
 
 export default function LoginPage() {
     let navigate = useNavigate()
@@ -71,32 +70,12 @@ export default function LoginPage() {
     }, [])
 
     useEffect(() => {
-        // send user immediately to home page if they're already authenticated
+        // send user immediately to home page if they're already authenticated, further auth checking will be enacted by Auth Context
         async function performAuthCheck() {
-            const csrfCookie = getCookie(import.meta.env.VITE_CSRF_COOKIE_NAME)
-            const accessToken = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_NAME)
-                
-            if (csrfCookie !== null && accessToken !== null) {
-                try {
-                    await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_CONFIRM_AUTH}`, {
-                        method: "POST",
-                        credentials: "include",
-                        headers: {
-                            "Authorization": `Bearer ${accessToken}`,
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": csrfCookie
-                        },
-                    }).then(middle => {
-                        return RESERVED_AUTH_STATUSES.findIndex(item => item.status === middle.status)
-                    }).then(result => {
-                        if (result === -1)
-                            navigate(`/${PAGE_HOME}`)
-                    })
-                }
-                catch (error) {
-                    console.log(error)
-                }
-            }
+            const existingRefreshToken: string | null = localStorage.getItem(import.meta.env.VITE_REFRESH_TOKEN_NAME)
+
+            if (existingRefreshToken)
+                navigate(`/${PAGE_HOME}`)
         }
 
         if (import.meta.env.VITE_CONFIRM_AUTH === "true")
@@ -105,11 +84,11 @@ export default function LoginPage() {
 
     return (
         <section className="w-full h-[85vh] bg-background flex justify-center">
-            <div className="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-primary shadow sm:rounded-lg flex justify-center flex-1">
+            <article className="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-primary shadow sm:rounded-lg flex justify-center flex-1">
                 <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-                    <div className="h-12">
+                    <header className="h-12">
                         <img src={ICON_LOGO_STICKER} className="h-full mx-auto" />
-                    </div>
+                    </header>
 
                     { 
                         loader
@@ -123,17 +102,17 @@ export default function LoginPage() {
                         signUp ? <SignUpForm setError={setError} setLoader={setLoader} /> : <SignInForm setError={setError} setLoader={setLoader} /> 
                     }
 
-                    <p className="mt-6 mx-auto text-xs text-gray-600 dark:text-text text-center">
+                    <aside className="z-10 relative mt-6 mx-auto text-xs text-gray-600 dark:text-text text-center">
                         { signUp ? "Already have an account?" : "Don't have an account?" } <button disabled={loader} onClick={() => { setError(""); setSignUp(prev => !prev) }} className="hover:underline hover:cursor-pointer text-primary dark:text-accent dark:hover:text-secondary">Sign { signUp ? "In" : "Up" }.</button>
-                    </p>
+                    </aside>
 
                     { error.trim() !== "" ? <p className="mt-2 mx-auto text-xs text-error text-center">{error}</p> : <></> }
                 </div>
 
-                <div className="flex-1 bg-text text-center hidden lg:flex">
+                <figure className="flex-1 bg-text text-center hidden lg:flex">
                     <img className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat" src={LoginPageImage} />
-                </div>
-            </div>
+                </figure>
+            </article>
         </section>
     )
 }

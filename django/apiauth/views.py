@@ -1,13 +1,11 @@
+import json
 import requests
 import uuid
 
-from urllib.parse import quote
-
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from rest_framework.permissions import IsAuthenticated
 
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.utils.decorators import method_decorator
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
@@ -20,12 +18,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .utils import decode_google_jwt, decode_github_token_response, get_user_from_access_token, generate_provider_response, generate_basic_response
+from .utils import decode_google_jwt, decode_github_token_response, extract_user_from_request, get_user_from_access_token, generate_jwt_response, extract_refresh_token_from_request
+from backend.utils.modules import isGenericError
 from .models import SocialAccount
 
 # Create your views here.
 
-@method_decorator(csrf_protect, name="dispatch")
 class ConfirmAuth(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -33,17 +31,17 @@ class ConfirmAuth(APIView):
         response = Response({ "success": "true", "message": "User is logged in." }, status.HTTP_200_OK)
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class RefreshTokens(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
 
-    def post(self, request):
+    def put(self, request):
         response = None
 
-        refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
-        if not refresh_token:
-            response = Response({ "error": "true", "message": "Refresh token missing." }, status=status.HTTP_401_UNAUTHORIZED)
+        refresh_token = extract_refresh_token_from_request(request)
+
+        if isGenericError(refresh_token):
+            response = Response(refresh_token, status=status.HTTP_401_UNAUTHORIZED)
             return response
         
         try:
@@ -56,21 +54,12 @@ class RefreshTokens(APIView):
             new_refresh_token = RefreshToken.for_user(user)
             refresh = str(new_refresh_token)
 
-            response = Response({ f"{settings.ACCESS_TOKEN_NAME}": new_access_token }, status=status.HTTP_200_OK)
-
-            response.set_cookie(
-                key=settings.REFRESH_COOKIE_NAME,
-                value=str(refresh),
-                httponly=True,
-                secure=True,
-                samesite="None"
-            )
-        except Exception as e:
-            response = Response({ "error": "true", "message": "Refresh token invalid." }, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({ settings.ACCESS_TOKEN_NAME: new_access_token, settings.REFRESH_TOKEN_NAME: str(refresh) }, status=status.HTTP_200_OK)
+        except Exception:
+            response = Response({ "error": "true", "message": "Invalid Tokens Detected." }, status=status.HTTP_401_UNAUTHORIZED)
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SignOut(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -78,18 +67,18 @@ class SignOut(APIView):
         response = JsonResponse({ "message": "Logged Out" }, status=status.HTTP_200_OK)
 
         try:
-            refresh_token = request.COOKIES.get(settings.REFRESH_COOKIE_NAME)
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+            user = extract_user_from_request(request)
+
+            if isGenericError(user):
+                return Response(user, status=status.HTTP_400_BAD_REQUEST)
+
+            OutstandingToken.objects.filter(user=user).delete()
         except Exception as e:
-            return JsonResponse({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_400_BAD_REQUEST)
-        
-        response.delete_cookie(settings.CSRF_COOKIE_NAME)
-        response.delete_cookie(settings.REFRESH_COOKIE_NAME)
+            print(e)
+            return JsonResponse({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response  
 
-@method_decorator(csrf_exempt, name='dispatch')
 class BasicSignIn(APIView):
     permission_classes = [AllowAny]
 
@@ -116,11 +105,10 @@ class BasicSignIn(APIView):
         if user is None:
             return Response({ "error": "true", "message": "Incorrect email or password." }, status=status.HTTP_401_UNAUTHORIZED)
         
-        response = generate_basic_response(request, user)
+        response = generate_jwt_response(user)
 
         return response
 
-@method_decorator(csrf_exempt, name='dispatch')
 class BasicSignUp(APIView):
       permission_classes = [AllowAny]
 
@@ -144,10 +132,10 @@ class BasicSignUp(APIView):
                 uid=str(uuid.uuid4())
             )
 
-            response = generate_basic_response(request, user)
+            response = generate_jwt_response(user)
 
             return response
-        except IntegrityError as e:
+        except IntegrityError:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
 
@@ -156,49 +144,31 @@ class BasicSignUp(APIView):
 
             response = Response({ "error": "true", "message": f"Sign in with {provider_name}." }, status=status.HTTP_403_FORBIDDEN)
             return response
-        except Exception as e:
-            response = Response({ "error": "true", "message": f"500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
+        except Exception:
+            response = Response({ "error": "true", "message": "500 Internal Server Error" }, status=status.HTTP_403_FORBIDDEN)
             return response
 
-@method_decorator(csrf_exempt, name='dispatch')
-class GoogleSignIn(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        server_callback_uri = quote(f"{settings.BACKEND_URL}/api/auth/google/login/callback/", safe="")
-
-        google_oauth_url = (
-            f"https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount"
-            f"?client_id={settings.GOOGLE_CLIENT_ID}"
-            f"&redirect_uri={server_callback_uri}"
-            f"&scope=email"
-            f"&response_type=code"
-            f"&service=lso"
-            f"&o2v=2"
-            f"&flowName=GeneralOAuthFlow"
-        )
-
-        return redirect(google_oauth_url)
-
-@method_decorator(csrf_exempt, name='dispatch') 
 class GoogleTokenExchange(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
-        response = None 
+    def post(self, request):
+        response = Response({ "error": True, "message": "500 Internal Server Error" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         social_account = None
         user = None
-        redirect_url = ""
 
         try:
-            code = request.GET.get("code")
+            raw = request.body
+            data = json.loads(raw)
+
+            if "code" not in data or "scope" not in data:
+                return Response({ "error": True, "message": f"Request missing 'code' and/or 'scope' field(s)." }, status=status.HTTP_400_BAD_REQUEST)
 
             google_token_url = "https://oauth2.googleapis.com/token"
             data = {
-                "code": code,
+                "code": data["code"],
                 "client_id": settings.GOOGLE_CLIENT_ID,
                 "client_secret": settings.GOOGLE_CLIENT_SECRET,
-                "redirect_uri": f"{settings.BACKEND_URL}/api/auth/google/login/callback/",  # must match what you registered with Google
+                "redirect_uri": f"{settings.FRONTEND_URL}/login",  # must match what you registered with Google
                 "grant_type": "authorization_code",
             }
 
@@ -208,18 +178,13 @@ class GoogleTokenExchange(APIView):
             id_token = token_json.get("id_token")
 
             decryption_result = decode_google_jwt(id_token=id_token)
-
-            if ("error" in decryption_result):
-                print(decryption_result.message)
-                redirect_url = (
-                    f"{settings.FRONTEND_URL}/login?"
-                    f"error=500_INTERNAL_SERVER_ERROR"
-                )
+            
+            if (isGenericError(decryption_result)):
+                response = Response(decryption_result, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 # log user in here
                 email = decryption_result["email"]
                 uid = decryption_result["sub"]
-
                 try:
                     social_account = SocialAccount.objects.get(provider=settings.GOOGLE_AUTH_ID, uid=uid)
                     user = social_account.user
@@ -237,70 +202,43 @@ class GoogleTokenExchange(APIView):
                         uid=uid
                     )
 
-                response = generate_provider_response(request, user)
+                response = generate_jwt_response(user)
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
-
             provider = social_account.provider
 
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error={settings.DUPLICATE_USER_CODE}"
-                f"&provider={provider}"
-            )
-            response = redirect(redirect_url)
+            response = Response({ "error": True, "message": f"Login with {settings.AUTH_ID_LIST[provider]}." }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error=500_INTERNAL_SERVER_ERROR"
-            )
-            response = redirect(redirect_url)
 
         return response
 
-@method_decorator(csrf_exempt, name='dispatch') 
-class GithubSignIn(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        server_callback_uri = quote(f"{settings.BACKEND_URL}/api/auth/github/login/callback/", safe="")
-
-        github_oauth_url = (
-            f"https://github.com/login/oauth/authorize"
-            f"?client_id={settings.GITHUB_CLIENT_ID}"
-            f"&amp;redirect_uri={server_callback_uri}"
-            f"&amp;scope=user"
-        )
-
-        return redirect(github_oauth_url)
-
-@method_decorator(csrf_exempt, name='dispatch')   
 class GithubTokenExchange(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
-        response = None 
+    def post(self, request):
+        response = Response({ "error": True, "message": "500 Internal Server Error" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         social_account = None
         user = None
-        redirect_url = f"{settings.FRONTEND_URL}/login"
 
         try:
-            code = request.GET.get("code")
+            raw = request.body
+            data = json.loads(raw)
+
+            if "code" not in data:
+                return Response({ "error": True, "message": f"Request missing 'code' and/or 'scope' field(s)." }, status=status.HTTP_400_BAD_REQUEST)
+            
+            code = data["code"]
+            headers = {'Accept': 'application/json'}
 
             github_token_url = f"https://github.com/login/oauth/access_token?client_id={settings.GITHUB_CLIENT_ID}&client_secret={settings.GITHUB_CLIENT_SECRET}&code={code}"
 
-            token_response = requests.get(github_token_url)
-            decryption_result = decode_github_token_response(response=token_response)
+            token_response = requests.get(github_token_url, headers=headers)
+            decryption_result = decode_github_token_response(token_response)
 
-            if ("email" not in decryption_result or "id" not in decryption_result):
-                print(decryption_result["message"])
-                redirect_url = (
-                    f"{settings.FRONTEND_URL}/login?"
-                    f"error=500_INTERNAL_SERVER_ERROR"
-                )
-                response = redirect(redirect_url)
+            if isGenericError(decryption_result):
+                response = Response(decryption_result, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 # log user in here
                 email = decryption_result["email"]
@@ -323,25 +261,15 @@ class GithubTokenExchange(APIView):
                         uid=uid
                     )
 
-                response = generate_provider_response(request, user)
+                response = generate_jwt_response(user)
         except IntegrityError as e:
             user = User.objects.get(username=email)
             social_account = SocialAccount.objects.get(user=user)
 
             provider = social_account.provider
 
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error={settings.DUPLICATE_USER_CODE}"
-                f"&provider={provider}"
-            )
-            response = redirect(redirect_url)
+            response = Response({ "error": True, "message": f"Login with {settings.AUTH_ID_LIST[provider]}." }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error=500_INTERNAL_SERVER_ERROR"
-            )
-            response = redirect(redirect_url)
 
         return response

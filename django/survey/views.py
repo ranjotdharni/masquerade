@@ -1,9 +1,6 @@
 import json
 
 # Create your views here.
-
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 from django.conf import settings
 
 from backend.helpers import GenericError
@@ -20,9 +17,9 @@ from bson.errors import InvalidId
 from pymongo import UpdateOne
 
 from .utils import validate_survey_creation_slug, create_mongo_survey_object, create_mongo_answer_object
+from backend.utils.modules import isGenericError
 from apiauth.utils import extract_user_from_request
 
-@method_decorator(csrf_protect, name="dispatch")
 class CreateSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -49,8 +46,7 @@ class CreateSurvey(APIView):
             response = Response({ "error": True, "message": "500 Internal Server Error" }, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response
-    
-@method_decorator(csrf_protect, name="dispatch")
+
 class DeleteSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -65,7 +61,7 @@ class DeleteSurvey(APIView):
 
             user = extract_user_from_request(request)
 
-            if isinstance(user, dict) and user["error"]:
+            if isGenericError(user):
                 return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
             
             if (requestHasDetails):
@@ -106,7 +102,6 @@ class DeleteSurvey(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SurveyCatalog(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -170,7 +165,7 @@ class SurveyCatalog(APIView):
             if surveyRequiresInvite:
                 user = extract_user_from_request(request)
 
-                if isinstance(user, dict) and user["error"]:
+                if isGenericError(user):
                     return Response(GenericError(user["message"] or "Cannot identify you. Please log in."), status.HTTP_401_UNAUTHORIZED)
                 
                 userDoesNotHaveInvite = not Invite.objects.filter(survey=surveyId, recipient=user.username).exists()
@@ -185,7 +180,6 @@ class SurveyCatalog(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SurveyDetail(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -199,7 +193,7 @@ class SurveyDetail(APIView):
 
             user = extract_user_from_request(request)
 
-            if isinstance(user, dict) and user["error"]:
+            if isGenericError(user):
                 return Response({"error": True, "message": user["message"] or "Cannot identify you. Please log in."}, status.HTTP_401_UNAUTHORIZED)
             
             if (requestHasParams):
@@ -219,7 +213,7 @@ class SurveyDetail(APIView):
                     if survey["creator"] != user.username:
                         return Response({"error": True, "message": "You don't have permission to see details of this survey(s)."}, status.HTTP_400_BAD_REQUEST)
                     
-                response = Response({ "success": True, "content": content }, status.HTTP_200_OK)
+                response = Response({ "success": True, "user": str(user.username), "content": content }, status.HTTP_200_OK)
             else:
                 response = Response({ "error": True, "message": "No viewable survey found." }, status.HTTP_200_OK)
         except (InvalidId, TypeError) as e:
@@ -230,7 +224,6 @@ class SurveyDetail(APIView):
 
         return response
 
-@method_decorator(csrf_protect, name="dispatch")
 class SubmitSurvey(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -262,7 +255,7 @@ class SubmitSurvey(APIView):
             if surveyRequiresInvite:
                 user = extract_user_from_request(request)
 
-                if isinstance(user, dict) and user["error"]:
+                if isGenericError(user):
                     return Response(GenericError(user["message"] or "Cannot identify you. Please log in."), status.HTTP_401_UNAUTHORIZED)
                 
                 userDoesNotHaveInvite = not Invite.objects.filter(survey=surveyId, recipient=user.username).exists()

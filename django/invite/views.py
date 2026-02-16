@@ -1,5 +1,3 @@
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 from django.conf import settings
 
 from bson import ObjectId
@@ -16,7 +14,6 @@ from backend.utils.mongo import get_survey_metadata_bulk
 from .serializers import InviteSerializer
 from .models import Invite
 
-@method_decorator(csrf_protect, name="dispatch")
 class Invites(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -58,8 +55,7 @@ class Invites(APIView):
             print(e)
 
         return response
-    
-@method_decorator(csrf_protect, name="dispatch")
+
 class DeclineInvites(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -99,7 +95,6 @@ invites were successfully sent to other users. THIS IS A HINT THAT A USER DOES
 IN FACT HAVE AN ACCOUNT AND IS ON HERE; THIS VIOLATES ANONYMITY.
 '''
 
-@method_decorator(csrf_protect, name="dispatch")
 class ReceivedInvites(APIView):
     permission_classes = [IsAuthenticated]
 

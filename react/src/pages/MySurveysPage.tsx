@@ -7,15 +7,19 @@ import { API_SURVEY_DETAIL, DEFAULT_ERROR_MESSAGE } from "../lib/constants"
 import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import type { Survey } from "../lib/types/api"
+import { AuthContext } from "../components/context/AuthContext"
 
 export default function MySurveysPage() {
+    const authentication = useContext(AuthContext)
     const { notify } = useContext(UIContext)
+
+    const [user, setUser] = useState<string | undefined>()
     const [content, setContent] = useState<Survey[] | undefined>()
 
     function PageContent({ content } : { content: Survey[] }) {
         return (
             <>
-                <MySurveyHeader username="ranjotdharni1@gmail.com" numberOfSurveys={content.length} />
+                <MySurveyHeader username={user || ""} numberOfSurveys={content.length} />
                 <section className="w-full h-3/4">
                     <MySurveyList surveys={content.map(s => { return {...s, questions: undefined, numberOfQuestions: s.questions.length } })} />
                 </section>
@@ -25,7 +29,7 @@ export default function MySurveysPage() {
     
     useEffect(() => {
         async function getMySurveys() {
-            await authenticatedRequest(API_SURVEY_DETAIL, "GET").then(result => {
+            await authenticatedRequest(authentication, API_SURVEY_DETAIL, "GET").then(result => {
                 let message = result.message as string || DEFAULT_ERROR_MESSAGE
 
                 if (result.error) {
@@ -35,6 +39,7 @@ export default function MySurveysPage() {
                     })
                 }
                 else {
+                    setUser((result as unknown as { user: string }).user)
                     setContent((result as unknown as { content: Survey[] }).content)
                 }
             })

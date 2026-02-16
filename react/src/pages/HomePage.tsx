@@ -6,7 +6,7 @@ import { NAV_CSS } from "../components/utility/animated/NavBar"
 
 export default function HomePage() {
     return (
-        <AppContent className="flex flex-col justify-start justify-center items-center overflow-y-scroll md:overflow-hidden">
+        <AppContent className="flex flex-col justify-center items-center overflow-y-scroll md:overflow-hidden">
             <section className={`w-full h-auto md:h-[10%] px-4 py-4 md:py-2 ${NAV_CSS.md_px}`}>
                 <HeaderSection />
             </section>

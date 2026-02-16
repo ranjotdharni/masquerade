@@ -11,8 +11,10 @@ import SurveyContent from "../components/TakeSurveyPage/SurveyContent"
 import SurveyHeader from "../components/TakeSurveyPage/SurveyHeader"
 import type { MultipleAnswerSlug, RankingAnswerSlug, RatingAnswerSlug, SingleAnswerSlug } from "../lib/types/client"
 import type { GenericError } from "../lib/types/internal"
+import { AuthContext } from "../components/context/AuthContext"
 
 function SurveyContainer({ content } : { content: Survey }) {
+    const authentication = useContext(AuthContext)
     const { confirm, notify } = useContext(UIContext)
     const navigation = useNavigate()
 
@@ -47,10 +49,10 @@ function SurveyContainer({ content } : { content: Survey }) {
 
     function updateRemaining() {
         // always check required
-        // single answer, check if slug is defined
-        // multiple answer, check if slug exists and if it is not empty
-        // ranking answer, check that slug is not 0
-        // rating answer is always fine
+        // check if slug is defined for all except ranking
+        // check for the specific completion condition for each type
+        // after collecting all items that don't meet above conditions into respective arrays,
+        // sum of all those arrays' lengths is the number of remaining, required, unanswered questions
 
         let remnants1 = content.questions.filter(q => !q.optional && (q.type !== QUESTION_TYPE_ID_MAP.RANKING_TYPE))
         let remnants2 = JSON.parse(JSON.stringify(remnants1)) as Question[]
@@ -124,7 +126,7 @@ function SurveyContainer({ content } : { content: Survey }) {
                 answers: JSON.parse(JSON.stringify(survey))
             }
 
-            await authenticatedRequest(API_SURVEY_SUBMIT, "POST", slug).then(response => {
+            await authenticatedRequest(authentication, API_SURVEY_SUBMIT, "POST", slug).then(response => {
                 let message: string = response.message as string || "Survey Complete!"
                 let color: string = "var(--color-text)"
 
@@ -165,6 +167,7 @@ function SurveyContainer({ content } : { content: Survey }) {
 export default function TakeSurveyPage() {
     const { id } = useParams()
     const { notify } = useContext(UIContext)
+    const authentication = useContext(AuthContext)
 
     const [content, setContent] = useState<Survey>()
     
@@ -174,7 +177,7 @@ export default function TakeSurveyPage() {
 
     useEffect(() => {
         async function getSurvey() {
-            await authenticatedRequest(API_SURVEY_CATALOG, "POST", { id: id as string }).then(result => {
+            await authenticatedRequest(authentication, API_SURVEY_CATALOG, "POST", { id: id as string }).then(result => {
                 if (result.error) {
                     // possible invite permission failure
                     notify({

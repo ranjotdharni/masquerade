@@ -66,7 +66,7 @@ export default function IconicInfoSection() {
                             <figure key={`ICONIC_INFO_DETAIL_1x${index}`} className="flex flex-col justify-end items-center space-y-4">
                                 <img src={detail.src} className="md:w-24 aspect-square bg-text p-4 rounded-[100px]" />
                                 <h4 className="text-xl text-secondary font-jbm-bold">{detail.title}</h4>
-                                <figcaption className="w-40 text-center text-center text-inactive font-roboto-italic">{detail.text}</figcaption>
+                                <figcaption className="w-40 text-center text-inactive font-roboto-italic">{detail.text}</figcaption>
                             </figure>
                         )
                     })
