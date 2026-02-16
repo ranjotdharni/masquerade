@@ -208,7 +208,7 @@ class GoogleTokenExchange(APIView):
             social_account = SocialAccount.objects.get(user=user)
             provider = social_account.provider
 
-            response = Response({ "error": True, "message": f"Login with {settings.AUTH_ID_LIST[provider]}" }, status=status.HTTP_400_BAD_REQUEST)
+            response = Response({ "error": True, "message": f"Login with {settings.AUTH_ID_LIST[provider]}." }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
 
@@ -217,27 +217,28 @@ class GoogleTokenExchange(APIView):
 class GithubTokenExchange(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
-        response = None 
+    def post(self, request):
+        response = Response({ "error": True, "message": "500 Internal Server Error" }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         social_account = None
         user = None
-        redirect_url = f"{settings.FRONTEND_URL}/login"
 
         try:
-            code = request.GET.get("code")
+            raw = request.body
+            data = json.loads(raw)
+
+            if "code" not in data:
+                return Response({ "error": True, "message": f"Request missing 'code' and/or 'scope' field(s)." }, status=status.HTTP_400_BAD_REQUEST)
+            
+            code = data["code"]
+            headers = {'Accept': 'application/json'}
 
             github_token_url = f"https://github.com/login/oauth/access_token?client_id={settings.GITHUB_CLIENT_ID}&client_secret={settings.GITHUB_CLIENT_SECRET}&code={code}"
 
-            token_response = requests.get(github_token_url)
-            decryption_result = decode_github_token_response(response=token_response)
+            token_response = requests.get(github_token_url, headers=headers)
+            decryption_result = decode_github_token_response(token_response)
 
-            if ("email" not in decryption_result or "id" not in decryption_result):
-                print(decryption_result["message"])
-                redirect_url = (
-                    f"{settings.FRONTEND_URL}/login?"
-                    f"error=500_INTERNAL_SERVER_ERROR"
-                )
-                response = redirect(redirect_url)
+            if isGenericError(decryption_result):
+                response = Response(decryption_result, status=status.HTTP_401_UNAUTHORIZED)
             else:
                 # log user in here
                 email = decryption_result["email"]
@@ -267,18 +268,8 @@ class GithubTokenExchange(APIView):
 
             provider = social_account.provider
 
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error={settings.DUPLICATE_USER_CODE}"
-                f"&provider={provider}"
-            )
-            response = redirect(redirect_url)
+            response = Response({ "error": True, "message": f"Login with {settings.AUTH_ID_LIST[provider]}." }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            redirect_url = (
-                f"{settings.FRONTEND_URL}/login?"
-                f"error=500_INTERNAL_SERVER_ERROR"
-            )
-            response = redirect(redirect_url)
 
         return response

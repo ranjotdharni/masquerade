@@ -1,4 +1,5 @@
 import requests
+import json
 import jwt
 
 from backend.helpers import GenericError
@@ -78,13 +79,15 @@ def decode_google_jwt(id_token):
     return GenericError(message="Could not decode Google credentials.").to_dict()
 
 def decode_github_token_response(response):
-    try:
-        token_content = response._content.decode("utf-8")
-        
-        items = token_content.split("&")
-        github_access_token_array = items[0].split("=")
+    default_error = GenericError(message="Could not decode GitHub credentials.")
 
-        github_access_token = github_access_token_array[1]
+    try:
+        token_content = response.json()
+        
+        if "access_token" not in token_content:
+            return default_error
+        
+        github_access_token = token_content["access_token"]
         
         headers = { "Authorization": f"Bearer {github_access_token}" }
         response = requests.get("https://api.github.com/user", headers=headers)
@@ -93,7 +96,7 @@ def decode_github_token_response(response):
         return payload
     except Exception as e:
         print(e)
-        return GenericError(message="Could not decode GitHub credentials.").to_dict()
+        return default_error
 
 def generate_jwt_response(user: User) -> Response:
     try:

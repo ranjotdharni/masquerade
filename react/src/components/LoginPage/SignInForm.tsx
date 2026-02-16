@@ -10,10 +10,19 @@ const GOOGLE_SCOPE_NAME: string = "scope"
 const GOOGLE_STATE_NAME: string = "state"
 const GOOGLE_ERROR_NAME: string = "error"
 
+const GITHUB_CODE_NAME: string = "code"
+const GITHUB_STATE_NAME: string = "state"
+const GITHUB_ERROR_NAME: string = "error"
+
 type GoogleCredentials = {
     [GOOGLE_CODE_NAME]: string
     [GOOGLE_SCOPE_NAME]: string
     [GOOGLE_STATE_NAME]: string
+}
+
+type GitHubCredentials = {
+    [GITHUB_CODE_NAME]: string
+    [GITHUB_STATE_NAME]: string
 }
 
 type SignInFormProps = {
@@ -93,11 +102,12 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
     }
 
     function initGoogleTokenExchange(): GoogleCredentials | false {
+        const provider = sessionStorage.getItem(PROVIDER_KEY_NAME)
         const storedState = sessionStorage.getItem(STATE_KEY_NAME)
 
         const rawParamString = location.search
 
-        if (!rawParamString)
+        if (!rawParamString || provider !== AUTH_ID_LIST[GOOGLE_AUTH_ID])
             return false
 
         setLoader(true)
@@ -163,11 +173,94 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
         setLoader(false)
     }
 
-    async function signInWithGithub(event: MouseEvent<HTMLButtonElement>) {
+    async function signInWithGitHub(event: MouseEvent<HTMLButtonElement>) {
         event.preventDefault()
-        
         setLoader(true)
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`
+
+        const state = crypto.randomUUID()
+
+        sessionStorage.setItem(STATE_KEY_NAME, state)
+        sessionStorage.setItem(PROVIDER_KEY_NAME, AUTH_ID_LIST[GITHUB_AUTH_ID])
+
+        const params = new URLSearchParams({
+            client_id: import.meta.env.VITE_GITHUB_CLIENT_ID,
+            redirect_uri: import.meta.env.VITE_GITHUB_REDIRECT_URI,
+            scope: "user",
+            state: state
+        })
+
+        window.location.href = `https://github.com/login/oauth/authorize?${params}`
+
+        setLoader(false)
+    }
+
+    function initGitHubTokenExchange(): GitHubCredentials | false {
+        const provider = sessionStorage.getItem(PROVIDER_KEY_NAME)
+        const storedState = sessionStorage.getItem(STATE_KEY_NAME)
+
+        const rawParamString = location.search
+
+        if (!rawParamString || provider !== AUTH_ID_LIST[GITHUB_AUTH_ID])
+            return false
+
+        setLoader(true)
+
+        const params = new URLSearchParams(rawParamString.substring(1))
+
+        if (params.get(GITHUB_ERROR_NAME)) {
+            setLoader(false)
+            setError("Access denied by GitHub")
+            return false
+        }
+
+        const code = params.get(GITHUB_CODE_NAME)
+        const state = params.get(GITHUB_STATE_NAME)
+
+        const readyForTokenExchange = (
+            code !== null && 
+            storedState !== null && 
+            storedState === state
+        )
+
+        if (readyForTokenExchange) {
+            setLoader(false)
+            return {
+                [GITHUB_CODE_NAME]: code,
+                [GITHUB_STATE_NAME]: state,
+            }
+        }
+
+        setLoader(false)
+        return false
+    }
+
+    async function exchangeGitHubTokenWithServer(credentials: GitHubCredentials) {
+        setLoader(true)
+
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${API_GITHUB_LOGIN}`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials)
+        }).then(middle => {
+            return middle.json()
+        }).then(result => {
+            return result
+        })
+
+        clearStaleCredentials()
+
+        if (response.error) {
+            setError(response.message)
+        }
+        else {
+            localStorage.setItem(import.meta.env.VITE_ACCESS_TOKEN_NAME, response[import.meta.env.VITE_ACCESS_TOKEN_NAME])
+            localStorage.setItem(import.meta.env.VITE_REFRESH_TOKEN_NAME, response[import.meta.env.VITE_REFRESH_TOKEN_NAME])
+            navigate(`/${PAGE_HOME}`)
+        }
+
         setLoader(false)
     }
 
@@ -186,7 +279,10 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
             }
 
             if (provider === AUTH_ID_LIST[GITHUB_AUTH_ID]) {
-                // check and attempt github sign in
+                const credentials = initGitHubTokenExchange()
+
+                if (credentials)
+                    await exchangeGitHubTokenWithServer(credentials)
             }
         }
 
@@ -225,7 +321,7 @@ export default function SignInForm({ setError, setLoader } : SignInFormProps) {
                     </button>
 
                     <button
-                        onClick={signInWithGithub}
+                        onClick={signInWithGitHub}
                         className="w-full max-w-xs font-jbm shadow-sm rounded-lg py-3 bg-accent text-text hover:text-primary flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:cursor-pointer hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
                         <figure className="bg-white p-1 rounded-full">
                             <svg className="w-6" viewBox="0 0 32 32">
