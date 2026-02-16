@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
+from csp.constants import SELF
 
 import certifi
 from pymongo.mongo_client import MongoClient
@@ -89,6 +90,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'corsheaders',
+    'csp',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -113,6 +115,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -143,6 +146,14 @@ CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
+
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "frame-src": [SELF],
+        "form-action": [SELF],
+        "script-src": [SELF],
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
