@@ -29,4 +29,4 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     command: certonly --webroot -w /var/www/certbot --email masqueradesurveyapp@gmail.com -d masquerades-api.ranjotdharni.space --keep-until-expiring --agree-tos --non-interactive
-# CAUTION: The above certbot command will request a valid tls certificate, be warned that failures will count against letsencrypt's strict production rate limits
+# CAUTION: The above certbot command will request a valid tls certificate (if one does not exist already), be warned that erroneous failures will count against letsencrypt's strict production rate limits
