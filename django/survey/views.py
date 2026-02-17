@@ -103,9 +103,7 @@ class DeleteSurvey(APIView):
         return response
 
 class SurveyCatalog(APIView):
-#    permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
-    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         response = Response({ "error": True, "message": "Invalid Survey ID" }, status.HTTP_400_BAD_REQUEST)
