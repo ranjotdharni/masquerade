@@ -84,8 +84,8 @@ export default function LoginPage() {
 
     return (
         <section className="w-full h-[85vh] bg-background flex justify-center">
-            <article className="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-primary shadow sm:rounded-lg flex justify-center items-center md:items-stretch flex-1">
-                <div className="lg:w-1/2 xl:w-5/12 px-6 flex flex-col justify-evenly">
+            <article className="max-w-screen-xl m-0 sm:m-10 dark:bg-primary bg-white shadow sm:rounded-lg flex justify-center items-center md:items-stretch flex-1">
+                <div className="lg:w-1/2 px-6 flex flex-col justify-evenly">
                     <header className="h-12">
                         <img src={ICON_LOGO_STICKER} className="h-full mx-auto" />
                     </header>
@@ -109,8 +109,8 @@ export default function LoginPage() {
                     { error.trim() !== "" ? <p className="mt-2 mx-auto text-xs text-error text-center">{error}</p> : <></> }
                 </div>
 
-                <figure className="flex-1 bg-text text-center hidden lg:flex h-full">
-                    <img className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat" src={LoginPageImage} />
+                <figure className="w-1/2 bg-text text-center hidden lg:flex justify-center items-center h-full">
+                    <img className="w-[90%] bg-contain bg-center bg-no-repeat" src={LoginPageImage} />
                 </figure>
             </article>
         </section>
