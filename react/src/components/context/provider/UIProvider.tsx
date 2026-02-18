@@ -41,7 +41,7 @@ function Notification({ message, color, reset } : NotificationProps & { reset: (
                     transition: "opacity 0.3s ease, transform 0.4s ease", 
                     display: message.trim() === "" ? "none" : "flex",
                 }} 
-                className="relative w-full md:w-auto z-30 py-4 md:px-8 font-jbm flex flex-row items-center justify-center border bg-background border-accent dark:bg-accent rounded-lg"
+                className="relative text-xs md:text-[1rem] w-full md:w-auto z-30 py-4 px-2 md:px-8 font-jbm flex flex-row items-center justify-center border bg-background border-accent dark:bg-accent rounded-lg"
             >
                 {message}
             </p>
@@ -70,7 +70,7 @@ function Confirm({ message, callback, loaderText, reset } : ConfirmProps & { res
             {
                 loader ?
                 <FullScreenLoader loaderText={loaderText} /> :
-                <div className="relative w-[90%] h-[50%] md:w-1/5 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center rounded-lg border bg-background border-primary popIn">
+                <div className="relative w-[90%] h-[50%] md:w-1/4 md:aspect-video md:h-auto p-2 flex flex-col justify-start items-center rounded-lg border bg-background border-primary popIn">
                     <h3 className="w-full px-2 border-b border-primary text-xl text-error font-jbm-bold">Are You Sure?</h3>
                     <span className="w-full p-2 flex-1 text-text font-jbm text-sm">
                         <p>{message}</p>

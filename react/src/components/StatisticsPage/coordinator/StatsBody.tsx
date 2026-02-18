@@ -39,7 +39,7 @@ export default function StatsBody({ survey } : { survey: Survey }) {
     return (
         <section className={`mt-2 md:mt-0 w-full ${NAV_CSS.md_h_diff} ${NAV_CSS.md_px}`}>
             <header className="w-full md:h-[10%] flex flex-col md:flex-row justify-between items-end md:items-center px-2">
-                <h2 className="mr-2 md:mr-0 p-1 text-text font-jbm border-2 border-text rounded">Survey Submissions: <span className="font-jbm-bold">{survey.submissions}</span></h2>
+                <h2 className="mt-6 md:mt-0 mr-2 md:mr-0 p-1 text-text font-jbm border-2 border-text rounded">Survey Submissions: <span className="font-jbm-bold">{survey.submissions}</span></h2>
 
                 <div className="w-full md:w-auto flex flex-row justify-between md:justify-center items-center">
                     <button onClick={cycleBackward} className="p-2">

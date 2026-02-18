@@ -64,7 +64,7 @@ export default function SignUpForm({ setError, setLoader } : SignUpFormProps) {
     }
 
     return (
-        <div className="mt-12 flex flex-col items-center">
+        <div className="mt-4 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-lato-bold text-text">
                 Sign Up
             </h1>

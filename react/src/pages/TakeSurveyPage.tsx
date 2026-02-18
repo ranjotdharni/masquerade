@@ -153,7 +153,7 @@ function SurveyContainer({ content } : { content: Survey }) {
     }
 
     return (
-        <section className="w-full md:w-[92vw] h-full relative left-[4vw] p-2">
+        <section className="w-[92vw] h-full relative left-[4vw] p-2">
             <SurveyHeader name={content.name} index={index} length={content.questions.length} cycleForward={cycleForward} cycleBackward={cycleBackward} />
             <SurveyContent survey={survey} index={index} editAnswer={editAnswer} />
             <footer className="w-full h-[5vh] flex flex-row justify-end items-end">

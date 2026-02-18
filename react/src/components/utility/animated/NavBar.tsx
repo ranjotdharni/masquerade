@@ -129,7 +129,7 @@ type NavbarStateType = typeof NAVBAR_STATES[keyof typeof NAVBAR_STATES]
 function LinkItem({ text, href, open, Icon, close, hoverContent, external } : { text: string, href: string, open: boolean, Icon: LucideIcon, close: () => void, hoverContent: string, external?: boolean }) {
     
     let tailwind = `
-        w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
+        w-full md:h-full flex flex-row items-center hover:rounded-md ${open ? 'space-x-4 justify-start p-3' : 'hover:rounded-xl justify-center py-3'} hover:cursor-pointer text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
         after:left-[90%] after:rounded after:border-accent after:bg-text after:text-background after:px-2 tooltip
     `
 
@@ -145,7 +145,7 @@ function LinkItem({ text, href, open, Icon, close, hoverContent, external } : { 
 
 function ActionItem({ text, action, open, Icon, hoverContent } : { text: string, action: () => void, open: boolean, Icon: LucideIcon, hoverContent: string }) {
     let tailwind = `
-        w-full md:h-full flex flex-row justify-start items-center hover:rounded-md ${open ? 'space-x-4' : 'hover:rounded-xl'} hover:cursor-pointer p-3 text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
+        w-full md:h-full flex flex-row items-center hover:rounded-md ${open ? 'space-x-4 justify-start p-3' : 'hover:rounded-xl justify-center py-3'} hover:cursor-pointer text-text hover:bg-secondary-light after:content-[attr(data-tooltip)]
         after:left-[90%] after:rounded after:border-accent after:bg-text after:text-background after:px-2 tooltip
     `
 
@@ -201,11 +201,11 @@ export default function NavBar() {
 
     return (
         <>
-            <button onClick={fullOpen} className={`absolute mt-[1vh] ml-[1vh] h-[5vh] w-[5vh] md:w-auto md:h-[5vh] aspect-square rounded bg-primary p-2 hover:cursor-pointer hover:shadow-md navbarButton ${barState !== CLOSED_STATE ? 'md:navbarButtonClosed' : ''}`}>
+            <button onClick={fullOpen} className={`z-10 md:z-auto absolute mt-[1vh] ml-[1vh] h-[5vh] w-[5vh] md:w-auto md:h-[5vh] aspect-square rounded bg-primary p-2 hover:cursor-pointer hover:shadow-md navbarButton ${barState !== CLOSED_STATE ? 'md:navbarButtonClosed' : ''}`}>
                 <img src={ICON_LOGO} className="w-full h-full" />
             </button>
 
-            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[12.5vw]' : `translate-x-[-125%] md:translate-none ${NAV_CSS.md_w}`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
+            <nav className={`z-40 p-2 absolute h-screen md:h-[100vh] ${barState === OPEN_STATE ? 'w-full md:w-[230px]' : `translate-x-[-125%] md:translate-none ${NAV_CSS.md_w}`} top-0 left-0 bg-primary flex flex-col justify-evenly md:justify-between navbar ${barState === CLOSED_STATE ? 'navbarClosed' : ''}`}>
                 <header className="w-full h-[5%] flex flex-row justify-center">
                     <div className={`${barState === OPEN_STATE ? 'w-4/5' : 'w-full'} h-full flex flex-row justify-start`}>
                         <img onClick={() => { setBarState(OPEN_STATE) }} src={ICON_LOGO} className={`${barState === OPEN_STATE ? 'h-full' : 'w-full max-w-[2.8vw]'} aspect-square hover:cursor-pointer`} />
