@@ -9,11 +9,11 @@ export default function SurveyHeader({ name, length, index, cycleForward, cycleB
             </h1>
             
             <div className="h-full flex flex-row items-center mr-1 md:mr-0">
-                <button onClick={cycleBackward} className="h-full p-2">
+                <button onClick={cycleBackward} className="md:h-6 md:p-0 p-2">
                     <ChevronLeft className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
                 </button>
                 <p className="font-jbm text-inactive px-2">{`${index + 1} / ${length}`}</p>
-                <button onClick={cycleForward} className="h-full p-2">
+                <button onClick={cycleForward} className="md:h-6 md:p-0 p-2">
                     <ChevronRight className="w-full h-full border-2 rounded text-text border-text hover:bg-text hover:text-background hover:cursor-pointer" />
                 </button>
             </div>

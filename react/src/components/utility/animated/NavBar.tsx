@@ -201,7 +201,7 @@ export default function NavBar() {
 
     return (
         <>
-            <button onClick={fullOpen} className={`absolute mt-[1vh] ml-[1vh] h-[5vh] w-[5vh] md:w-auto md:h-[5vh] aspect-square rounded bg-primary p-2 hover:cursor-pointer hover:shadow-md navbarButton ${barState !== CLOSED_STATE ? 'md:navbarButtonClosed' : ''}`}>
+            <button onClick={fullOpen} className={`z-10 md:z-auto absolute mt-[1vh] ml-[1vh] h-[5vh] w-[5vh] md:w-auto md:h-[5vh] aspect-square rounded bg-primary p-2 hover:cursor-pointer hover:shadow-md navbarButton ${barState !== CLOSED_STATE ? 'md:navbarButtonClosed' : ''}`}>
                 <img src={ICON_LOGO} className="w-full h-full" />
             </button>
 
