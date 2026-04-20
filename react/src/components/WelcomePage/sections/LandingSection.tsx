@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import "../../../css/utility.css"
 import { IMG_LANDING_BACKGROUND, IMG_LANDING_STATISTICS_DASHBOARD,  PAGE_LOGIN } from "../../../lib/constants"
+import { MoveRight } from "lucide-react"
 
 export default function LandingSection() {
 
@@ -21,7 +22,10 @@ export default function LandingSection() {
                 </p>
             </header>
 
-            <Link to={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary rounded-[100px] text-secondary dark:text-text font-roboto-bold text-2xl px-9 py-3 transition-transform hover:cursor-pointer hover:scale-105">Get Started For Free</Link>
+            <Link to={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="flex flex-row items-center space-x-3 mt-10 gradientBackgroundButton border-background-light border-[1px] rounded-lg text-background dark:text-accent font-roboto text-2xl px-9 py-3 transition-transform hover:cursor-pointer hover:scale-105">
+                <span>Get Started</span>
+                <MoveRight />
+            </Link>
             
             <figure className="md:w-full flex flex-col items-center space-y-6">
                 <div style={{zIndex: 1}} className="bg-text shadow-xl rounded-xl max-w-250 w-[90vw] md:w-[55%] mt-16 pt-26 flex flex-row justify-center items-end">
