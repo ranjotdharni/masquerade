@@ -67,7 +67,7 @@ export function HowItWorksSection() {
                 }
             </ul>
 
-            <Link to={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary rounded-[100px] text-background font-roboto-bold text-[1.3rem] px-10 py-3 transition-transform hover:cursor-pointer hover:scale-105">Start For Free Now</Link>
+            <Link to={`/${PAGE_LOGIN}`} style={{zIndex: 1}} className="mt-10 bg-primary dark:bg-secondary rounded-[100px] text-background dark:text-accent font-roboto-bold text-[1.3rem] px-10 py-3 transition-transform hover:cursor-pointer hover:scale-105">Start For Free Now</Link>
         </section>
     )
 }

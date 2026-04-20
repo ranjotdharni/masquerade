@@ -48,46 +48,81 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
- --color-text: #124f54;
- --color-background: #ededed;
- --color-primary: #15a888;/*#3EB489; oldest -> #6ad7af;*/
- --color-secondary: #102937;
- --color-accent: #e2dad0;
- --color-error: #96063b;
- --color-success: #68c151;
- --color-inactive: #4a4a4a;
+  --color-text: #124f54;
+  --color-background: #ededed;
+  --color-primary: #15a888;/*#3EB489; oldest -> #6ad7af;*/
+  --color-secondary: #102937;
+  --color-accent: #e2dad0;
+  --color-error: #96063b;
+  --color-success: #68c151;
+  --color-inactive: #4a4a4a;
 
- --color-secondary-light: #10293720;
- --color-inactive-light: #4a4a4a20;
- --color-background-light: #d4d4d43a;
+  --color-secondary-light: #10293720;
+  --color-inactive-light: #4a4a4a20;
+  --color-background-light: #c2fceac5;
 
- --font-jbm: JetBrains;
- --font-jbm-italic: JetBrains Italic;
- --font-jbm-bold: JetBrains Bold;
+  /* Gradient Stops */
 
- --font-roboto: Roboto;
- --font-roboto-italic: Roboto Italic;
- --font-roboto-bold: Roboto Bold;
+  --color-highlight-button-0: #0F3443;
+  --color-highlight-button-1: #165855;
+  --color-highlight-button-2: #1E7C67;
+  --color-highlight-button-3: #25A07A;
+  --color-highlight-button-4: #2DC48C;
+  --color-highlight-button-5: #34E89E;
 
- --font-lato: Lato;
- --font-lato-italic: Lato Italic;
- --font-lato-bold: Lato Bold;
+  /* Shadows */
+
+  --shadow-highlight-button-inset: inset 2px 1px 10px 2px rgba(204, 204, 204, 0.5);
+  --shadow-highlight-button-outset: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-highlight-button-outset-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Fonts */
+
+  --font-jbm: JetBrains;
+  --font-jbm-italic: JetBrains Italic;
+  --font-jbm-bold: JetBrains Bold;
+
+  --font-roboto: Roboto;
+  --font-roboto-italic: Roboto Italic;
+  --font-roboto-bold: Roboto Bold;
+
+  --font-lato: Lato;
+  --font-lato-italic: Lato Italic;
+  --font-lato-bold: Lato Bold;
 }
 
 @layer theme {
   .dark {
     --color-text: #ac9e8d;
-    --color-background: #0a2325;
-    --color-primary: #3e3c27;
+    --color-background: #292929;/* oldest -> #0a2325;*/
+    --color-primary:  #1c201e;/* #32483f oldest -> #3e3c27;*/
     --color-secondary: #1e7b59;
     --color-accent: #ededed;
     --color-error: #96063b;
     --color-success: #68c151;
     --color-inactive: #948181;
 
+    --color-mid-highlight: #A8A86F;
+    --color-highlight: #8A7724;
+
     --color-secondary-light: #1e7b5920;
     --color-inactive-light: #94818120;
-    --color-background-light: #0a23253a;
+    --color-background-light: #6e7a7ab6;
+
+    /* Gradient Stops */
+
+    --color-highlight-button-0: rgba(8, 8, 8, 1);
+    --color-highlight-button-1: rgba(31, 28, 28, 1);
+    --color-highlight-button-2: rgb(62, 58, 58);
+    --color-highlight-button-3: rgb(53, 53, 43);
+    --color-highlight-button-4: rgb(116, 116, 83);
+    --color-highlight-button-5: rgb(135, 121, 61);
+
+    /* Shadows */
+
+    --shadow-highlight-button-inset: inset 2px 1px 7px 3px rgba(41, 39, 39, 0.5);
+    --shadow-highlight-button-outset: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-highlight-button-outset-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 }
 
@@ -145,5 +180,25 @@ body {
 
   &:focus {
     color: var(--color-text);
+  }
+}
+
+.gradientBackgroundButton {
+  background: linear-gradient( 
+    150deg, 
+    var(--color-highlight-button-0) 0%, 
+    var(--color-highlight-button-1) 20%, 
+    var(--color-highlight-button-2) 40%, 
+    var(--color-highlight-button-3) 60%, 
+    var(--color-highlight-button-4) 90%, 
+    var(--color-highlight-button-5) 100%
+  );
+
+  box-shadow: var(--shadow-highlight-button-inset), var(--shadow-highlight-button-outset);
+
+  transition: box-shadow 0.2s ease, scale 0.15s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-highlight-button-inset), var(--shadow-highlight-button-outset-hover);
   }
 }
