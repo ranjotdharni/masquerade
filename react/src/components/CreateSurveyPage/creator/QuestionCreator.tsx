@@ -90,7 +90,7 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
     }
 
     return (
-        <div style={{flexShrink: 0}} className="z-10 w-4/5 md:w-[30%] h-[90%] mb-6 rounded-lg shadow-xl border-2 border-primary dark:border-inactive bg-background dark:bg-primary flex flex-col items-center">
+        <article style={{flexShrink: 0}} className="z-10 w-4/5 md:w-[30%] h-[90%] mb-6 rounded-lg shadow-xl border-2 border-primary dark:border-inactive bg-background dark:bg-primary flex flex-col items-center">
             <header className="w-full h-[10%] px-4 space-x-4 bg-primary dark:bg-inactive flex flex-row justify-end items-center">
                 <span className="flex-1 font-jbm text-text dark:text-primary">
                     <p>{contentItemNames.get(slug.type)}</p>
@@ -139,6 +139,6 @@ export default function QuestionCreator({ slug, changeType, removeQuestion, addA
                     <p>Add Answer</p>
                 </button>
             </footer>
-        </div>
+        </article>
     )
 }

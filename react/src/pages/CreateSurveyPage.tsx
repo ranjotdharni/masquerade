@@ -10,6 +10,7 @@ import { authenticatedRequest } from "../lib/utility/internal"
 import { UIContext } from "../components/context/UIContext"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../components/context/AuthContext"
+import { Plus } from "lucide-react"
 
 function newSingleChoiceQuestion(): ChoiceQuestionType {
     return {
@@ -242,13 +243,17 @@ export default function CreateSurveyPage() {
         <AppContent>
             <CreateSurveyHeader name={name} changeName={changeName} addQuestion={addQuestion} setInviteOnly={setInviteOnly} submit={createSurvey} />
             
-            <div className="w-full relative h-[88.5vh] md:h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
+            <section style={{justifyContent: questions.length === 0 ? "center" : undefined}} className="w-full relative h-[88.5vh] top-[2.5vh] py-6 flex flex-col items-center overflow-y-scroll border-t border-b border-primary">
                 {
+                    questions.length === 0 ? 
+                    <p className="flex flex-row font-jbm text-text">
+                        Click <span className="border border-text rounded flex flex-row items-center px-2 mx-2 text-sm"><Plus className="scale-75" /> Add</span> to add a new question.
+                    </p> :
                     questions.map(item => {
                         return <QuestionCreator key={item.id} slug={item} changeType={changeType} editQuestion={editQuestion} removeQuestion={removeQuestion} addAnswer={addAnswer} removeAnswer={removeAnswer} setOptional={setAnswerOptional} />
                     })
                 }
-            </div>
+            </section>
         </AppContent>
     )
 }
