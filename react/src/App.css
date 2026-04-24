@@ -136,8 +136,6 @@ body {
 }
 
 .appNavigation {
-  /*transition: height 0.25s ease, opacity 0.35s ease;*/
-
   a {
     transition: transform 0.3s ease;
 
@@ -210,19 +208,19 @@ body {
 /*---break---*/
 
 :root {
-  --background: oklch(1 0 0);
+  --background: #ededed;
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
+  --primary: #15a888;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
+  --secondary: #102937;
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.967 0.001 286.375);
   --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
+  --accent: #e2dad0;
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0.004 286.32);
@@ -242,24 +240,56 @@ body {
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  --color-text: #124f54;
+  --color-error: #96063b;
+  --color-success: #68c151;
+  --color-inactive: #4a4a4a;
+
+  --color-secondary-light: #10293720;
+  --color-inactive-light: #4a4a4a20;
+  --color-background-light: #c2fceac5;
+
+  --color-highlight-button-0: #0F3443;
+  --color-highlight-button-1: #165855;
+  --color-highlight-button-2: #1E7C67;
+  --color-highlight-button-3: #25A07A;
+  --color-highlight-button-4: #2DC48C;
+  --color-highlight-button-5: #34E89E;
+
+  --shadow-highlight-button-inset: inset 2px 1px 10px 2px rgba(204, 204, 204, 0.5);
+  --shadow-highlight-button-outset: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-highlight-button-outset-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --font-jbm: JetBrains;
+  --font-jbm-italic: JetBrains Italic;
+  --font-jbm-bold: JetBrains Bold;
+
+  --font-roboto: Roboto;
+  --font-roboto-italic: Roboto Italic;
+  --font-roboto-bold: Roboto Bold;
+
+  --font-lato: Lato;
+  --font-lato-italic: Lato Italic;
+  --font-lato-bold: Lato Bold;
 }
 
 /*---break---*/
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
+  --background: #292929;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
+  --primary: #1c201e;
   --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(0.274 0.006 286.033);
+  --secondary: #1e7b59;
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
   --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
+  --accent: #ededed;
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
@@ -278,6 +308,29 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  --color-text: #ac9e8d;
+  --color-error: #96063b;
+  --color-success: #68c151;
+  --color-inactive: #948181;
+
+  --color-mid-highlight: #A8A86F;
+  --color-highlight: #8A7724;
+
+  --color-secondary-light: #1e7b5920;
+  --color-inactive-light: #94818120;
+  --color-background-light: #6e7a7ab6;
+
+  --color-highlight-button-0: rgba(8, 8, 8, 1);
+  --color-highlight-button-1: rgba(31, 28, 28, 1);
+  --color-highlight-button-2: rgb(62, 58, 58);
+  --color-highlight-button-3: rgb(53, 53, 43);
+  --color-highlight-button-4: rgb(116, 116, 83);
+  --color-highlight-button-5: rgb(135, 121, 61);
+
+  --shadow-highlight-button-inset: inset 2px 1px 7px 3px rgba(41, 39, 39, 0.5);
+  --shadow-highlight-button-outset: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-highlight-button-outset-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 /*---break---*/
